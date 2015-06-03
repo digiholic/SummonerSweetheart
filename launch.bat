@@ -1,0 +1,1 @@
+..\renpy-6.99.1-sdk\renpy.exe "."
