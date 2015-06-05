@@ -17,6 +17,7 @@ class TransitionScreen():
         
     def buildTestScreen(self):
         # Build the BGSurface
+        """
         sky = screenObjects.StaticObject(screenObjects.load_image('data','SKY_BG.png'),(0,0))
         self.gameObjects.append(sky)
         
@@ -36,7 +37,7 @@ class TransitionScreen():
         
         
         self.gameObjects.extend([treetile1,treetile2,treetile3])
-        
+        """
         # Build animated sprites
         poro = screenObjects.AnimatedObject((640,320),4, os.path.join(os.path.dirname(__file__),'data/Poro1'),['_1','_2','_3','_4'],5)
         self.gameObjects.append(poro)

@@ -672,7 +672,7 @@ label dungeon:
 
 label TestTrigger:
     scene bg dungeon
-    show DungeonScene()
+    show expression DungeonScene()
     show raka vr flat at right
     ez flat "Testing dialogue scene"
     call screen dungeon_run()

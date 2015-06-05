@@ -3,12 +3,12 @@
 While running game code:
   File "game/script00.rpy", line 557, in script call
     call dungeon
-  File "game/script00.rpy", line 621, in script call
+  File "game/script00.rpy", line 621, in script
     call screen dungeon_run()
-  File "game/script00.rpy", line 677, in script
-    ez flat "Testing dialogue scene"
-  File "game/script00.rpy", line 96, in render
-    retScreen = self.dungeon.update()
+  File "renpy/common/000statements.rpy", line 457, in execute_call_screen
+    store._return = renpy.call_screen(name, *args, **kwargs)
+  File "game/script00.rpy", line 71, in render
+    self.retScreen = self.dungeon.update()
 IndexError: list index out of range
 
 -- Full Traceback ------------------------------------------------------------
@@ -16,20 +16,18 @@ IndexError: list index out of range
 Full traceback:
   File "game/script00.rpy", line 557, in script call
     call dungeon
-  File "game/script00.rpy", line 621, in script call
+  File "game/script00.rpy", line 621, in script
     call screen dungeon_run()
-  File "game/script00.rpy", line 677, in script
-    ez flat "Testing dialogue scene"
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 593, in execute
-    renpy.exports.say(who, what, interact=self.interact)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/exports.py", line 999, in say
-    who(what, interact=interact)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/character.py", line 826, in __call__
-    self.do_display(who, what, cb_args=self.cb_args, **display_args)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/character.py", line 688, in do_display
-    **display_args)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/character.py", line 491, in display_say
-    rv = renpy.ui.interact(mouse='say', type=type, roll_forward=roll_forward)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 1635, in execute
+    self.call("execute")
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 1653, in call
+    renpy.statements.call(method, parsed, *args, **kwargs)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/statements.py", line 144, in call
+    return method(parsed, *args, **kwargs)
+  File "renpy/common/000statements.rpy", line 457, in execute_call_screen
+    store._return = renpy.call_screen(name, *args, **kwargs)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/exports.py", line 2311, in call_screen
+    rv = renpy.ui.interact(mouse="screen", type="screen", roll_forward=roll_forward)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ui.py", line 247, in interact
     rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/core.py", line 2149, in interact
@@ -62,11 +60,10 @@ Full traceback:
   File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
   File "accelerator.pyx", line 108, in renpy.display.accelerator.transform_render (gen/renpy.display.accelerator.c:1922)
   File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "game/script00.rpy", line 96, in render
-    retScreen = self.dungeon.update()
-  File "transitionScreen.py", line 53, in update
-  File "screenObjects.py", line 197, in update
-  File "screenObjects.py", line 183, in changeImage
+  File "game/script00.rpy", line 71, in render
+    self.retScreen = self.dungeon.update()
+  File "summonersRift.py", line 124, in update
+  File "summonersRift.py", line 297, in doAttack
 IndexError: list index out of range
 
 Linux-3.11.0-26-generic-x86_64-with-debian-wheezy-sid

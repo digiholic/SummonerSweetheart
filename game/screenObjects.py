@@ -99,9 +99,8 @@ class InfiniteTile(ScreenObject):
         number = (screenSize[0] / self.width) + 3 # Plus 3 because 1 to make it the proper width (zero indexing fix), and one extra on each side.
         
         self.image = renpy.display.pgrender.Surface((self.width*number,self.height),True)
-        print self.width, self.image.get_rect().width
         for i in range(0,number):
-            self.image.blit(img,(self.width*i,0))
+            self.image.blit(img.convert_alpha(),(self.width*i,0))
         self.rect = pygame.Rect((startPos[0] - self.width,startPos[1]),(self.width*number,self.height))
     
     def stageToScreen(self,camera_rect):
@@ -145,6 +144,8 @@ class AnimatedObject(ScreenObject):
         else:
             self.orderedImages = self.images.values() # This will probably need to be fixed in the individual animation
         self.image = self.orderedImages[0]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.pos
         
     """
     This will create the image dictionary.
@@ -167,7 +168,6 @@ class AnimatedObject(ScreenObject):
             fname, ext = os.path.splitext(f)
             if fname.startswith(prefix) and (ext in supportedFileTypes):
                 spriteName = fname[len(prefix):]
-                print spriteName
                 fp = directory+'/'+f
                 sprite = renpy.display.pgrender.load_image(renpy.loader.load(fp), fp)
                 imageDict[spriteName] = sprite
@@ -204,7 +204,109 @@ class AnimatedObject(ScreenObject):
                     # If we're not changing, no point in calling the function
         else:
             self.currentDelay += 1
+
+class MultiAnimationObject(ScreenObject):
+    def __init__(self,directory,prefix,startingImage,offset,colorMap = {},paralaxValue = 0.0):
+        ScreenObject.__init__(self, paralaxValue)
+        self.colorMap = colorMap
+        self.imageLibrary = self.buildImageLibrary(ImageLibrary(directory,prefix), offset)
         
+        self.startingImage = startingImage
+         
+        self.flip = "right"
+        self.currentSheet = startingImage
+        self.index = 0
+        
+        self.image = self.imageLibrary[self.flip][self.startingImage][self.index]
+        
+        self.rect = self.image.get_rect()
+        self.boundingRect = self.getBoundingBox()
+        
+    def flipX(self):
+        if self.flip == "right": self.flip = "left"
+        else: self.flip = "right"
+    
+    def getBoundingBox(self):
+        boundingRect = self.image.get_bounding_rect()
+        boundingRect.top += self.rect.top
+        boundingRect.left += self.rect.left
+        return boundingRect
+    
+    def updatePosition(self,rect):
+        self.rect = rect
+        self.boundingRect = self.getBoundingBox()
+                
+    def changeImage(self,newImage,subImage = 0):
+        self.currentSheet = newImage
+        self.index = subImage
+        self.get_image()
+        
+    def changeSubImage(self,index):
+        self.index = index % len(self.imageLibrary[self.flip][self.currentSheet])
+        self.get_image()
+    
+    def rotate(self,angle = 0):
+        self.angle = angle
+    
+    def get_image(self):
+        try:
+            self.image = self.imageLibrary[self.flip][self.currentSheet][self.index]
+        except:
+            print "Error loading sprite ", self.currentSheet, " Loading default"
+            self.image = self.imageLibrary[self.flip][self.startingImage][0]
+        
+        self.rect = self.image.get_rect(center=self.rect.center)
+        self.boundingRect = self.getBoundingBox()
+        return self.image
+    
+    def get_length(self):
+        return len(self.imageLibrary[self.flip][self.currentSheet])
+    
+    def draw(self,screen,offset):
+        self.get_image()
+        ScreenObject.draw(self,screen,offset)
+    
+    def buildImageLibrary(self,lib,offset):
+        library = {}
+        flippedLibrary = {}
+        for key,value in lib.imageDict.iteritems():
+            imageList = self.buildSubimageList(value,offset)
+            library[key] = imageList
+            flipList = []
+            for image in imageList:
+                img = image.copy()
+                img = pygame.transform.flip(img,True,False)
+                flipList.append(img)
+            flippedLibrary[key] = flipList
+
+        return {"right": library, "left": flippedLibrary}
+        
+    def buildSubimageList(self,sheet,offset):
+        index = 0
+        imageList = []
+        while index < sheet.get_width() / offset:
+            sheet.set_clip(pygame.Rect(index * offset, 0, offset,sheet.get_height()))
+            image = sheet.subsurface(sheet.get_clip())
+            for fromColor,toColor in self.colorMap.iteritems():
+                self.recolor(image, list(fromColor), list(toColor))
+            imageList.append(image)
+            index += 1
+        return imageList     
+
+class ImageLibrary():
+    def __init__(self,directory,prefix=""):
+        self.directory = os.path.join(os.path.dirname(__file__),directory)
+        self.imageDict = {}
+        supportedFileTypes = [".jpg",".png",".gif",".bmp",".pcx",".tga",".tif",".lbm",".pbm",".xpm"]
+             
+        for f in os.listdir(os.path.join(renpy.config.gamedir,self.directory)):
+            fname, ext = os.path.splitext(f)
+            if fname.startswith(prefix) and supportedFileTypes.count(ext):
+                spriteName = fname[len(prefix):]
+                fp = os.path.join(self.directory,f)
+                sprite = renpy.display.pgrender.load_image(renpy.loader.load(fp),fp)
+                self.imageDict[spriteName] = sprite
+                
 class BGChunk(ScreenObject):
     def __init__(self,startX,size):
         ScreenObject.__init__(self)

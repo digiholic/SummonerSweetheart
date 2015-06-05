@@ -58,10 +58,10 @@ init python:
       super(DungeonRun, self).__init__(**kwargs)
       self.width = 1024
       self.height = 768
-      self.dungeon = dungeon.getDungeon()
-      self.dungeon.loadFromVN([])
+      #self.dungeon = dungeon.getDungeon()
+      #self.dungeon.loadFromVN([])
       self.retScreen = None
-      #self.dungeon = summonersRift.getDungeon()
+      self.dungeon = summonersRift.getDungeon()
       
     def render(self, width, height, st, at):
       if self.dungeon is None:
