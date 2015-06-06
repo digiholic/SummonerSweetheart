@@ -2,6 +2,7 @@ import renpygame as pygame
 import screenObjects
 import renpy.display
 import os
+import random
 
 dungeon = None
 
@@ -22,7 +23,12 @@ class Dungeon():
         """
         
         self.route = True
-        self.battle = Battle([Ezreal(),Ahri(),Soraka(),Rengar()],[])
+        
+        self.currentBattle = 0
+        self.battle = None
+        self.battles = [Battle(self,[Ezreal(),Ahri(),Soraka(),Rengar()],[Poro(),Poro()]),
+                        Battle(self,[Ezreal(),Ahri(),Soraka(),Rengar()],[Poro(),Poro(),Poro()])]
+        
         #self.battle = None
         
         self.gameObjects = []
@@ -36,11 +42,6 @@ class Dungeon():
         
         loadScreen = screenObjects.StaticObject(screenObjects.load_image('data','Loading.png'),(0,0))
         loadScreen.draw(self.screen,(0,0))
-        
-        
-        
-        
-        
         
         # Initialization is IN ORDER. Earliest stuff on the bottom.
         sky = screenObjects.StaticObject(screenObjects.load_image('data','SKY_BG.png'),(0,0),0)
@@ -73,6 +74,8 @@ class Dungeon():
         self.player = Player(self,True)
         self.player.update()
         
+        self.victorySound = pygame.mixer.Sound('data/music/VictoryTheme2.wav')
+        
         self.clock = pygame.time.Clock()
         
     """
@@ -93,7 +96,19 @@ class Dungeon():
             self.battleChamps = [Ezreal(),Ahri()]
         else:    
             self.battleChamps = []
+        
+    def startBattle(self):
+        self.battle = self.battles[self.currentBattle]
+        pygame.mixer.music.load(self.battle.music)
+        pygame.mixer.music.play()
             
+    def endBattle(self):
+        pygame.mixer.music.stop()
+        self.victorySound.play()
+        self.battle = None
+        self.currentBattle += 1
+        self.callScene = "victoryScreen"
+        
     def addEvent(self,event):
         self.eventList.append(event)
     
@@ -119,18 +134,19 @@ class Dungeon():
                     self.callScene = 'TestTrigger'
                 elif event.key == pygame.K_d:
                     if self.player.currentSheet == 'idle': self.player.changeImage('walk', 0)
+                    self.startBattle()
                 elif event.key == pygame.K_q:
                     if self.battle:
-                        self.battle.doAttack(3)
+                        self.battle.doPlayerAttack(3)
                 elif event.key == pygame.K_w:
                     if self.battle:
-                        self.battle.doAttack(2)
+                        self.battle.doPlayerAttack(2)
                 elif event.key == pygame.K_e:
                     if self.battle:
-                        self.battle.doAttack(1)
+                        self.battle.doPlayerAttack(1)
                 elif event.key == pygame.K_r:
                     if self.battle:
-                        self.battle.doAttack(0)
+                        self.battle.doPlayerAttack(0)
                                                 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_d:
@@ -171,85 +187,6 @@ class Dungeon():
         self.eventList = []
         return self.screen
         #pygame.display.flip()
-            
-class Champion(screenObjects.MultiAnimationObject):
-    def __init__(self):
-        screenObjects.MultiAnimationObject.__init__(self, self.directory, self.prefix, 'idleB',self.offset)
-        self.attacking = False
-        self.frame = 0
-        self.delay = 0
-        self.currentCD = 0
-        self.hp = 100
-        
-    def update(self):
-        if self.currentCD > 0:
-            self.currentCD -= 1
-        if self.delay == 2:
-            self.changeSubImage(self.frame)
-            self.frame += 1
-            self.delay = 0
-            if self.frame >= self.get_length():
-                self.frame = 0
-                if self.attacking and self.currentSheet == 'attack':
-                    self.attacking = False
-                    self.changeImage('idleB')
-        else:
-            self.delay += 1
-        
-    def doAttack(self):
-        print "attacking", self.currentCD
-        if not self.attacking and self.currentCD == 0:
-            self.attacking = True
-            self.currentCD = self.attackCD
-            self.frame = 0
-            self.changeImage('attack')
-        
-class Ezreal(Champion):
-    def __init__(self):
-        self.directory = 'data/Ezreal'
-        self.prefix = 'ezreal_'
-        self.offset = 250
-        self.attackCD = 120
-        self.centerOffset = 0
-        
-        Champion.__init__(self)
-        
-class Ahri(Champion):
-    def __init__(self):
-        self.directory = 'data/Ahri'
-        self.prefix = 'ahri_'
-        self.offset = 275
-        self.attackCD = 120
-        self.centerOffset = 50
-        
-        Champion.__init__(self)
-        
-class Soraka(Champion):
-    def __init__(self):
-        self.directory = 'data/Soraka'
-        self.prefix = 'soraka_'
-        self.offset = 180
-        self.attackCD = 120
-        self.centerOffset = 0
-        
-        Champion.__init__(self)
-
-class Rengar(Champion):
-    def __init__(self):
-        self.directory = 'data/Rengar'
-        self.prefix = 'rengar_'
-        self.offset = 250
-        self.attackCD = 120
-        self.centerOffset = 50
-        
-        Champion.__init__(self)
-
-
-class Enemy(screenObjects.MultiAnimationObject):
-    def __init__(self):
-        pass
-    
-    
 
 class Player(screenObjects.MultiAnimationObject):
     def __init__(self,dungeon,route):
@@ -280,29 +217,218 @@ class Player(screenObjects.MultiAnimationObject):
                 self.frame = 0
         else:
             self.delay += 1
+                        
+class Champion(screenObjects.MultiAnimationObject):
+    def __init__(self):
+        screenObjects.MultiAnimationObject.__init__(self, self.directory, self.prefix, 'idleB',self.offset)
+        self.attacking = False
+        self.frame = 0
+        self.delay = 0
+        self.currentCD = 0
+        self.hp = self.maxHP
+        self.attackDamage = 10
+        self.alive = True
+        
+    def update(self):
+        if self.currentCD > 0:
+            self.currentCD -= 1
+        if self.delay == 2:
+            self.changeSubImage(self.frame)
+            self.frame += 1
+            self.delay = 0
+            if self.frame >= self.get_length():
+                self.frame = 0
+                if self.attacking and self.currentSheet == 'attack':
+                    self.attacking = False
+                    self.changeImage('idleB')
+        else:
+            self.delay += 1
+        
+    def doAttack(self,target):
+        if not self.attacking and self.currentCD == 0:
+            self.attacking = True
+            self.currentCD = self.attackCD
+            self.frame = 0
+            self.changeImage('attack')
+            self.attackSound.play()
+            #TODO animation
+            target.getAttacked(self.attackDamage)
+        
+    def getAttacked(self,damage):
+        print self.prefix, self.hp
+        self.hp -= damage
+        self.hurtSound.play()
+        if self.hp <= 0: self.alive = False
+        
+class Enemy(screenObjects.MultiAnimationObject):
+    def __init__(self):
+        screenObjects.MultiAnimationObject.__init__(self, self.directory, self.prefix, 'idle',self.offset)
+        self.currentCD = random.randint(0,self.attackCD)
+        self.attacking = False
+        self.hp = self.maxHP
+        self.alive = True
+        self.frame = 0
+        self.delay = 0
+        
+    def update(self):
+        if self.currentCD > 0:
+            self.currentCD -= 1
             
+        if self.delay == 2:
+            self.changeSubImage(self.frame)
+            self.frame += 1
+            self.delay = 0
+            if self.frame >= self.get_length():
+                self.frame = 0
+                if self.attacking and self.currentSheet == 'attack':
+                    self.attacking = False
+                    self.changeImage('idle')
+        else:
+            self.delay += 1
+        
+    def doAttack(self,target):
+        if not self.attacking and self.currentCD == 0:
+            self.attacking = True
+            self.currentCD = self.attackCD
+            self.frame = 0
+            #self.changeImage('attack')
+            #TODO Animation
+            target.getAttacked(self.attackDamage)
+        
+    def chooseTarget(self):
+        return random.randint(0,3)
+        
+    def getAttacked(self,damage):
+        self.hp -= damage
+        if self.hp <= 0:
+            self.alive = False
+        
 class Battle():
-    def __init__(self,players,enemies):
+    def __init__(self,dungeon,players,enemies,music='data/music/BattleStance.wav'):
         self.players = players
         self.enemies = enemies
+        self.currentTarget = 0
+        self.dungeon = dungeon
+        self.music = music
+        
         for i in range(0,len(self.players)):
             self.players[i].rect.left = self.players[i].centerOffset + (450 - (150*i))
             self.players[i].rect.bottom = 668
-        
+        for i in range(0,len(self.enemies)):
+            self.enemies[i].rect.right = self.enemies[i].centerOffset + (1024 - (150*i))
+            self.enemies[i].rect.bottom = 668
+    
     def update(self,screen):
         # UPDATE
         for ch in self.players:
             ch.update()
-        for en in self.enemies:
+        for i in range(0,len(self.enemies)):
+            en = self.enemies[i]
             en.update()
+            if en.alive and en.currentCD == 0:
+                self.doEnemyAttack(i)
+                en.currentCD = en.attackCD
+        
+        for en in self.enemies:
+            if not en.alive:
+                self.enemies.remove(en)
+                
+        if len(self.enemies) == 0:
+            self.dungeon.endBattle()
             
         # DRAW
         for ch in self.players:
-            ch.draw(screen,ch.rect.topleft)
+            if ch.alive:
+                ch.draw(screen,ch.rect.topleft)
         for en in self.enemies:
-            en.draw(screen,en.rect.topleft)
-            
+            if en.alive:
+                en.draw(screen,en.rect.topleft)
         return screen
     
-    def doAttack(self,i):
-        self.players[i].doAttack()
+    def doPlayerAttack(self,i):
+        en = self.enemies[self.currentTarget]
+        while not en.alive:
+            self.changeTarget(1)
+            en = self.enemies[self.currentTarget]
+        self.players[i].doAttack(en)
+        
+    def doEnemyAttack(self,i):
+        j = self.enemies[i].chooseTarget()
+        while not self.players[j].alive:
+            j = self.enemies[i].chooseTarget()
+        
+        print "attacking", self.enemies[i], self.enemies[i].currentCD, '/', self.enemies[i].attackCD    
+        self.enemies[i].doAttack(self.players[j])
+        
+    def changeTarget(self,amt):
+        self.currentTarget += amt
+        l = len(self.enemies)
+        self.currentTarget = (l + amt) % l
+
+class Effect(screenObjects.AnimatedObject):
+    def __init__(self):
+        screenObjects.AnimatedObject.__init__(self, self.rect.topleft, animLength, directory, order, delay, prefix, loop, paralaxValue)
+        
+class Ezreal(Champion):
+    def __init__(self):
+        self.directory = 'data/Ezreal'
+        self.prefix = 'ezreal_'
+        self.offset = 250
+        self.attackCD = 120
+        self.centerOffset = 0
+        self.maxHP = 100
+        self.attackSound = pygame.mixer.Sound('data/EffectSFX/EZ_Attack_1.mp3')
+        self.hurtSound = pygame.mixer.Sound('data/EffectSFX/EzDamage.wav')
+        
+        Champion.__init__(self)
+        
+class Ahri(Champion):
+    def __init__(self):
+        self.directory = 'data/Ahri'
+        self.prefix = 'ahri_'
+        self.offset = 275
+        self.attackCD = 120
+        self.centerOffset = 50
+        self.maxHP = 100
+        self.attackSound = pygame.mixer.Sound('data/AhriSFX/Attack1_c.wav')
+        self.hurtSound = pygame.mixer.Sound('data/AhriSFX/AhriDamage.wav')
+        
+        Champion.__init__(self)
+        
+class Soraka(Champion):
+    def __init__(self):
+        self.directory = 'data/Soraka'
+        self.prefix = 'soraka_'
+        self.offset = 180
+        self.attackCD = 120
+        self.centerOffset = 0
+        self.maxHP = 100
+        self.attackSound = pygame.mixer.Sound('data/EffectSFX/SorakaAttack1.wav')
+        self.hurtSound = pygame.mixer.Sound('data/EffectSFX/SorakaDamage.wav')
+        
+        Champion.__init__(self)
+
+class Rengar(Champion):
+    def __init__(self):
+        self.directory = 'data/Rengar'
+        self.prefix = 'rengar_'
+        self.offset = 250
+        self.attackCD = 120
+        self.centerOffset = 50
+        self.maxHP = 100
+        self.attackSound = pygame.mixer.Sound('data/EffectSFX/Attack3.wav')
+        self.hurtSound = pygame.mixer.Sound('data/EffectSFX/ReceivingDamage2.wav')
+        
+        Champion.__init__(self)
+
+class Poro(Enemy):
+    def __init__(self):
+        self.directory = 'data/Poro1'
+        self.prefix = 'poro_'
+        self.offset = 200
+        self.attackCD = 160
+        self.centerOffset = 0
+        self.attackDamage = 10
+        self.maxHP = 40
+        
+        Enemy.__init__(self)

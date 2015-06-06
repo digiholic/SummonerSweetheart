@@ -58,10 +58,10 @@ init python:
       super(DungeonRun, self).__init__(**kwargs)
       self.width = 1024
       self.height = 768
-      self.dungeon = dungeon.getDungeon()
-      self.dungeon.loadFromVN([])
+      #self.dungeon = dungeon.getDungeon()
+      #self.dungeon.loadFromVN([])
       self.retScreen = None
-      #self.dungeon = summonersRift.getDungeon()
+      self.dungeon = summonersRift.getDungeon()
       
     def render(self, width, height, st, at):
       if self.dungeon is None:
@@ -90,14 +90,15 @@ init python:
       super(DungeonScene, self).__init__(**kwargs)
       self.width = 1024
       self.height = 768
-      self.dungeon = transitionScreen.TransitionScreen([],[])
+      #self.dungeon = transitionScreen.TransitionScreen([],[])
+      self.dungeon = summonersRift.getDungeon()
       
     def render(self, width, height, st, at):
-      retScreen = self.dungeon.update()
+      retScreen = self.dungeon.getScreen()
       render = renpy.Render(self.width,self.height)
       render.blit(retScreen, (0,0))
       
-      renpy.redraw(self,0)
+      #renpy.redraw(self,0)
       return render
       
     def event(self,ev, x, y, st):
@@ -671,12 +672,21 @@ label dungeon:
     return
 
 label TestTrigger:
-    scene bg dungeon
     show expression DungeonScene()
     show raka vr flat at right
     ez flat "Testing dialogue scene"
     call screen dungeon_run()
     
+label victoryScreen:
+    scene expression DungeionScene()
+    "YOU WIN"
+    menu:
+        "Press on":
+            ez happy "Let's keep going!"
+            call screen dungeon_run()
+        "That's enough":
+            ez flat "I think that's far enough for now, let's heal up and come back later!"
+            call screen dungeon_run()
 label normalize_rp:
     if route == "Ezreal":
         if ahri_rp > 100:
