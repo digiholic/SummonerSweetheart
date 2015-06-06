@@ -138,14 +138,19 @@ class AnimatedObject(ScreenObject):
         
         self.images = self.buildImageDict(directory,prefix)
         self.orderedImages = []
+        
+        self.buildOrderdImages(order)
+        
+        self.image = self.orderedImages[0]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.pos
+        
+    def buildOrderdImages(self,order):
         if order:
             for o in order:
                 self.orderedImages.append(self.images[o])
         else:
             self.orderedImages = self.images.values() # This will probably need to be fixed in the individual animation
-        self.image = self.orderedImages[0]
-        self.rect = self.image.get_rect()
-        self.rect.topleft = self.pos
         
     """
     This will create the image dictionary.
@@ -205,10 +210,47 @@ class AnimatedObject(ScreenObject):
         else:
             self.currentDelay += 1
 
+class SheetAnimatedObject(ScreenObject):
+    def __init__(self,directory,sheet,offset,frameDelay = 0):
+        ScreenObject.__init__(self,0)
+        
+        fp = os.path.join(directory,sheet)
+        sprite = renpy.display.pgrender.load_image(renpy.loader.load(fp),fp)
+        
+        self.images = self.buildSubimageList(sprite, offset)
+        
+        self.image = self.images[0]
+        self.frame = 0
+        self.rect = self.image.get_rect()
+        self.delay = 0
+        self.frameDelay = frameDelay
+        
+    def update(self):
+        if self.delay == self.frameDelay:
+            self.image = self.images[self.frame]
+            self.frame += 1
+            self.delay = 0
+            if self.frame == len(self.images):
+                self.doFinish()
+        else:
+            self.delay += 1
+        
+    def doFinish(self):
+        self.kill()
+        
+    def buildSubimageList(self,sheet,offset):
+        index = 0
+        imageList = []
+        while index < sheet.get_width() / offset:
+            sheet.set_clip(pygame.Rect(index * offset, 0, offset,sheet.get_height()))
+            image = sheet.subsurface(sheet.get_clip())
+            imageList.append(image)
+            index += 1
+        return imageList     
+
 class MultiAnimationObject(ScreenObject):
-    def __init__(self,directory,prefix,startingImage,offset,colorMap = {},paralaxValue = 0.0):
+    def __init__(self,directory,prefix,startingImage,offset,paralaxValue = 0.0):
         ScreenObject.__init__(self, paralaxValue)
-        self.colorMap = colorMap
         self.imageLibrary = self.buildImageLibrary(ImageLibrary(directory,prefix), offset)
         
         self.startingImage = startingImage
@@ -287,8 +329,6 @@ class MultiAnimationObject(ScreenObject):
         while index < sheet.get_width() / offset:
             sheet.set_clip(pygame.Rect(index * offset, 0, offset,sheet.get_height()))
             image = sheet.subsurface(sheet.get_clip())
-            for fromColor,toColor in self.colorMap.iteritems():
-                self.recolor(image, list(fromColor), list(toColor))
             imageList.append(image)
             index += 1
         return imageList     

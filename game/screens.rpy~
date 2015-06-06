@@ -483,9 +483,8 @@ screen school_map():
 #####
 screen dungeon_run():
   modal True
-  $ import renpygame as pygame
-  $ pygame.font.init()
   add DungeonRun() xpos 0.0 ypos 0.0
+  action Return(True)
   
 screen dungeon_scene():
   add DungeonScene() xpos 0.0 ypos 0.0

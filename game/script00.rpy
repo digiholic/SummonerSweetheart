@@ -76,8 +76,10 @@ init python:
           self.dungeon.callScene = ""
           renpygame.image.save(self.retScreen,os.path.join(renpy.config.gamedir,'bg/dungeon.png'))
           renpy.call(callScene)
+        if self.dungeon.finished:
+          return render
         else:
-          renpy.redraw(self,0)
+          renpy.redraw(self,0.03)
         return render
       
     def event(self, ev, x, y, st):
@@ -619,7 +621,6 @@ label dungeon:
     scene bg black
     stop music fadeout 0.5
     "Time to be patient... sometimes, it takes a little while."
-    call screen dungeon_run()
     if route == "Leona":
         $ giftsInventory = [have_hammer, have_sketch, have_rubix]
         $ comboSkillsUnlocked = [jayce_combo, rumble_combo, vik_combo]
@@ -636,6 +637,7 @@ label dungeon:
         $ comboSkillsUnlocked = [ahri_combo, rango_combo, raka_combo]
         $ SceneKeys = (sum(comboSkillsUnlocked), dungeon_visits_no_combo, bosses_defeated, raka_confessed)
         $ pass_list = [True, giftsInventory, comboSkillsUnlocked, SceneKeys]
+        $ summonersRift.getDungeon().loadFromVN(pass_list)
         call screen dungeon_run()
         ""
         $ [giftsReturned,n_bossesDefeated] = summonersRift.main(set_mode(),pass_list)
@@ -683,10 +685,13 @@ label victoryScreen:
     menu:
         "Press on":
             ez happy "Let's keep going!"
+            $ summonersRift.getDungeon().battle.onward()
             call screen dungeon_run()
         "That's enough":
             ez flat "I think that's far enough for now, let's heal up and come back later!"
+            $ summonersRift.getDungeon().battle.retreat()
             call screen dungeon_run()
+            
 label normalize_rp:
     if route == "Ezreal":
         if ahri_rp > 100:

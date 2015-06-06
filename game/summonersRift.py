@@ -17,66 +17,32 @@ def getDungeon():
 class Dungeon():
     def __init__(self,debug=False):
         self.camera_rect = pygame.Rect(0,0,1024,768)
-        """
-        if debug == True:
-            self.mscreen = pygame.display.set_mode(self.camera_rect.size)
-        """
+        
+        self.banner = Banner() # This one's big, want to load it only once
+        
         
         self.route = True
-        
         self.currentBattle = 0
         self.battle = None
-        self.battles = [Battle(self,[Ezreal(),Ahri(),Soraka(),Rengar()],[Poro(),Poro()]),
-                        Battle(self,[Ezreal(),Ahri(),Soraka(),Rengar()],[Poro(),Poro(),Poro()])]
         
         #self.battle = None
         
         self.gameObjects = []
-        
         
         pygame.init()
         self.eventList = []
         self.screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
         
         self.callScene = ""
+        self.finished = False
         
         loadScreen = screenObjects.StaticObject(screenObjects.load_image('data','Loading.png'),(0,0))
         loadScreen.draw(self.screen,(0,0))
         
-        # Initialization is IN ORDER. Earliest stuff on the bottom.
-        sky = screenObjects.StaticObject(screenObjects.load_image('data','SKY_BG.png'),(0,0),0)
-        sky.paralaxValue = 0
-        self.gameObjects.append(sky)
-        
-        grndtileImg = screenObjects.load_image('data','Grounds/SR_GRND.gif')
-        grndtile = screenObjects.InfiniteTile(grndtileImg,
-                                              (0,self.camera_rect.bottom - grndtileImg.get_height()),
-                                              self.camera_rect.size)
-        self.gameObjects.append(grndtile)
-        
-        clouds1 = screenObjects.load_image('data','Clouds/clouds1.png')
-        clouds2 = screenObjects.load_image('data','Clouds/clouds2.png')
-        clouds3 = screenObjects.load_image('data','Clouds/clouds3.png')
-        clouds = [screenObjects.StaticObject(clouds1,( 500,self.camera_rect.bottom - 730), paralaxValue = 0.7),
-                  screenObjects.StaticObject(clouds2,(1030,self.camera_rect.bottom - 690), paralaxValue = 0.5),
-                  screenObjects.StaticObject(clouds2,(1435,self.camera_rect.bottom - 715), paralaxValue = 0.9),
-                  screenObjects.StaticObject(clouds1,(2015,self.camera_rect.bottom - 743), paralaxValue = 0.3),
-                  screenObjects.StaticObject(clouds3,(2418,self.camera_rect.bottom - 760), paralaxValue = 0.5),
-                  screenObjects.StaticObject(clouds1,(3272,self.camera_rect.bottom - 771), paralaxValue = 0.8),   
-                  screenObjects.StaticObject(clouds3,(4699,self.camera_rect.bottom - 721), paralaxValue = 0.7)]
-        
-        self.cloudsGroup = pygame.sprite.Group(clouds)
-        
-        #treeTileImg = screenObjects.load_image('data','summoner rift tree [repeatable].png')
-        #treetile = screenObjects.InfiniteTile(treeTileImg,(490,self.camera_rect[3] - treeTileImg.get_height() - 100),self.camera_rect.size)
-        #self.gameObjects.append(treetile)
-        
-        self.player = Player(self,True)
-        self.player.update()
-        
         self.victorySound = pygame.mixer.Sound('data/music/VictoryTheme2.wav')
         
         self.clock = pygame.time.Clock()
+        
         
     """
     def run(self):
@@ -93,19 +59,25 @@ class Dungeon():
 
     def loadFromVN(self,pass_list):
         if pass_list[0]: #Route == True means Ezreal
-            self.battleChamps = [Ezreal(),Ahri()]
+            self.battleChamps = [Ezreal(),Ahri(),Soraka(),Rengar()]
         else:    
             self.battleChamps = []
+        
+        self.battles = [Battle(self, self.battleChamps, [Poro(),Poro()]           ),
+                        Battle(self, self.battleChamps, [Poro(),Poro(),Poro()]    ),
+                        Battle(self, self.battleChamps, [Poro(),MrPoro(),Poro()]  ),
+                        Battle(self, self.battleChamps, [MrPoro(),Poro(),MrPoro()])]
+        
+        self.startBattle()
         
     def startBattle(self):
         self.battle = self.battles[self.currentBattle]
         pygame.mixer.music.load(self.battle.music)
-        pygame.mixer.music.play()
-            
+        self.battle.initialize(self.battleBG(self.currentBattle))
+        
     def endBattle(self):
         pygame.mixer.music.stop()
         self.victorySound.play()
-        self.battle = None
         self.currentBattle += 1
         self.callScene = "victoryScreen"
         
@@ -115,76 +87,61 @@ class Dungeon():
     def getScreen(self):
         return self.screen
     
+    def battleBG(self,bgNumber):
+        gameObjects = []
+        screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
+        
+        print bgNumber
+        if bgNumber < 10:
+            # Initialization is IN ORDER. Earliest stuff on the bottom.
+            sky = screenObjects.StaticObject(screenObjects.load_image('data','SKY_BG.png'),(0,0),0)
+            gameObjects.append(sky)
+        
+            grndtileImg = screenObjects.load_image('data','Grounds/SR_GRND.gif')
+            grndtile = screenObjects.InfiniteTile(grndtileImg,
+                                              (0,self.camera_rect.bottom - grndtileImg.get_height()),
+                                              self.camera_rect.size)
+            gameObjects.append(grndtile)
+        
+            treeTileImg = screenObjects.load_image('data','summoner rift tree [repeatable].png')
+            if bgNumber % 2 == 0:
+                treetiles = [screenObjects.StaticObject(treeTileImg,(0,self.camera_rect[3] - treeTileImg.get_height() - 100)),
+                             screenObjects.StaticObject(treeTileImg,(treeTileImg.get_width(),self.camera_rect[3] - treeTileImg.get_height() - 100))]
+            else:
+                treetiles = [screenObjects.StaticObject(treeTileImg,(-88,self.camera_rect[3] - treeTileImg.get_height() - 100)),
+                             screenObjects.StaticObject(treeTileImg,(treeTileImg.get_width() - 88,self.camera_rect[3] - treeTileImg.get_height() - 100))]
+            
+            gameObjects.extend(treetiles)
+            
+            for obj in gameObjects:
+                obj.draw(screen,obj.rect.topleft)
+            return screen
+            
     def update(self):
-        self.clock.tick(60)
         self.screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
+        
         for event in self.eventList:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.exitStatus = 1
                 elif event.key == pygame.K_LEFT:
-                    self.camera_rect.x -= 25
+                    self.battle.changeTarget(1)
                 elif event.key == pygame.K_RIGHT:
-                    self.camera_rect.x += 25
-                elif event.key == pygame.K_UP:
-                    self.camera_rect.y -= 25
-                elif event.key == pygame.K_DOWN:
-                    self.camera_rect.y += 25
-                elif event.key == pygame.K_z:
-                    self.callScene = 'TestTrigger'
-                elif event.key == pygame.K_d:
-                    if self.player.currentSheet == 'idle': self.player.changeImage('walk', 0)
-                    self.startBattle()
+                    self.battle.changeTarget(-1)
                 elif event.key == pygame.K_q:
-                    if self.battle:
-                        self.battle.doPlayerAttack(3)
+                    self.battle.doPlayerAttack(3)
                 elif event.key == pygame.K_w:
-                    if self.battle:
-                        self.battle.doPlayerAttack(2)
+                    self.battle.doPlayerAttack(2)
                 elif event.key == pygame.K_e:
-                    if self.battle:
-                        self.battle.doPlayerAttack(1)
+                    self.battle.doPlayerAttack(1)
                 elif event.key == pygame.K_r:
-                    if self.battle:
-                        self.battle.doPlayerAttack(0)
-                                                
-            elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_d:
-                    self.player.changeImage('idle', 0)
-            
-            elif event.type == pygame.MOUSEMOTION:
-                pass
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                pass
-            elif event.type == pygame.MOUSEBUTTONUP:
-                pass
-            elif event.type == pygame.QUIT:
-                self.exitStatus = 1
+                    self.battle.doPlayerAttack(0)
+                    
         # END EVENT LOOP #
         
-        # BEGIN BACKGROUNDS
-        for obj in self.gameObjects:
-            obj.update()
-        for obj in self.gameObjects:
-            obj.draw(self.screen,obj.rect.topleft)
-        
-        self.cloudsGroup.draw(self.screen)    
-        # END BACKGROUNDS
-        
-        # BEGIN UPDATES #
-        if self.battle:
-            self.screen = self.battle.update(self.screen)
-            
-        else:
-            # BEGIN UPDATE #
-            self.player.update()
-            # END UPDATE #
-            
-            # BEGIN DRAWING #
-            self.player.draw(self.screen, self.player.rect.topleft)    
-            # END DRAWING #
-            
+        self.screen = self.battle.update(self.screen)    
         self.eventList = []
+        
         return self.screen
         #pygame.display.flip()
 
@@ -228,6 +185,10 @@ class Champion(screenObjects.MultiAnimationObject):
         self.hp = self.maxHP
         self.attackDamage = 10
         self.alive = True
+        self.active = False
+        
+    def setBattle(self,battle):
+        self.battle = battle
         
     def update(self):
         if self.currentCD > 0:
@@ -238,41 +199,56 @@ class Champion(screenObjects.MultiAnimationObject):
             self.delay = 0
             if self.frame >= self.get_length():
                 self.frame = 0
-                if self.attacking and self.currentSheet == 'attack':
-                    self.attacking = False
+                if self.attacking != None and self.currentSheet == 'attack':
+                    self.attacking.getAttacked(self.attackDamage)
+                    self.attacking = None
                     self.changeImage('idleB')
         else:
             self.delay += 1
         
     def doAttack(self,target):
         if not self.attacking and self.currentCD == 0:
-            self.attacking = True
+            self.attacking = target
             self.currentCD = self.attackCD
             self.frame = 0
             self.changeImage('attack')
             self.attackSound.play()
             #TODO animation
-            target.getAttacked(self.attackDamage)
-        
+            
     def getAttacked(self,damage):
-        print self.prefix, self.hp
         self.hp -= damage
         self.hurtSound.play()
+        print self.prefix, self.hp
         if self.hp <= 0: self.alive = False
         
 class Enemy(screenObjects.MultiAnimationObject):
-    def __init__(self):
+    def __init__(self, directory, prefix, offset, centerOffset, attackCD, maxHP, attackDamage):
+        self.directory = directory
+        self.prefix = prefix
+        self.offset = offset
+        self.centerOffset = centerOffset
+        self.attackCD = attackCD
+        self.maxHP = maxHP
+        self.attackDamage = attackDamage
+        
         screenObjects.MultiAnimationObject.__init__(self, self.directory, self.prefix, 'idle',self.offset)
         self.currentCD = random.randint(0,self.attackCD)
-        self.attacking = False
         self.hp = self.maxHP
+        
         self.alive = True
+        self.attacking = False
+        self.active = False
+        
         self.frame = 0
         self.delay = 0
         
+    def setBattle(self,battle):
+        self.battle = battle
+        
     def update(self):
-        if self.currentCD > 0:
-            self.currentCD -= 1
+        if self.active:
+            if self.currentCD > 0:
+                self.currentCD -= 1
             
         if self.delay == 2:
             self.changeSubImage(self.frame)
@@ -280,9 +256,8 @@ class Enemy(screenObjects.MultiAnimationObject):
             self.delay = 0
             if self.frame >= self.get_length():
                 self.frame = 0
-                if self.attacking and self.currentSheet == 'attack':
+                if self.attacking:
                     self.attacking = False
-                    self.changeImage('idle')
         else:
             self.delay += 1
         
@@ -300,74 +275,208 @@ class Enemy(screenObjects.MultiAnimationObject):
         
     def getAttacked(self,damage):
         self.hp -= damage
+        self.battle.effects.add(self.getHurtSprite(0))
         if self.hp <= 0:
             self.alive = False
-        
+      
+    def getHurtSprite(self,frameDelay = 1):
+        spr = screenObjects.SheetAnimatedObject(self.directory, self.prefix+'die.png', self.offset, frameDelay)
+        spr.rect = self.rect
+        return spr
+      
 class Battle():
     def __init__(self,dungeon,players,enemies,music='data/music/BattleStance.wav'):
         self.players = players
         self.enemies = enemies
-        self.currentTarget = 0
+        
         self.dungeon = dungeon
         self.music = music
         
+        self.effects = pygame.sprite.Group()
+        #self.effects.add(self.dungeon.banner)
+        
+        self.ui = pygame.sprite.Group()
+        self.targetArrow = Arrow()
+        
+        self.currentTarget = 0
+        self.state = 0 # state 0, start animation, state 1, actual battle, state 2, going onward, state 3, going backward
+        
+        self.bg = None
+        
+    def initialize(self,bg):
+        self.bg = bg
+        
         for i in range(0,len(self.players)):
-            self.players[i].rect.left = self.players[i].centerOffset + (450 - (150*i))
+            self.players[i].active = False
+            self.players[i].rect.left = self.players[i].centerOffset + (300 - (100*i))
             self.players[i].rect.bottom = 668
+            self.players[i].setBattle(self)
+            
         for i in range(0,len(self.enemies)):
-            self.enemies[i].rect.right = self.enemies[i].centerOffset + (1024 - (150*i))
+            self.enemies[i].active = False
+            self.enemies[i].rect.right = self.enemies[i].centerOffset + (1024 - (100*i))
             self.enemies[i].rect.bottom = 668
-    
+            self.enemies[i].setBattle(self)
+        
+        self.targetArrow.rect.bottom = self.enemies[self.currentTarget].rect.centery
+        self.targetArrow.rect.centerx = self.enemies[self.currentTarget].rect.centerx
+        
+        self.players[0].rect.right = 0
+        self.players[0].changeImage('walkB')
+        self.players[0].active = True
+        
     def update(self,screen):
-        # UPDATE
+        screen.blit(self.bg,(0,0))
+        
+        if self.state == 0:
+            # Make the main character walk into position
+            mc = self.players[0]
+            mc.rect.x += 15
+            
+            for i in range(1,len(self.players)):
+                if mc.rect.left >= self.players[i].centerOffset + (300 - (100*i)):
+                    self.players[i].active = True
+            
+            if mc.rect.left >= 300 + mc.centerOffset:
+                mc.rect.left = 300 + mc.centerOffset
+                mc.changeImage('idleB')
+                for en in self.enemies: en.active = True
+                
+                self.ui.add(self.targetArrow)
+                pygame.mixer.music.play()
+                
+                self.state = 1
+                    
+        elif self.state == 1:
+            
+            for i in range(0,len(self.enemies)):
+                en = self.enemies[i]
+                if en.alive and en.currentCD == 0:
+                    self.doEnemyAttack(i)
+                    en.currentCD = en.attackCD
+            
+            for en in self.enemies:
+                if not en.alive:
+                    self.enemies.remove(en)
+                    self.effects.add(en.getHurtSprite())
+                    self.changeTarget(1)
+            
+            if len(self.enemies) == 0:
+                if len(self.effects) == 0:
+                    self.dungeon.endBattle()
+                  
+        # Onward Animation
+        elif self.state == 2:
+            mc = self.players[0]
+            mc.rect.x += 15
+            if mc.rect.left >= 1024:
+                self.dungeon.startBattle()
+            
+        # Exit Animation
+        elif self.state == 3:
+            mc = self.players[0]
+            mc.rect.x -= 15
+            if mc.rect.right < 0:
+                mc.flipX()
+                self.dungeon.finished = True
+                self.dungeon.callScene = "endRun"
+                
+            for i in range(1,len(self.players)):
+                if mc.rect.left <= self.players[i].centerOffset + (300 - (100*i)):
+                    self.players[i].active = False
+                
         for ch in self.players:
             ch.update()
-        for i in range(0,len(self.enemies)):
-            en = self.enemies[i]
-            en.update()
-            if en.alive and en.currentCD == 0:
-                self.doEnemyAttack(i)
-                en.currentCD = en.attackCD
         
         for en in self.enemies:
-            if not en.alive:
-                self.enemies.remove(en)
-                
-        if len(self.enemies) == 0:
-            self.dungeon.endBattle()
+            en.update()
             
+        for ef in self.effects:
+            ef.update()
+        
+        for ui in self.ui:
+            ui.update()        
+        
         # DRAW
         for ch in self.players:
-            if ch.alive:
+            if ch.alive and ch.active:
                 ch.draw(screen,ch.rect.topleft)
+        
         for en in self.enemies:
             if en.alive:
                 en.draw(screen,en.rect.topleft)
+            
+        self.effects.draw(screen)
+        self.ui.draw(screen)
+        
         return screen
     
+    def onward(self):
+        self.state = 2
+        for pl in self.players:
+                pl.changeImage('idleB',0)
+                pl.attacking = False
+        mc = self.players[0]
+        mc.changeImage('walkB',0)
+        
+    def retreat(self):
+        self.state = 3
+        for pl in self.players:
+                pl.changeImage('idleB',0)
+        mc = self.players[0]
+        mc.flipX()
+        mc.changeImage('walkB',0)
+    
     def doPlayerAttack(self,i):
-        en = self.enemies[self.currentTarget]
-        while not en.alive:
-            self.changeTarget(1)
+        if self.state == 1:
             en = self.enemies[self.currentTarget]
-        self.players[i].doAttack(en)
-        
+            while not en.alive:
+                self.changeTarget(1)
+                en = self.enemies[self.currentTarget]
+            self.players[i].doAttack(en)
+            
     def doEnemyAttack(self,i):
-        j = self.enemies[i].chooseTarget()
-        while not self.players[j].alive:
+        if self.state == 1:
             j = self.enemies[i].chooseTarget()
-        
-        print "attacking", self.enemies[i], self.enemies[i].currentCD, '/', self.enemies[i].attackCD    
-        self.enemies[i].doAttack(self.players[j])
+            while not self.players[j].alive:
+                j = self.enemies[i].chooseTarget()
+            
+            self.enemies[i].doAttack(self.players[j])
         
     def changeTarget(self,amt):
         self.currentTarget += amt
         l = len(self.enemies)
-        self.currentTarget = (l + amt) % l
-
+        if l > 0:
+            self.currentTarget = (l + self.currentTarget) % l
+            self.targetArrow.rect.bottom = self.enemies[self.currentTarget].rect.centery
+            self.targetArrow.rect.centerx = self.enemies[self.currentTarget].rect.centerx
+        else:
+            self.targetArrow.kill()
 class Effect(screenObjects.AnimatedObject):
+    def __init__(self,topleft,length,directory,order,delay,prefix,loop):
+        screenObjects.AnimatedObject.__init__(self, topleft, length, directory, order, delay, prefix, loop)
+        
+class Banner(Effect):
     def __init__(self):
-        screenObjects.AnimatedObject.__init__(self, self.rect.topleft, animLength, directory, order, delay, prefix, loop, paralaxValue)
+        order = ['01','02','03','04','05','06','07','08','09','10',
+                 '11','12','13','14','15','16','17','18','19','20',
+                 '21','22','23','24','25','26','27','28','29','30']
+        Effect.__init__(self,(0,0),30,'data/UITop',order,0,'layout_UI_2_000',False)
+
+
+class Arrow(screenObjects.StaticObject):
+    def __init__(self):
+        img = screenObjects.load_image('data/icons', 'arrow2.png')
+        screenObjects.StaticObject.__init__(self, img, (0,0))
+        
+        self.bounce = -5
+        self.bounceDir = 1
+        
+    def update(self):
+        self.rect.y += self.bounce
+        self.bounce += self.bounceDir
+        if self.bounce == 5: self.bounceDir = -1
+        if self.bounce == -5: self.bounceDir = 1
         
 class Ezreal(Champion):
     def __init__(self):
@@ -379,9 +488,7 @@ class Ezreal(Champion):
         self.maxHP = 100
         self.attackSound = pygame.mixer.Sound('data/EffectSFX/EZ_Attack_1.mp3')
         self.hurtSound = pygame.mixer.Sound('data/EffectSFX/EzDamage.wav')
-        
         Champion.__init__(self)
-        
 class Ahri(Champion):
     def __init__(self):
         self.directory = 'data/Ahri'
@@ -391,10 +498,8 @@ class Ahri(Champion):
         self.centerOffset = 50
         self.maxHP = 100
         self.attackSound = pygame.mixer.Sound('data/AhriSFX/Attack1_c.wav')
-        self.hurtSound = pygame.mixer.Sound('data/AhriSFX/AhriDamage.wav')
-        
+        self.hurtSound = pygame.mixer.Sound('data/AhriSFX/AhriDamage.wav')        
         Champion.__init__(self)
-        
 class Soraka(Champion):
     def __init__(self):
         self.directory = 'data/Soraka'
@@ -404,10 +509,8 @@ class Soraka(Champion):
         self.centerOffset = 0
         self.maxHP = 100
         self.attackSound = pygame.mixer.Sound('data/EffectSFX/SorakaAttack1.wav')
-        self.hurtSound = pygame.mixer.Sound('data/EffectSFX/SorakaDamage.wav')
-        
+        self.hurtSound = pygame.mixer.Sound('data/EffectSFX/SorakaDamage.wav')        
         Champion.__init__(self)
-
 class Rengar(Champion):
     def __init__(self):
         self.directory = 'data/Rengar'
@@ -418,17 +521,10 @@ class Rengar(Champion):
         self.maxHP = 100
         self.attackSound = pygame.mixer.Sound('data/EffectSFX/Attack3.wav')
         self.hurtSound = pygame.mixer.Sound('data/EffectSFX/ReceivingDamage2.wav')
-        
         Champion.__init__(self)
-
 class Poro(Enemy):
     def __init__(self):
-        self.directory = 'data/Poro1'
-        self.prefix = 'poro_'
-        self.offset = 200
-        self.attackCD = 160
-        self.centerOffset = 0
-        self.attackDamage = 10
-        self.maxHP = 40
-        
-        Enemy.__init__(self)
+        Enemy.__init__(self, 'data/Poro1', 'poro_', 200, 0, 160, 40, 10)
+class MrPoro(Enemy):
+    def __init__(self):
+        Enemy.__init__(self, 'data/Poro2', 'mrporo_', 200, 0, 160, 100, 15)        

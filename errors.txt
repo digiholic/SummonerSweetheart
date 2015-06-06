@@ -2,8 +2,8 @@
 errors listed below, and try again.
 
 
-File "game/script00.rpy", line 678: expected statement.
-    ifraka_rp > 100:
-                   ^
+File "game/screens.rpy", line 487: u'action' is not a keyword argument or valid child for the screen statement.
+    action Return(True)
+          ^
 
 Ren'Py Version: Ren'Py 6.18.3.761
