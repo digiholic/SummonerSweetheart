@@ -1,4 +1,4 @@
-Sat Jun  6 18:16:51 2015
+Sat Jun  6 21:06:41 2015
 Linux-3.11.0-26-generic-x86_64-with-debian-wheezy-sid
 Ren'Py 6.18.3.761
 Summoner Sweetheart 0.9
@@ -197,24 +197,8 @@ Texture testing:
 Performance test:
 - Target is 5 frames in 0.333333333333 seconds.
 - Frame drawn at 0.000000 seconds.
-- Frame drawn at 0.017311 seconds.
-- Frame drawn at 0.054563 seconds.
-- Frame drawn at 0.069203 seconds.
-- Frame drawn at 0.087201 seconds.
-- 0.087201 seconds to render 5 frames.
-Traceback (most recent call last):
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/bootstrap.py", line 289, in bootstrap
-    renpy.main.main()
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/main.py", line 357, in main
-    run(restart)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/main.py", line 77, in run
-    renpy.execution.run_context(True)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/execution.py", line 598, in run_context
-    context.run()
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/execution.py", line 330, in run
-    node = self.call(e.label, return_site=self.next_node.name)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/execution.py", line 371, in call
-    return renpy.game.script.lookup(label)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/script.py", line 595, in lookup
-    raise ScriptError("could not find label '%s'." % str(label))
-ScriptError: could not find label 'endRun'.
+- Frame drawn at 0.017604 seconds.
+- Frame drawn at 0.056192 seconds.
+- Frame drawn at 0.070529 seconds.
+- Frame drawn at 0.088387 seconds.
+- 0.088387 seconds to render 5 frames.

@@ -673,25 +673,6 @@ label dungeon:
     call normalize_rp
     return
 
-label TestTrigger:
-    show expression DungeonScene()
-    show raka vr flat at right
-    ez flat "Testing dialogue scene"
-    call screen dungeon_run()
-    
-label victoryScreen:
-    scene expression DungeonScene()
-    "YOU WIN"
-    menu:
-        "Press on":
-            ez happy "Let's keep going!"
-            $ summonersRift.getDungeon().battle.onward()
-            call screen dungeon_run()
-        "That's enough":
-            ez flat "I think that's far enough for now, let's heal up and come back later!"
-            $ summonersRift.getDungeon().battle.retreat()
-            call screen dungeon_run()
-            
 label normalize_rp:
     if route == "Ezreal":
         if ahri_rp > 100:

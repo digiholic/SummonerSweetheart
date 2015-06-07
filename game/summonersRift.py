@@ -63,11 +63,11 @@ class Dungeon():
         else:    
             self.battleChamps = []
         
-        self.battles = [Battle(self, self.battleChamps, [Poro(),Poro()]           ),
+        self.battles = [Battle(self, self.battleChamps, [Poro(),Poro()], "afterFirstBattle"),
                         #Battle(self, self.battleChamps, [Poro(),Poro(),Poro()]    ),
                         #Battle(self, self.battleChamps, [Poro(),MrPoro(),Poro()]  ),
                         #Battle(self, self.battleChamps, [MrPoro(),Poro(),MrPoro()]),
-                        Battle(self, self.battleChamps, [Cinderling(-150), Brambleback(), Cinderling(-100)], 'data/music/bossBattle.ogg')]
+                        Battle(self, self.battleChamps, [Cinderling(-150), Brambleback(), Cinderling(-100)], music = 'data/music/bossBattle.ogg')]
         
         self.startBattle()
         
@@ -80,7 +80,7 @@ class Dungeon():
         pygame.mixer.music.stop()
         self.victorySound.play()
         self.currentBattle += 1
-        self.callScene = "victoryScreen"
+        self.callScene = self.battle.endScene
         
     def addEvent(self,event):
         self.eventList.append(event)
@@ -184,7 +184,6 @@ class Champion(screenObjects.MultiAnimationObject):
         self.delay = 0
         self.currentCD = 0
         self.hp = self.maxHP
-        self.attackDamage = 10
         self.alive = True
         self.active = False
         
@@ -286,9 +285,10 @@ class Enemy(screenObjects.MultiAnimationObject):
         return spr
       
 class Battle():
-    def __init__(self,dungeon,players,enemies,music='data/music/BattleStance.wav'):
+    def __init__(self,dungeon,players,enemies,endScene = "victoryScreen", music='data/music/BattleStance.wav'):
         self.players = players
         self.enemies = enemies
+        self.endScene = endScene
         
         self.dungeon = dungeon
         self.music = music
@@ -434,7 +434,10 @@ class Battle():
             while not en.alive:
                 self.changeTarget(1)
                 en = self.enemies[self.currentTarget]
-            self.players[i].doAttack(en)
+            try:
+                self.players[i].doAttack(en)
+            except:
+                pass
             
     def doEnemyAttack(self,i):
         if self.state == 1:
@@ -485,6 +488,7 @@ class Ezreal(Champion):
         self.prefix = 'ezreal_'
         self.offset = 250
         self.attackCD = 120
+        self.attackDamage = 10
         self.centerOffset = 0
         self.maxHP = 100
         self.attackSound = pygame.mixer.Sound('data/EffectSFX/EZ_Attack_1.mp3')
@@ -495,9 +499,10 @@ class Ahri(Champion):
         self.directory = 'data/Ahri'
         self.prefix = 'ahri_'
         self.offset = 275
-        self.attackCD = 120
+        self.attackCD = 180
+        self.attackDamage = 15
         self.centerOffset = 50
-        self.maxHP = 100
+        self.maxHP = 80
         self.attackSound = pygame.mixer.Sound('data/AhriSFX/Attack1_c.wav')
         self.hurtSound = pygame.mixer.Sound('data/AhriSFX/AhriDamage.wav')        
         Champion.__init__(self)
@@ -506,7 +511,8 @@ class Soraka(Champion):
         self.directory = 'data/Soraka'
         self.prefix = 'soraka_'
         self.offset = 180
-        self.attackCD = 120
+        self.attackCD = 80
+        self.attackDamage = 5
         self.centerOffset = 0
         self.maxHP = 100
         self.attackSound = pygame.mixer.Sound('data/EffectSFX/SorakaAttack1.wav')
@@ -517,9 +523,10 @@ class Rengar(Champion):
         self.directory = 'data/Rengar'
         self.prefix = 'rengar_'
         self.offset = 250
-        self.attackCD = 120
+        self.attackCD = 100
+        self.attackDamage = 10
         self.centerOffset = 50
-        self.maxHP = 100
+        self.maxHP = 120
         self.attackSound = pygame.mixer.Sound('data/EffectSFX/Attack3.wav')
         self.hurtSound = pygame.mixer.Sound('data/EffectSFX/ReceivingDamage2.wav')
         Champion.__init__(self)
