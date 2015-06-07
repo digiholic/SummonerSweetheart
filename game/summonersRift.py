@@ -14,6 +14,9 @@ def getDungeon():
         dungeon = Dungeon()
         return dungeon
     
+def getRetList():
+    global dungeon
+    return [dungeon.gifts,dungeon.bossesDefeated]
 class Dungeon():
     def __init__(self,debug=False):
         self.camera_rect = pygame.Rect(0,0,1024,768)
@@ -24,6 +27,7 @@ class Dungeon():
         self.route = True
         self.currentBattle = 0
         self.battle = None
+        self.bossesDefeated = 0
         
         #self.battle = None
         
@@ -67,8 +71,12 @@ class Dungeon():
                         #Battle(self, self.battleChamps, [Poro(),Poro(),Poro()]    ),
                         #Battle(self, self.battleChamps, [Poro(),MrPoro(),Poro()]  ),
                         #Battle(self, self.battleChamps, [MrPoro(),Poro(),MrPoro()]),
-                        Battle(self, self.battleChamps, [Cinderling(-150), Brambleback(), Cinderling(-100)], music = 'data/music/bossBattle.ogg')]
+                        Battle(self, self.battleChamps, [Cinderling(-150), Brambleback(), Cinderling(-100)], music = 'data/music/bossBattle.ogg'),
+                        Battle(self, self.battleChamps, [MrPoro(), MrPoro(), Cinderling()])]
         
+        self.gifts = pass_list[1]
+        self.specialMoves = pass_list[2]
+        self.sceneKeys = pass_list[3]
         self.startBattle()
         
     def startBattle(self):
@@ -363,6 +371,9 @@ class Battle():
                     self.changeTarget(1)
             
             if len(self.enemies) == 0:
+                for ch in self.players:
+                    ch.attacking = None
+                    ch.changeImage('idleB')
                 if len(self.effects) == 0:
                     self.dungeon.endBattle()
                   
@@ -380,7 +391,6 @@ class Battle():
             if mc.rect.right < 0:
                 mc.flipX()
                 self.dungeon.finished = True
-                self.dungeon.callScene = "endRun"
                 
             for i in range(1,len(self.players)):
                 if mc.rect.left <= self.players[i].centerOffset + (300 - (100*i)):
@@ -416,7 +426,7 @@ class Battle():
         self.state = 2
         for pl in self.players:
                 pl.changeImage('idleB',0)
-                pl.attacking = False
+                pl.attacking = None
         mc = self.players[0]
         mc.changeImage('walkB',0)
         
@@ -430,14 +440,15 @@ class Battle():
     
     def doPlayerAttack(self,i):
         if self.state == 1:
-            en = self.enemies[self.currentTarget]
-            while not en.alive:
-                self.changeTarget(1)
+            if len(self.enemies) > 0:
                 en = self.enemies[self.currentTarget]
-            try:
-                self.players[i].doAttack(en)
-            except:
-                pass
+                while not en.alive:
+                    self.changeTarget(1)
+                    en = self.enemies[self.currentTarget]
+                try:
+                    self.players[i].doAttack(en)
+                except:
+                    pass
             
     def doEnemyAttack(self,i):
         if self.state == 1:
@@ -537,14 +548,23 @@ class MrPoro(Enemy):
     def __init__(self):
         Enemy.__init__(self, 'data/Poro2', 'mrporo_', 200, 0, 160, 100, 15)
 class Cinderling(Enemy):
-    def __init__(self,offset = 100):
+    def __init__(self,offset = 0):
         Enemy.__init__(self, 'data/Cinderling', 'cinderling_', 200, offset, 60, 60, 5)
 class Brambleback(Enemy):
     def __init__(self):
-        Enemy.__init__(self, 'data/Brambleback', 'brambleback_', 400, 200, 160, 200, 20)
+        Enemy.__init__(self, 'data/Brambleback', 'brambleback_', 400, 200, 160, 10, 20)
+        self.zonya = False
+        self.zTimer = 0
+    
+    def update(self):
+        Enemy.update(self)
+        if self.zonya:
+            self.zTimer += 1
+            if self.zTimer == 80:
+                self.battle.dungeon.callScene = "redBattle"
         
     def getAttacked(self,damage):
         self.hp -= damage
         if self.hp <= 0:
-            self.alive = False
-              
+            self.changeImage('zonya')
+            self.zonya = True

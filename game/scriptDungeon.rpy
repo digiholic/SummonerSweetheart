@@ -18,8 +18,27 @@ label victoryScreen:
             call screen dungeon_run()
             
 label redBattle:
-  scene expression DungeonScene()
-  
+    scene expression DungeonScene()
+    $ redCount = 0
+    
+    if redCount == 0:
+      ez sad "Why is this boss so hard to annihilate?! Nothing seems to be working."
+      ez surprise "It’s as if this monster has some kind of buff... That’s it! This is the hacker’s doing."
+      ez surprise "Wait, that golden stance – that’s Zhonya’s! A players-only item that lets you become invulnerable for a couple seconds. How does he have it?"
+      ez angry "Argh. I think I need to ask someone for help."
+    elif redCount == 1:
+      ez angry "This is so hopeless. Although I hate to admit it, I {i}really{/i} need to ask the club for some advice."
+      ez angry "At this rate, I’ll be wasting all my time bumping into the same problem over and over again."
+      ez flat "There has to be {i}someone{/i} who knows what to do."
+    elif redCount == 2:
+      ez angry "Okay, now I’m just being stupid and stubborn."
+      ez angry "Why am I diving into the dungeon when I know I can’t kill the boss without some sort of help?"
+      ez sad "Me and my pride…"
+      
+    $ redCount += 1
+    #call endRun
+    call screen dungeon_run()
+    
 label afterFirstBattle:
   scene expression DungeonScene()
   "YOU WIN"

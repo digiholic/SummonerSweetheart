@@ -2,16 +2,8 @@
 errors listed below, and try again.
 
 
-File "game/scriptDungeon.rpy", line 27: expected statement.
-    h “Congratulations, Summoner! You’ve defeated the first minion of the game. You must be brimming with pride and glee.”
-                      ^
-
-File "game/scriptDungeon.rpy", line 28: expected statement.
-    h “Well, that will be short-lived, I assure you. No matter how you may try and struggle, you stand no chance of defeating {i}me{/i}!”
-           ^
-
-File "game/scriptDungeon.rpy", line 29: expected statement.
-    h “If you still think you stand a chance, you are welcome to try! But, first, you have to get past all of my minions! *Cackling*”
-                                            ^
+File "game/screens.rpy", line 488: u'return' is not a keyword argument or valid child for the screen statement.
+    return
+          ^
 
 Ren'Py Version: Ren'Py 6.18.3.761

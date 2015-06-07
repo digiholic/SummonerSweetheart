@@ -77,6 +77,7 @@ init python:
           renpygame.image.save(self.retScreen,os.path.join(renpy.config.gamedir,'bg/dungeon.png'))
           renpy.call(callScene)
         if self.dungeon.finished:
+          #renpy.ast.Return()
           return render
         else:
           renpy.redraw(self,0.03)
@@ -214,6 +215,7 @@ label name_input:
 label prologue:
     $ dungeon_visited = False
     $ dungeon_visits_no_combo = 0
+    $ redCount = 0
     
     $ bosses_defeated = 0
     stop music fadeout 1.0
@@ -626,9 +628,9 @@ label dungeon:
         $ comboSkillsUnlocked = [jayce_combo, rumble_combo, vik_combo]
         $ SceneKeys = (sum(comboSkillsUnlocked), dungeon_visits_no_combo, bosses_defeated, vik_confessed)
         $ pass_list = [False, giftsInventory, comboSkillsUnlocked, SceneKeys]
+        $ summonersRift.getDungeon().loadFromVN(pass_list)
         call screen dungeon_run()
-        ""
-        $ [giftsReturned,n_bossesDefeated] = summonersRift.main(set_mode(),pass_list)
+        $ [giftsReturned,n_bossesDefeated] = summonersRift.getRetList()
         $ have_hammer = giftsReturned[0]
         $ have_sketch = giftsReturned[1]
         $ have_rubix = giftsReturned[2]
@@ -639,8 +641,7 @@ label dungeon:
         $ pass_list = [True, giftsInventory, comboSkillsUnlocked, SceneKeys]
         $ summonersRift.getDungeon().loadFromVN(pass_list)
         call screen dungeon_run()
-        ""
-        $ [giftsReturned,n_bossesDefeated] = summonersRift.main(set_mode(),pass_list)
+        $ [giftsReturned,n_bossesDefeated] = summonersRift.getRetList()
         $ have_charm = giftsReturned[0]
         $ have_bone = giftsReturned[1]
         $ have_clip = giftsReturned[2]
