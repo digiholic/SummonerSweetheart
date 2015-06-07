@@ -102,7 +102,7 @@ label beforeHacker:
       so "U-um, actually, nevermind."
       ez happy "Alright! Like I was saying, onward—"
       
-      summonersRift.getDungeon().battle.betray()
+      $ summonersRift.getDungeon().battle.betray()
       call screen dungeon_run()
       return
       
@@ -139,7 +139,7 @@ label beforeHacker:
       so "That’s right! I won’t assist you any further, Dr. Reveck! What you’re doing is wrong, no matter how I look at it."
       so "This isn’t about me anymore; even if I have to bear the weight of Orianna’s death, forcing that despair on others is a fate much worse."
       h "Unable to fulfill your duties until the end, I see. So be it! Fight me if you will, or knowing your own failures, will you turn tail now?"
-      call dungeon_run()
+      call screen dungeon_run()
       return
       
   elif route == "Leona":
@@ -157,7 +157,8 @@ label betrayal:
       show raka vr sad at right
       so "…"
       so "I must correct my sins, Ezreal. I’m sorry."
-      call AfterBetrayal
-
+      call dungeon_run()
+      return
+      
 label AfterBetrayal:
     pass

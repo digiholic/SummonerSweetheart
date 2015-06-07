@@ -277,7 +277,7 @@ class Enemy(screenObjects.MultiAnimationObject):
             target.getAttacked(self.attackDamage)
         
     def chooseTarget(self):
-        return random.randint(0,3)
+        return random.randint(0,len(self.battle.players))
         
     def getAttacked(self,damage):
         self.hp -= damage
@@ -582,15 +582,22 @@ class FinalBattle(Battle):
         return screen
     
     def betray(self):
-        betrayer = self.players[2]
-        betrayer.rect.x = self.enemies[0].rect.x - 100
+        self.players.remove(self.players[2])
+        betrayer = EnemyRaka()
+        betrayer.rect.x = self.enemies[0].rect.x - 150
+        betrayer.rect.bottom = self.enemies[0].rect.bottom
+        
         betrayer.flipX()
+        
         poofSprite = screenObjects.SheetAnimatedObject('data/Soraka/SFX', 'raka_poof.png', 160, 0)
+        
         poofSprite.rect.bottom = betrayer.rect.bottom
         poofSprite.rect.centerx = betrayer.rect.centerx
         self.effects.add(poofSprite)
+        
         pygame.mixer.Sound('data/EffectSFX/flash.wav').play()
-            
+        self.enemies.append(betrayer)
+          
 class Effect(screenObjects.AnimatedObject):
     def __init__(self,topleft,length,directory,order,delay,prefix,loop):
         screenObjects.AnimatedObject.__init__(self, topleft, length, directory, order, delay, prefix, loop)
@@ -727,3 +734,17 @@ class Baron(Enemy):
 class Doran(Enemy):
     def __init__(self):
         Enemy.__init__(self, 'data/Doran', 'doran_', 100, 0, 60, 600, 20)
+        
+    def getAttacked(self,damage):
+        self.hp -= damage
+        if self.hp <= 0:
+            self.alive = False
+            
+class EnemyRaka(Enemy):
+    def __init__(self):
+        Enemy.__init__(self, 'data/Soraka', 'soraka_', 180, 0, 80, 100, 5)
+        
+    def getAttacked(self,damage):
+        self.hp -= damage
+        if self.hp <= 0:
+            self.alive = False
