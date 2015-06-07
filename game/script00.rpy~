@@ -41,7 +41,8 @@ define s = Character('Shen')
 define z = Character('Dr. Zen')
 define te = Character('Teemo')
 define h = Character('Hacker')
-    
+define na = Character('Baron Nashor')
+
 init python:
   import pygame
   
@@ -58,8 +59,6 @@ init python:
       super(DungeonRun, self).__init__(**kwargs)
       self.width = 1024
       self.height = 768
-      #self.dungeon = dungeon.getDungeon()
-      #self.dungeon.loadFromVN([])
       self.retScreen = None
       self.dungeon = summonersRift.getDungeon()
       
@@ -77,7 +76,6 @@ init python:
           renpygame.image.save(self.retScreen,os.path.join(renpy.config.gamedir,'bg/dungeon.png'))
           renpy.call(callScene)
         if self.dungeon.finished:
-          renpy.ast.Return()
           return render
         else:
           renpy.redraw(self,0.03)
@@ -86,6 +84,9 @@ init python:
     def event(self, ev, x, y, st):
       if not self.dungeon is None:
         self.dungeon.addEvent(ev)    
+      if self.dungeon.finished:
+        self.dungeon.finished = False
+        return ""
       
   import transitionScreen
   class DungeonScene(renpy.Displayable):
@@ -121,6 +122,11 @@ init python:
     elif route == "Leona":
       mc2(what, **kwargs)            
 
+  def vrmc(what, **kwargs):
+    if route == "Ezreal":
+      ez(what, **kwargs)
+    elif route == "Leona":
+      mc2(what, **kwargs)
 ######################################### GAME SCRIPT
 ## The splash screen.
 label splashscreen:
@@ -630,6 +636,8 @@ label dungeon:
         $ pass_list = [False, giftsInventory, comboSkillsUnlocked, SceneKeys]
         $ summonersRift.getDungeon().loadFromVN(pass_list)
         call screen dungeon_run()
+        scene expression DungeonScene()
+        scene bg black with dissolve
         $ [giftsReturned,n_bossesDefeated] = summonersRift.getRetList()
         $ have_hammer = giftsReturned[0]
         $ have_sketch = giftsReturned[1]
@@ -641,6 +649,8 @@ label dungeon:
         $ pass_list = [True, giftsInventory, comboSkillsUnlocked, SceneKeys]
         $ summonersRift.getDungeon().loadFromVN(pass_list)
         call screen dungeon_run()
+        scene expression DungeonScene()
+        scene bg black with dissolve
         $ [giftsReturned,n_bossesDefeated] = summonersRift.getRetList()
         $ have_charm = giftsReturned[0]
         $ have_bone = giftsReturned[1]
@@ -657,10 +667,10 @@ label dungeon:
             $ vik_rp = vik_rp + 15
     else:
         if route == "Ezreal":
-            if not ahri_combo and not rango_combo and not raka_combo:
+            if not ahri_combo and not rango_combo and not raka_combo and redCount > 0:
                 call unlock_combo1
         elif route == "Leona":
-            if not jayce_combo and not vik_combo and not rumble_combo:
+            if not jayce_combo and not vik_combo and not rumble_combo and redCount > 0:
                 call unlock_combo1
         $ dungeon_visits_no_combo = dungeon_visits_no_combo + 1
         if route == "Ezreal":

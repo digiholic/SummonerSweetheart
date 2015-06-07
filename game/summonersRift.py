@@ -18,7 +18,7 @@ def getRetList():
     global dungeon
     return [dungeon.gifts,dungeon.bossesDefeated]
 class Dungeon():
-    def __init__(self,debug=False):
+    def __init__(self):
         self.camera_rect = pygame.Rect(0,0,1024,768)
         
         self.banner = Banner() # This one's big, want to load it only once
@@ -45,9 +45,6 @@ class Dungeon():
         
         self.victorySound = pygame.mixer.Sound('data/music/VictoryTheme2.wav')
         
-        self.clock = pygame.time.Clock()
-        
-        
     """
     def run(self):
         self.clock = pygame.time.Clock()
@@ -71,6 +68,8 @@ class Dungeon():
                         #Battle(self, self.battleChamps, [Poro(),Poro(),Poro()]    ),
                         #Battle(self, self.battleChamps, [Poro(),MrPoro(),Poro()]  ),
                         #Battle(self, self.battleChamps, [MrPoro(),Poro(),MrPoro()]),
+                        FinalBattle(self, self.battleChamps),
+                        Battle(self, self.battleChamps, [Baron()],music = 'data/music/bossBattle.ogg'),
                         Battle(self, self.battleChamps, [Cinderling(-150), Brambleback(), Cinderling(-100)], music = 'data/music/bossBattle.ogg'),
                         Battle(self, self.battleChamps, [MrPoro(), MrPoro(), Cinderling()])]
         
@@ -91,7 +90,8 @@ class Dungeon():
         self.callScene = self.battle.endScene
         
     def addEvent(self,event):
-        self.eventList.append(event)
+        if event.type == pygame.KEYDOWN:
+            self.eventList.append(event.key)
     
     def getScreen(self):
         return self.screen
@@ -130,22 +130,20 @@ class Dungeon():
         self.screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
         
         for event in self.eventList:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.exitStatus = 1
-                elif event.key == pygame.K_LEFT:
-                    self.battle.changeTarget(1)
-                elif event.key == pygame.K_RIGHT:
-                    self.battle.changeTarget(-1)
-                elif event.key == pygame.K_q:
-                    self.battle.doPlayerAttack(3)
-                elif event.key == pygame.K_w:
-                    self.battle.doPlayerAttack(2)
-                elif event.key == pygame.K_e:
-                    self.battle.doPlayerAttack(1)
-                elif event.key == pygame.K_r:
-                    self.battle.doPlayerAttack(0)
-                    
+            if event == pygame.K_ESCAPE:
+                self.exitStatus = 1
+            elif event == pygame.K_LEFT:
+                self.battle.changeTarget(1)
+            elif event == pygame.K_RIGHT:
+                self.battle.changeTarget(-1)
+            elif event == pygame.K_q:
+                self.battle.doPlayerAttack(3)
+            elif event == pygame.K_w:
+                self.battle.doPlayerAttack(2)
+            elif event == pygame.K_e:
+                self.battle.doPlayerAttack(1)
+            elif event == pygame.K_r:
+                self.battle.doPlayerAttack(0)
         # END EVENT LOOP #
         
         self.screen = self.battle.update(self.screen)    
@@ -239,7 +237,7 @@ class Enemy(screenObjects.MultiAnimationObject):
         self.maxHP = maxHP
         self.attackDamage = attackDamage
         
-        screenObjects.MultiAnimationObject.__init__(self, self.directory, self.prefix, 'idle',self.offset)
+        screenObjects.MultiAnimationObject.__init__(self, self.directory, self.prefix, 'idle', self.offset)
         self.currentCD = random.randint(0,self.attackCD)
         self.hp = self.maxHP
         
@@ -391,6 +389,7 @@ class Battle():
             if mc.rect.right < 0:
                 mc.flipX()
                 self.dungeon.finished = True
+                pygame.mixer.music.fadeout(1000)
                 
             for i in range(1,len(self.players)):
                 if mc.rect.left <= self.players[i].centerOffset + (300 - (100*i)):
@@ -467,10 +466,135 @@ class Battle():
             self.targetArrow.rect.centerx = self.enemies[self.currentTarget].rect.centerx
         else:
             self.targetArrow.kill()
+
+class FinalBattle(Battle):
+    def __init__(self, dungeon, players):
+        enemies = [Doran()]
+        
+        Battle.__init__(self, dungeon, players, enemies)
+        self.players = players
+        self.enemies = enemies
+        self.endScene = ""
+        
+        self.dungeon = dungeon
+        self.music = ""
+        
+        self.effects = pygame.sprite.Group()
+        #self.effects.add(self.dungeon.banner)
+        
+        self.currentTarget = 0
+        self.state = 0 # state 0, start animation, state 1, actual battle, state 2, going onward, state 3, going backward
+        
+        self.bg = None
+    
+    def update(self,screen):
+        screen.blit(self.bg,(0,0))
+        
+        if self.state == 0:
+            # Make the main character walk into position
+            mc = self.players[0]
+            mc.rect.x += 15
+            
+            for i in range(1,len(self.players)):
+                if mc.rect.left >= self.players[i].centerOffset + (300 - (100*i)):
+                    self.players[i].active = True
+            
+            if mc.rect.left >= 300 + mc.centerOffset:
+                mc.rect.left = 300 + mc.centerOffset
+                mc.changeImage('idleB')
+                for en in self.enemies: en.active = True
+                
+                self.ui.add(self.targetArrow)
+                
+                self.state = 4
+                self.dungeon.callScene = 'beforeHacker'
+                
+        elif self.state == 1:
+            
+            for i in range(0,len(self.enemies)):
+                en = self.enemies[i]
+                if en.alive and en.currentCD == 0:
+                    self.doEnemyAttack(i)
+                    en.currentCD = en.attackCD
+            
+            for en in self.enemies:
+                if not en.alive:
+                    self.enemies.remove(en)
+                    self.effects.add(en.getHurtSprite())
+                    self.changeTarget(1)
+            
+            if len(self.enemies) == 0:
+                for ch in self.players:
+                    ch.attacking = None
+                    ch.changeImage('idleB')
+                if len(self.effects) == 0:
+                    self.dungeon.endBattle()
+                  
+        # Onward Animation
+        elif self.state == 2:
+            mc = self.players[0]
+            mc.rect.x += 15
+            if mc.rect.left >= 1024:
+                self.dungeon.startBattle()
+            
+        # Exit Animation
+        elif self.state == 3:
+            mc = self.players[0]
+            mc.rect.x -= 15
+            if mc.rect.right < 0:
+                mc.flipX()
+                self.dungeon.finished = True
+                pygame.mixer.music.fadeout(1000)
+                
+            for i in range(1,len(self.players)):
+                if mc.rect.left <= self.players[i].centerOffset + (300 - (100*i)):
+                    self.players[i].active = False
+                
+        elif self.state == 4: #betrayal
+            if len(self.effects) == 0:
+                self.state = 1
+                self.dungeon.callScene = 'betrayal'
+            
+        for ch in self.players:
+            ch.update()
+        
+        for en in self.enemies:
+            en.update()
+            
+        for ef in self.effects:
+            ef.update()
+        
+        for ui in self.ui:
+            ui.update()        
+        
+        # DRAW
+        for ch in reversed(self.players):
+            if ch.alive and ch.active:
+                ch.draw(screen,ch.rect.topleft)
+        
+        for en in self.enemies:
+            if en.alive:
+                en.draw(screen,en.rect.topleft)
+            
+        self.effects.draw(screen)
+        self.ui.draw(screen)
+        
+        return screen
+    
+    def betray(self):
+        betrayer = self.players[2]
+        betrayer.rect.x = self.enemies[0].rect.x - 100
+        betrayer.flipX()
+        poofSprite = screenObjects.SheetAnimatedObject('data/Soraka/SFX', 'raka_poof.png', 160, 0)
+        poofSprite.rect.bottom = betrayer.rect.bottom
+        poofSprite.rect.centerx = betrayer.rect.centerx
+        self.effects.add(poofSprite)
+        pygame.mixer.Sound('data/EffectSFX/flash.wav').play()
+            
 class Effect(screenObjects.AnimatedObject):
     def __init__(self,topleft,length,directory,order,delay,prefix,loop):
         screenObjects.AnimatedObject.__init__(self, topleft, length, directory, order, delay, prefix, loop)
-        
+            
 class Banner(Effect):
     def __init__(self):
         order = ['01','02','03','04','05','06','07','08','09','10',
@@ -552,19 +676,54 @@ class Cinderling(Enemy):
         Enemy.__init__(self, 'data/Cinderling', 'cinderling_', 200, offset, 60, 60, 5)
 class Brambleback(Enemy):
     def __init__(self):
-        Enemy.__init__(self, 'data/Brambleback', 'brambleback_', 400, 200, 160, 10, 20)
+        Enemy.__init__(self, 'data/Brambleback', 'brambleback_', 400, 200, 160, 200, 20)
         self.zonya = False
         self.zTimer = 0
+        self.sound1 = pygame.mixer.Sound('data/EffectSFX/zonya1.wav')
+        self.sound2 = pygame.mixer.Sound('data/EffectSFX/zonya2.wav')
     
     def update(self):
         Enemy.update(self)
         if self.zonya:
             self.zTimer += 1
             if self.zTimer == 80:
+                self.sound1.play()
+                self.sound2.play()
                 self.battle.dungeon.callScene = "redBattle"
         
     def getAttacked(self,damage):
         self.hp -= damage
         if self.hp <= 0:
+            self.sound1.play()
+            self.sound2.play()
             self.changeImage('zonya')
             self.zonya = True
+            
+            
+class Baron(Enemy):
+    def __init__(self):
+        Enemy.__init__(self, 'data/Nashor', 'baron_', 800, 100, 160, 800, 20)
+        self.eventTimer = 0
+        self.eventTrigger = False
+        
+    def update(self):
+        Enemy.update(self)
+        if self.eventTrigger:
+            self.eventTimer += 1
+            if self.eventTimer >= 240:
+                getDungeon().callScene = "waitBaron"
+                
+    def getAttacked(self,damage):
+        self.hp -= damage
+        if self.hp <= self.maxHP / 2:
+            print "half health"
+            self.eventTrigger = True
+            self.eventTimer = 0
+            
+        if self.hp <= 0:
+            self.alive = False
+            getDungeon().callScene = "killBaron"
+
+class Doran(Enemy):
+    def __init__(self):
+        Enemy.__init__(self, 'data/Doran', 'doran_', 100, 0, 60, 600, 20)

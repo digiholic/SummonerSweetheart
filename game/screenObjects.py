@@ -320,7 +320,6 @@ class MultiAnimationObject(ScreenObject):
                 img = pygame.transform.flip(img,True,False)
                 flipList.append(img)
             flippedLibrary[key] = flipList
-
         return {"right": library, "left": flippedLibrary}
         
     def buildSubimageList(self,sheet,offset):
@@ -346,9 +345,3 @@ class ImageLibrary():
                 fp = os.path.join(self.directory,f)
                 sprite = renpy.display.pgrender.load_image(renpy.loader.load(fp),fp)
                 self.imageDict[spriteName] = sprite
-                
-class BGChunk(ScreenObject):
-    def __init__(self,startX,size):
-        ScreenObject.__init__(self)
-        self.rect = pygame.Rect((0,startX),size)    
-        
