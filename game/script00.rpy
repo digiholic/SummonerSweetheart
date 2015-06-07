@@ -102,7 +102,7 @@ init python:
       render = renpy.Render(self.width,self.height)
       render.blit(retScreen, (0,0))
       
-      #renpy.redraw(self,0)
+      renpy.redraw(self,0.03)
       return render
       
     def event(self,ev, x, y, st):

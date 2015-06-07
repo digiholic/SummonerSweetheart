@@ -127,6 +127,7 @@ init python:
       ez(what, **kwargs)
     elif route == "Leona":
       mc2(what, **kwargs)
+      
 ######################################### GAME SCRIPT
 ## The splash screen.
 label splashscreen:

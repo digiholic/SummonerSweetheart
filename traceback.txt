@@ -5,17 +5,11 @@ While running game code:
     call dungeon
   File "game/script00.rpy", line 652, in script call
     call screen dungeon_run()
-  File "game/scriptDungeon.rpy", line 47, in script call
-    call screen dungeon_run()
-  File "game/scriptDungeon.rpy", line 106, in script call
-    call screen dungeon_run()
-  File "game/scriptDungeon.rpy", line 160, in script
-    call screen dungeon_run()
-  File "renpy/common/000statements.rpy", line 457, in execute_call_screen
-    store._return = renpy.call_screen(name, *args, **kwargs)
-  File "game/script00.rpy", line 70, in render
-    self.retScreen = self.dungeon.update()
-IndexError: list index out of range
+  File "game/scriptDungeon.rpy", line 39, in script
+    "YOU WIN"
+  File "game/script00.rpy", line 101, in render
+    retScreen = self.dungeon.getScreen()
+AttributeError: Battle instance has no attribute 'screen'
 
 -- Full Traceback ------------------------------------------------------------
 
@@ -24,22 +18,18 @@ Full traceback:
     call dungeon
   File "game/script00.rpy", line 652, in script call
     call screen dungeon_run()
-  File "game/scriptDungeon.rpy", line 47, in script call
-    call screen dungeon_run()
-  File "game/scriptDungeon.rpy", line 106, in script call
-    call screen dungeon_run()
-  File "game/scriptDungeon.rpy", line 160, in script
-    call screen dungeon_run()
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 1635, in execute
-    self.call("execute")
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 1653, in call
-    renpy.statements.call(method, parsed, *args, **kwargs)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/statements.py", line 144, in call
-    return method(parsed, *args, **kwargs)
-  File "renpy/common/000statements.rpy", line 457, in execute_call_screen
-    store._return = renpy.call_screen(name, *args, **kwargs)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/exports.py", line 2311, in call_screen
-    rv = renpy.ui.interact(mouse="screen", type="screen", roll_forward=roll_forward)
+  File "game/scriptDungeon.rpy", line 39, in script
+    "YOU WIN"
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 593, in execute
+    renpy.exports.say(who, what, interact=self.interact)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/exports.py", line 999, in say
+    who(what, interact=interact)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/character.py", line 826, in __call__
+    self.do_display(who, what, cb_args=self.cb_args, **display_args)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/character.py", line 688, in do_display
+    **display_args)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/character.py", line 491, in display_say
+    rv = renpy.ui.interact(mouse='say', type=type, roll_forward=roll_forward)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ui.py", line 247, in interact
     rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/core.py", line 2149, in interact
@@ -62,22 +52,13 @@ Full traceback:
     surf = render(child, width, height, cst, cat)
   File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
   File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/screen.py", line 598, in render
-    child = renpy.display.render.render(self.child, w, h, st, at)
-  File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
-  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 618, in render
-    surf = render(child, width, height, cst, cat)
-  File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
-  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
   File "accelerator.pyx", line 108, in renpy.display.accelerator.transform_render (gen/renpy.display.accelerator.c:1922)
   File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "game/script00.rpy", line 70, in render
-    self.retScreen = self.dungeon.update()
-  File "summonersRift.py", line 149, in update
-  File "summonersRift.py", line 517, in update
-  File "summonersRift.py", line 455, in doEnemyAttack
-IndexError: list index out of range
+  File "game/script00.rpy", line 101, in render
+    retScreen = self.dungeon.getScreen()
+  File "summonersRift.py", line 98, in getScreen
+  File "summonersRift.py", line 367, in updateAnimOnly
+AttributeError: Battle instance has no attribute 'screen'
 
 Linux-3.11.0-26-generic-x86_64-with-debian-wheezy-sid
 Ren'Py 6.18.3.761

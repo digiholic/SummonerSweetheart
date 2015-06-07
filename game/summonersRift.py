@@ -94,8 +94,10 @@ class Dungeon():
             self.eventList.append(event.key)
     
     def getScreen(self):
+        self.screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
+        self.screen = self.battle.updateAnimOnly(self.screen)    
         return self.screen
-    
+        
     def battleBG(self,bgNumber):
         gameObjects = []
         screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
@@ -199,6 +201,9 @@ class Champion(screenObjects.MultiAnimationObject):
     def update(self):
         if self.currentCD > 0:
             self.currentCD -= 1
+        self.updateAnim()
+        
+    def updateAnim(self):
         if self.delay == 2:
             self.changeSubImage(self.frame)
             self.frame += 1
@@ -211,7 +216,7 @@ class Champion(screenObjects.MultiAnimationObject):
                     self.changeImage('idleB')
         else:
             self.delay += 1
-        
+    
     def doAttack(self,target):
         if not self.attacking and self.currentCD == 0:
             self.attacking = target
@@ -256,6 +261,9 @@ class Enemy(screenObjects.MultiAnimationObject):
             if self.currentCD > 0:
                 self.currentCD -= 1
             
+        self.updateAnim()
+    
+    def updateAnim(self):
         if self.delay == 2:
             self.changeSubImage(self.frame)
             self.frame += 1
@@ -266,7 +274,7 @@ class Enemy(screenObjects.MultiAnimationObject):
                     self.attacking = False
         else:
             self.delay += 1
-        
+            
     def doAttack(self,target):
         if not self.attacking and self.currentCD == 0:
             self.attacking = True
@@ -331,6 +339,35 @@ class Battle():
         self.players[0].rect.right = 0
         self.players[0].changeImage('walkB')
         self.players[0].active = True
+    
+    def updateAnimOnly(self,screen):
+        screen.blit(self.bg, (0,0))
+        
+        for ch in self.players:
+            ch.updateAnim()
+        
+        for en in self.enemies:
+            en.updateAnim()
+            
+        for ef in self.effects:
+            ef.update()
+        
+        for ui in self.ui:
+            ui.update()        
+        
+        # DRAW
+        for ch in reversed(self.players):
+            if ch.alive and ch.active:
+                ch.draw(screen,ch.rect.topleft)
+        
+        for en in self.enemies:
+            if en.alive:
+                en.draw(screen,en.rect.topleft)
+        
+        self.effects.draw(screen)
+        self.ui.draw(screen)
+            
+        return screen
         
     def update(self,screen):
         screen.blit(self.bg,(0,0))
