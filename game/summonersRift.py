@@ -64,9 +64,10 @@ class Dungeon():
             self.battleChamps = []
         
         self.battles = [Battle(self, self.battleChamps, [Poro(),Poro()]           ),
-                        Battle(self, self.battleChamps, [Poro(),Poro(),Poro()]    ),
-                        Battle(self, self.battleChamps, [Poro(),MrPoro(),Poro()]  ),
-                        Battle(self, self.battleChamps, [MrPoro(),Poro(),MrPoro()])]
+                        #Battle(self, self.battleChamps, [Poro(),Poro(),Poro()]    ),
+                        #Battle(self, self.battleChamps, [Poro(),MrPoro(),Poro()]  ),
+                        #Battle(self, self.battleChamps, [MrPoro(),Poro(),MrPoro()]),
+                        Battle(self, self.battleChamps, [Cinderling(-150), Brambleback(), Cinderling(-100)], 'data/music/bossBattle.ogg')]
         
         self.startBattle()
         
@@ -343,7 +344,7 @@ class Battle():
                 for en in self.enemies: en.active = True
                 
                 self.ui.add(self.targetArrow)
-                pygame.mixer.music.play()
+                pygame.mixer.music.play(-1)
                 
                 self.state = 1
                     
@@ -398,7 +399,7 @@ class Battle():
             ui.update()        
         
         # DRAW
-        for ch in self.players:
+        for ch in reversed(self.players):
             if ch.alive and ch.active:
                 ch.draw(screen,ch.rect.topleft)
         
@@ -527,4 +528,16 @@ class Poro(Enemy):
         Enemy.__init__(self, 'data/Poro1', 'poro_', 200, 0, 160, 40, 10)
 class MrPoro(Enemy):
     def __init__(self):
-        Enemy.__init__(self, 'data/Poro2', 'mrporo_', 200, 0, 160, 100, 15)        
+        Enemy.__init__(self, 'data/Poro2', 'mrporo_', 200, 0, 160, 100, 15)
+class Cinderling(Enemy):
+    def __init__(self,offset = 100):
+        Enemy.__init__(self, 'data/Cinderling', 'cinderling_', 200, offset, 60, 60, 5)
+class Brambleback(Enemy):
+    def __init__(self):
+        Enemy.__init__(self, 'data/Brambleback', 'brambleback_', 400, 200, 160, 200, 20)
+        
+    def getAttacked(self,damage):
+        self.hp -= damage
+        if self.hp <= 0:
+            self.alive = False
+              
