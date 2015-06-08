@@ -45,14 +45,24 @@ define na = Character('Baron Nashor')
 
 init python:
   import pygame
-  
   pygame.font.init()
-  
   import renpygame
-  
   import summonersRift
-  import dungeon
-  import os
+  
+  dungeon = None
+  
+  def getDungeon():
+    global dungeon
+    if dungeon:
+        return dungeon
+    else:
+        dungeon = summonersRift.Dungeon()
+        return dungeon
+        
+  def getRetList():
+    global dungeon
+    return [dungeon.gifts,dungeon.bossesDefeated]
+    
   
   class DungeonRun(renpy.Displayable):
     def __init__(self, **kwargs):
@@ -60,7 +70,7 @@ init python:
       self.width = 1024
       self.height = 768
       self.retScreen = None
-      self.dungeon = summonersRift.getDungeon()
+      self.dungeon = getDungeon()
       
     def render(self, width, height, st, at):
       if self.dungeon is None:
@@ -73,7 +83,6 @@ init python:
         if self.dungeon.callScene != "":
           callScene = self.dungeon.callScene
           self.dungeon.callScene = ""
-          renpygame.image.save(self.retScreen,os.path.join(renpy.config.gamedir,'bg/dungeon.png'))
           renpy.call(callScene)
         if self.dungeon.finished:
           return render
@@ -85,17 +94,18 @@ init python:
       if not self.dungeon is None:
         self.dungeon.addEvent(ev)    
       if self.dungeon.finished:
+        self.dungeon.battleChamps = []
+        self.dungeon.battle = None
         self.dungeon.finished = False
-        return ""
+        return "Finished Dungeon"
       
-  import transitionScreen
   class DungeonScene(renpy.Displayable):
     def __init__(self, **kwargs):
       super(DungeonScene, self).__init__(**kwargs)
       self.width = 1024
       self.height = 768
       #self.dungeon = transitionScreen.TransitionScreen([],[])
-      self.dungeon = summonersRift.getDungeon()
+      self.dungeon = getDungeon()
       
     def render(self, width, height, st, at):
       retScreen = self.dungeon.getScreen()
@@ -635,11 +645,10 @@ label dungeon:
         $ comboSkillsUnlocked = [jayce_combo, rumble_combo, vik_combo]
         $ SceneKeys = (sum(comboSkillsUnlocked), dungeon_visits_no_combo, bosses_defeated, vik_confessed)
         $ pass_list = [False, giftsInventory, comboSkillsUnlocked, SceneKeys]
-        $ summonersRift.getDungeon().loadFromVN(pass_list)
+        $ getDungeon().loadFromVN(pass_list)
         call screen dungeon_run()
-        scene expression DungeonScene()
         scene bg black with dissolve
-        $ [giftsReturned,n_bossesDefeated] = summonersRift.getRetList()
+        $ [giftsReturned,n_bossesDefeated] = getRetList()
         $ have_hammer = giftsReturned[0]
         $ have_sketch = giftsReturned[1]
         $ have_rubix = giftsReturned[2]
@@ -648,11 +657,10 @@ label dungeon:
         $ comboSkillsUnlocked = [ahri_combo, rango_combo, raka_combo]
         $ SceneKeys = (sum(comboSkillsUnlocked), dungeon_visits_no_combo, bosses_defeated, raka_confessed)
         $ pass_list = [True, giftsInventory, comboSkillsUnlocked, SceneKeys]
-        $ summonersRift.getDungeon().loadFromVN(pass_list)
+        $ getDungeon().loadFromVN(pass_list)
         call screen dungeon_run()
-        scene expression DungeonScene()
         scene bg black with dissolve
-        $ [giftsReturned,n_bossesDefeated] = summonersRift.getRetList()
+        $ [giftsReturned,n_bossesDefeated] = getRetList()
         $ have_charm = giftsReturned[0]
         $ have_bone = giftsReturned[1]
         $ have_clip = giftsReturned[2]

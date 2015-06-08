@@ -4,35 +4,19 @@ import renpy.display
 import os
 import random
 
-dungeon = None
-
-def getDungeon():
-    global dungeon
-    if dungeon:
-        return dungeon
-    else:
-        dungeon = Dungeon()
-        return dungeon
-    
-def getRetList():
-    global dungeon
-    return [dungeon.gifts,dungeon.bossesDefeated]
-
 class Dungeon():
     def __reduce__(self):
-        return (Dungeon, str(self.currentBattle))
+        print self.__class__
+        return (self.__class__, (self.currentBattle,))
     
-    def __init__(self, startingBattle = "0"):
+    def __init__(self, startingBattle = 0):
         self.camera_rect = pygame.Rect(0,0,1024,768)
         
-        self.banner = Banner() # This one's big, want to load it only once
-        
-        
         self.route = True
-        self.currentBattle = int(startingBattle)
+        self.currentBattle = startingBattle
         self.battle = None
         self.bossesDefeated = 0
-        
+        self.imageLoader = screenObjects.imageLoader()
         #self.battle = None
         
         self.gameObjects = []
@@ -44,7 +28,7 @@ class Dungeon():
         self.callScene = ""
         self.finished = False
         
-        loadScreen = screenObjects.StaticObject(screenObjects.load_image('data','Loading.png'),(0,0))
+        loadScreen = screenObjects.StaticObject(self.imageLoader.load_image('data','Loading.png'),(0,0))
         loadScreen.draw(self.screen,(0,0))
         
         self.victorySound = pygame.mixer.Sound('data/music/VictoryTheme2.wav')
@@ -100,8 +84,9 @@ class Dungeon():
             self.eventList.append(event.key)
     
     def getScreen(self):
-        self.screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
-        self.screen = self.battle.updateAnimOnly(self.screen)    
+        if self.battle:
+            self.screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
+            self.screen = self.battle.updateAnimOnly(self.screen)    
         return self.screen
         
     def initBattle(self,battleNumber):
@@ -112,7 +97,7 @@ class Dungeon():
         music='data/music/BattleStance.wav'
         
         if battleNumber == 0:
-            enemiesList = [Poro(), Poro()]
+            enemiesList = [Poro()]
             endScene = "afterFirstBattle"
             # Define this battle's background
         
@@ -130,16 +115,18 @@ class Dungeon():
         
         if battleNumber < 10:
             # Initialization is IN ORDER. Earliest stuff on the bottom.
-            sky = screenObjects.StaticObject(screenObjects.load_image('data','SKY_BG.png'),(0,0),0)
+            sky = screenObjects.StaticObject(self.imageLoader.load_image('data','SKY_BG.png'),(0,0))
             gameObjects.append(sky)
         
-            grndtileImg = screenObjects.load_image('data','Grounds/SR_GRND.gif')
-            grndtile = screenObjects.InfiniteTile(grndtileImg,
-                                              (0,self.camera_rect.bottom - grndtileImg.get_height()),
-                                              self.camera_rect.size)
-            gameObjects.append(grndtile)
+            grndtileImg = self.imageLoader.load_image('data','Grounds/SR_GRND.gif')
+            grndTiles = [screenObjects.StaticObject(grndtileImg, (0, self.camera_rect.bottom - grndtileImg.get_height())),
+                         screenObjects.StaticObject(grndtileImg, (grndtileImg.get_width(), self.camera_rect.bottom - grndtileImg.get_height())),
+                         screenObjects.StaticObject(grndtileImg, (2 * grndtileImg.get_width(), self.camera_rect.bottom - grndtileImg.get_height())),
+                         screenObjects.StaticObject(grndtileImg, (3 * grndtileImg.get_width(), self.camera_rect.bottom - grndtileImg.get_height())),]
+            
+            gameObjects.extend(grndTiles)
         
-            treeTileImg = screenObjects.load_image('data','summoner rift tree [repeatable].png')
+            treeTileImg = self.imageLoader.load_image('data','summoner rift tree [repeatable].png')
             if battleNumber % 2 == 0:
                 treetiles = [screenObjects.StaticObject(treeTileImg,(0,self.camera_rect[3] - treeTileImg.get_height() - 100)),
                              screenObjects.StaticObject(treeTileImg,(treeTileImg.get_width(),self.camera_rect[3] - treeTileImg.get_height() - 100))]
@@ -180,37 +167,12 @@ class Dungeon():
         return self.screen
         #pygame.display.flip()
 
-class Player(screenObjects.MultiAnimationObject):
-    def __init__(self,dungeon,route):
-        self.dungeon = dungeon
-        self.frame = 0
-        self.delay = 0
-        
-        if route == True:
-            self.directory = 'data/Ezreal'
-            self.prefix = 'ezreal_'
-            self.startingImage = 'idle'
-            self.offset = 150
-        else:
-            self.directory = 'data/Ezreal'
-            self.prefix = 'ezreal_'
-            self.startingImage = 'idle'
-            self.offset = 150
-        
-        screenObjects.MultiAnimationObject.__init__(self, self.directory, self.prefix, self.startingImage, self.offset)
-        self.rect.topleft = (200,self.dungeon.camera_rect.height - 300)
-        
-    def update(self):
-        if self.delay == 2:
-            self.changeSubImage(self.frame)
-            self.frame += 1
-            self.delay = 0
-            if self.frame >= self.get_length():
-                self.frame = 0
-        else:
-            self.delay += 1
-                        
+
 class Champion(screenObjects.MultiAnimationObject):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
     def __init__(self):
         screenObjects.MultiAnimationObject.__init__(self, self.directory, self.prefix, 'idleB',self.offset)
         self.attacking = False
@@ -259,6 +221,10 @@ class Champion(screenObjects.MultiAnimationObject):
         if self.hp <= 0: self.alive = False
         
 class Enemy(screenObjects.MultiAnimationObject):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, (self.directory, self.prefix, self.offset, self.centerOffset, self.attackCD, self.maxHP, self.attackDamage))
+    
     def __init__(self, directory, prefix, offset, centerOffset, attackCD, maxHP, attackDamage):
         self.directory = directory
         self.prefix = prefix
@@ -325,6 +291,10 @@ class Enemy(screenObjects.MultiAnimationObject):
         return spr
       
 class Battle():
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, (self.dungeon, self.players, self.enemies, self.bg, self.endScene, self.music))
+    
     def __init__(self, dungeon, players, enemies, bg, endScene, music):
         self.players = players
         self.enemies = enemies
@@ -334,7 +304,6 @@ class Battle():
         self.music = music
         
         self.effects = pygame.sprite.Group()
-        #self.effects.add(self.dungeon.banner)
         
         self.ui = pygame.sprite.Group()
         self.targetArrow = Arrow()
@@ -529,6 +498,10 @@ class Battle():
             self.targetArrow.kill()
 
 class FinalBattle(Battle):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, (self.dungeon, self.players))
+    
     def __init__(self, dungeon, players):
         enemies = [Doran()]
         
@@ -541,7 +514,6 @@ class FinalBattle(Battle):
         self.music = ""
         
         self.effects = pygame.sprite.Group()
-        #self.effects.add(self.dungeon.banner)
         
         self.currentTarget = 0
         self.state = 0 # state 0, start animation, state 1, actual battle, state 2, going onward, state 3, going backward
@@ -660,20 +632,20 @@ class FinalBattle(Battle):
         self.enemies.append(betrayer)
           
 class Effect(screenObjects.AnimatedObject):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
     def __init__(self,topleft,length,directory,order,delay,prefix,loop):
         screenObjects.AnimatedObject.__init__(self, topleft, length, directory, order, delay, prefix, loop)
-            
-class Banner(Effect):
-    def __init__(self):
-        order = ['01','02','03','04','05','06','07','08','09','10',
-                 '11','12','13','14','15','16','17','18','19','20',
-                 '21','22','23','24','25','26','27','28','29','30']
-        Effect.__init__(self,(0,0),30,'data/UITop',order,0,'layout_UI_2_000',False)
-
 
 class Arrow(screenObjects.StaticObject):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
     def __init__(self):
-        img = screenObjects.load_image('data/icons', 'arrow2.png')
+        img = screenObjects.imageLoader().load_image('data/icons', 'arrow2.png')
         screenObjects.StaticObject.__init__(self, img, (0,0))
         
         self.bounce = -5
@@ -686,6 +658,10 @@ class Arrow(screenObjects.StaticObject):
         if self.bounce == -5: self.bounceDir = 1
         
 class Ezreal(Champion):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
     def __init__(self):
         self.directory = 'data/Ezreal'
         self.prefix = 'ezreal_'
@@ -697,7 +673,30 @@ class Ezreal(Champion):
         self.attackSound = pygame.mixer.Sound('data/EffectSFX/EZ_Attack_1.mp3')
         self.hurtSound = pygame.mixer.Sound('data/EffectSFX/EzDamage.wav')
         Champion.__init__(self)
+        
+class Leona(Champion):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
+    def __init__(self):
+        self.directory = 'data/Leona'
+        self.prefix = 'leona_'
+        #TODO FIX THIS
+        self.offset = 275
+        self.attackCD = 140
+        self.attackDamage = 10
+        self.centerOffset = 0
+        self.maxHP = 120
+        self.attackSound = pygame.mixer.Sound('data/Leona/LeonaSFX/Attack1.wav')
+        self.hurtSound = pygame.mixer.Sound('data/Leona/LeonaSFX/Damage.wav')
+        Champion.__init__(self)
+        
 class Ahri(Champion):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
     def __init__(self):
         self.directory = 'data/Ahri'
         self.prefix = 'ahri_'
@@ -709,7 +708,29 @@ class Ahri(Champion):
         self.attackSound = pygame.mixer.Sound('data/AhriSFX/Attack1_c.wav')
         self.hurtSound = pygame.mixer.Sound('data/AhriSFX/AhriDamage.wav')        
         Champion.__init__(self)
+        
+class Jayce(Champion):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
+    def __init__(self):
+        self.directory = 'data/Jayce'
+        self.prefix = 'jayce_'
+        self.offset = -1
+        self.attackCD = 120
+        self.attackDamage = 10
+        self.centerOffset = -1
+        self.maxHP = 100
+        self.attackSound = pygame.mixer.Sound('data/EffectSFX/JayceAttack.wav')
+        self.hurtSound = pygame.mixer.Sound('data/EffectSFX/JayceDamage.wav')        
+        Champion.__init__(self)
+        
 class Soraka(Champion):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
     def __init__(self):
         self.directory = 'data/Soraka'
         self.prefix = 'soraka_'
@@ -721,7 +742,30 @@ class Soraka(Champion):
         self.attackSound = pygame.mixer.Sound('data/EffectSFX/SorakaAttack1.wav')
         self.hurtSound = pygame.mixer.Sound('data/EffectSFX/SorakaDamage.wav')        
         Champion.__init__(self)
+        
+class Viktor(Champion):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
+    def __init__(self):
+        self.directory = 'data/Viktor'
+        self.prefix = 'viktor_'
+        self.offset = -1
+        self.attackCD = 80
+        self.attackDamage = 5
+        self.centerOffset = 0
+        self.maxHP = 100
+        self.attackSound = pygame.mixer.Sound('')
+        self.hurtSound = pygame.mixer.Sound('')        
+        Champion.__init__(self)
+
+        
 class Rengar(Champion):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
     def __init__(self):
         self.directory = 'data/Rengar'
         self.prefix = 'rengar_'
@@ -733,16 +777,50 @@ class Rengar(Champion):
         self.attackSound = pygame.mixer.Sound('data/EffectSFX/Attack3.wav')
         self.hurtSound = pygame.mixer.Sound('data/EffectSFX/ReceivingDamage2.wav')
         Champion.__init__(self)
+        
+class Rumble(Champion):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
+    def __init__(self):
+        self.directory = 'data/Rumble'
+        self.prefix = 'rumble_'
+        self.offset = -1
+        self.attackCD = 180
+        self.attackDamage = 15
+        self.centerOffset = -1
+        self.maxHP = 80
+        self.attackSound = pygame.mixer.Sound('data/EffectSFX/RumbleAttack1.wav')
+        self.hurtSound = pygame.mixer.Sound('data/EffectSFX/RumbleDamage1.wav')   
+        Champion.__init__(self)
+        
 class Poro(Enemy):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
     def __init__(self):
         Enemy.__init__(self, 'data/Poro1', 'poro_', 200, 0, 160, 40, 10)
 class MrPoro(Enemy):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
     def __init__(self):
         Enemy.__init__(self, 'data/Poro2', 'mrporo_', 200, 0, 160, 100, 15)
 class Cinderling(Enemy):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, (self.offset,))
+    
     def __init__(self,offset = 0):
         Enemy.__init__(self, 'data/Cinderling', 'cinderling_', 200, offset, 60, 60, 5)
 class Brambleback(Enemy):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
     def __init__(self):
         Enemy.__init__(self, 'data/Brambleback', 'brambleback_', 400, 0, 160, 200, 20)
         self.zonya = False
@@ -767,6 +845,10 @@ class Brambleback(Enemy):
             
             
 class Baron(Enemy):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
     def __init__(self):
         Enemy.__init__(self, 'data/Nashor', 'baron_', 800, 100, 160, 800, 20)
         self.eventTimer = 0
@@ -791,6 +873,10 @@ class Baron(Enemy):
             getDungeon().callScene = "killBaron"
 
 class Doran(Enemy):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
     def __init__(self):
         Enemy.__init__(self, 'data/Doran', 'doran_', 100, 0, 60, 600, 20)
         
@@ -800,6 +886,10 @@ class Doran(Enemy):
             self.alive = False
             
 class EnemyRaka(Enemy):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
     def __init__(self):
         Enemy.__init__(self, 'data/Soraka', 'soraka_', 180, 0, 80, 100, 5)
         

@@ -3,12 +3,13 @@ import renpy.display
 import renpy.config
 import os
 
-def load_image(path,fname):
-    fp = path + '/' + fname
-    #sprite = pygame.image.load(fp)
-    sprite = renpy.display.pgrender.load_image(renpy.loader.load(fp), fp)
-    return sprite
-
+class imageLoader():
+    def load_image(self,path,fname):
+        fp = path + '/' + fname
+        #sprite = pygame.image.load(fp)
+        sprite = renpy.display.pgrender.load_image(renpy.loader.load(fp), fp)
+        return sprite
+    
 """
 A ScreenObject is anything drawn on the screen.
 If it's animated, it'll have an update method that is called every frame.
@@ -18,11 +19,14 @@ If defining a static ScreenObject, pass in an image for it to render
 and a position to render to.
 """
 class ScreenObject(pygame.sprite.Sprite):
-    def __init__(self,paralaxValue = 1.0):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, ())
+    
+    def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = renpy.display.pgrender.Surface((0,0),True)
         self.rect = self.image.get_rect()
-        self.paralaxValue = paralaxValue
         
     def update(self):
         pass
@@ -55,65 +59,16 @@ class ScreenObject(pygame.sprite.Sprite):
         return (x,y)
     
 class StaticObject(ScreenObject):
-    def __init__(self,img,pos,paralaxValue = 1.0):
-        ScreenObject.__init__(self,paralaxValue)
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, (self.image, self.rect.topleft))
+    
+    def __init__(self,img,pos):
+        ScreenObject.__init__(self)
         self.image = img
         self.rect = self.image.get_rect()
         self.rect.topleft = pos
        
-"""
-Draws a long tile
-imgList = [Left,Middle,Right] surface objects
-startPos = the XY Position of the topleft of the bush
-number = The number of tiles to place. Must be at least 2
-"""
-class LongTile(ScreenObject):
-    def __init__(self,imgList,startPos,number,paralaxValue = 1.0):
-        ScreenObject.__init__(self,paralaxValue)
-        width, height = (imgList[0].get_width(),imgList[0].get_height())
-        self.image = renpy.display.pgrender.Surface((width*number,height),True)
-        for i in range(0,number):
-            if i == 0:
-                self.image.blit(imgList[0],(width*i,0))
-            elif i == number - 1:
-                self.image.blit(imgList[2],(width*i,0))
-            else:
-                self.image.blit(imgList[1],(width*i,0))
-        self.rect = pygame.Rect(startPos,(width*number,height))
-
-class RepeatTile(ScreenObject):
-    def __init__(self,img,startPos,number,paralaxValue = 1.0):
-        ScreenObject.__init__(self,paralaxValue)
-        width, height = (img.get_width(),img.get_height())
-        
-        self.image = renpy.display.pgrender.Surface((width*number,height),True)
-        for i in range(0,number):
-            blitImage = StaticObject(img,(0,0))
-            blitImage.draw(self.image, (width*i,0))
-        self.rect = pygame.Rect(startPos,(width*number,height))
-        
-class InfiniteTile(ScreenObject):
-    def __init__(self,img,startPos,screenSize,paralaxValue = 1.0):
-        ScreenObject.__init__(self,paralaxValue)
-        self.width, self.height = (img.get_width(), img.get_height())
-        number = (screenSize[0] / self.width) + 3 # Plus 3 because 1 to make it the proper width (zero indexing fix), and one extra on each side.
-        
-        self.image = renpy.display.pgrender.Surface((self.width*number,self.height),True)
-        for i in range(0,number):
-            self.image.blit(img.convert_alpha(),(self.width*i,0))
-        self.rect = pygame.Rect((startPos[0] - self.width,startPos[1]),(self.width*number,self.height))
-    
-    def stageToScreen(self,camera_rect):
-        if self.rect.left - camera_rect.left >= 0:
-            self.rect.x -= self.width
-        if camera_rect.right - self.rect.right >= 0:
-            self.rect.x += self.width
-        
-        x = self.rect.x - (camera_rect.x * self.paralaxValue)
-        y = self.rect.y - (camera_rect.y * self.paralaxValue)
-        
-        return (x,y)
-        
 """
 An Animated Object takes a directory,
 loads all of the images from that directory,
@@ -126,9 +81,16 @@ prefix - what the file names start with, defaults to none (will take all images)
 loop - whether or not the animation loops
 """
 class AnimatedObject(ScreenObject):
-    def __init__(self,position,animLength,directory,order=None,delay=1,prefix="",loop=True,paralaxValue = 1.0):
-        ScreenObject.__init__(self,paralaxValue)
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, (self.pos, self.lastFrame, self.directory, self.order, self.delay, self.prefix, self.loop))
+    
+    def __init__(self,position,animLength,directory,order=None,delay=1,prefix="",loop=True):
+        ScreenObject.__init__(self)
         self.pos = position
+        self.directory = directory
+        self.order = order
+        self.prefix = prefix
         
         self.frame = 0
         self.lastFrame = animLength - 1
@@ -139,7 +101,7 @@ class AnimatedObject(ScreenObject):
         self.images = self.buildImageDict(directory,prefix)
         self.orderedImages = []
         
-        self.buildOrderdImages(order)
+        self.buildOrderdImages(self.order)
         
         self.image = self.orderedImages[0]
         self.rect = self.image.get_rect()
@@ -211,8 +173,15 @@ class AnimatedObject(ScreenObject):
             self.currentDelay += 1
 
 class SheetAnimatedObject(ScreenObject):
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, (self.directory, self.sheet, self.offset, self.frameDelay))
+    
     def __init__(self,directory,sheet,offset,frameDelay = 0):
-        ScreenObject.__init__(self,0)
+        ScreenObject.__init__(self)
+        self.directory = directory
+        self.sheet = sheet
+        self.offset = offset
         
         fp = os.path.join(directory,sheet)
         sprite = renpy.display.pgrender.load_image(renpy.loader.load(fp),fp)
@@ -249,11 +218,18 @@ class SheetAnimatedObject(ScreenObject):
         return imageList     
 
 class MultiAnimationObject(ScreenObject):
-    def __init__(self,directory,prefix,startingImage,offset,paralaxValue = 0.0):
-        ScreenObject.__init__(self, paralaxValue)
-        self.imageLibrary = self.buildImageLibrary(ImageLibrary(directory,prefix), offset)
-        
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, (self.directory, self.prefix, self.startingImage, self.offset))
+    
+    def __init__(self,directory,prefix,startingImage,offset):
+        ScreenObject.__init__(self)
+        self.directory = directory
+        self.prefix = prefix
         self.startingImage = startingImage
+        self.offset = offset
+        
+        self.imageLibrary = self.buildImageLibrary(ImageLibrary(directory,prefix), offset)
          
         self.flip = "right"
         self.currentSheet = startingImage
@@ -333,7 +309,14 @@ class MultiAnimationObject(ScreenObject):
         return imageList     
 
 class ImageLibrary():
+    def __reduce__(self):
+        print self.__class__
+        return (self.__class__, (self.startingDirectory, self.prefix))
+    
     def __init__(self,directory,prefix=""):
+        self.startingDirectory = directory
+        self.prefix = prefix
+        
         self.directory = os.path.join(os.path.dirname(__file__),directory)
         self.imageDict = {}
         supportedFileTypes = [".jpg",".png",".gif",".bmp",".pcx",".tga",".tif",".lbm",".pbm",".xpm"]
