@@ -17,15 +17,19 @@ def getDungeon():
 def getRetList():
     global dungeon
     return [dungeon.gifts,dungeon.bossesDefeated]
+
 class Dungeon():
-    def __init__(self):
+    def __reduce__(self):
+        return (Dungeon, str(self.currentBattle))
+    
+    def __init__(self, startingBattle = "0"):
         self.camera_rect = pygame.Rect(0,0,1024,768)
         
         self.banner = Banner() # This one's big, want to load it only once
         
         
         self.route = True
-        self.currentBattle = 0
+        self.currentBattle = int(startingBattle)
         self.battle = None
         self.bossesDefeated = 0
         
@@ -64,6 +68,7 @@ class Dungeon():
         else:    
             self.battleChamps = []
         
+        """
         self.battles = [Battle(self, self.battleChamps, [Poro(),Poro()], "afterFirstBattle"),
                         #Battle(self, self.battleChamps, [Poro(),Poro(),Poro()]    ),
                         #Battle(self, self.battleChamps, [Poro(),MrPoro(),Poro()]  ),
@@ -72,6 +77,7 @@ class Dungeon():
                         Battle(self, self.battleChamps, [Baron()],music = 'data/music/bossBattle.ogg'),
                         Battle(self, self.battleChamps, [Cinderling(-150), Brambleback(), Cinderling(-100)], music = 'data/music/bossBattle.ogg'),
                         Battle(self, self.battleChamps, [MrPoro(), MrPoro(), Cinderling()])]
+        """
         
         self.gifts = pass_list[1]
         self.specialMoves = pass_list[2]
@@ -79,9 +85,9 @@ class Dungeon():
         self.startBattle()
         
     def startBattle(self):
-        self.battle = self.battles[self.currentBattle]
+        self.battle = self.initBattle(self.currentBattle)
         pygame.mixer.music.load(self.battle.music)
-        self.battle.initialize(self.battleBG(self.currentBattle))
+        self.battle.initialize()
         
     def endBattle(self):
         pygame.mixer.music.stop()
@@ -98,12 +104,31 @@ class Dungeon():
         self.screen = self.battle.updateAnimOnly(self.screen)    
         return self.screen
         
-    def battleBG(self,bgNumber):
+    def initBattle(self,battleNumber):
         gameObjects = []
         screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
+        enemiesList = []
+        endScene = "victoryScreen"
+        music='data/music/BattleStance.wav'
         
-        print bgNumber
-        if bgNumber < 10:
+        if battleNumber == 0:
+            enemiesList = [Poro(), Poro()]
+            endScene = "afterFirstBattle"
+            # Define this battle's background
+        
+        elif battleNumber == 1:
+            enemiesList = [Brambleback(),Cinderling(-50),Cinderling(-50)]
+            music = 'data/music/bossBattle.ogg'
+            # Define this battle's background
+        
+        elif battleNumber == 2:
+            enemiesList = [Baron()]
+            music = 'data/music/bossBattle.ogg'
+            # Define this battle's background
+            
+        elif battleNumber == 3: return FinalBattle
+        
+        if battleNumber < 10:
             # Initialization is IN ORDER. Earliest stuff on the bottom.
             sky = screenObjects.StaticObject(screenObjects.load_image('data','SKY_BG.png'),(0,0),0)
             gameObjects.append(sky)
@@ -115,7 +140,7 @@ class Dungeon():
             gameObjects.append(grndtile)
         
             treeTileImg = screenObjects.load_image('data','summoner rift tree [repeatable].png')
-            if bgNumber % 2 == 0:
+            if battleNumber % 2 == 0:
                 treetiles = [screenObjects.StaticObject(treeTileImg,(0,self.camera_rect[3] - treeTileImg.get_height() - 100)),
                              screenObjects.StaticObject(treeTileImg,(treeTileImg.get_width(),self.camera_rect[3] - treeTileImg.get_height() - 100))]
             else:
@@ -126,7 +151,8 @@ class Dungeon():
             
             for obj in gameObjects:
                 obj.draw(screen,obj.rect.topleft)
-            return screen
+        battle = Battle(self,self.battleChamps,enemiesList,screen,endScene,music)
+        return battle
             
     def update(self):
         self.screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
@@ -285,7 +311,7 @@ class Enemy(screenObjects.MultiAnimationObject):
             target.getAttacked(self.attackDamage)
         
     def chooseTarget(self):
-        return random.randint(0,len(self.battle.players))
+        return random.randint(0,3)
         
     def getAttacked(self,damage):
         self.hp -= damage
@@ -299,7 +325,7 @@ class Enemy(screenObjects.MultiAnimationObject):
         return spr
       
 class Battle():
-    def __init__(self,dungeon,players,enemies,endScene = "victoryScreen", music='data/music/BattleStance.wav'):
+    def __init__(self, dungeon, players, enemies, bg, endScene, music):
         self.players = players
         self.enemies = enemies
         self.endScene = endScene
@@ -316,11 +342,9 @@ class Battle():
         self.currentTarget = 0
         self.state = 0 # state 0, start animation, state 1, actual battle, state 2, going onward, state 3, going backward
         
-        self.bg = None
-        
-    def initialize(self,bg):
         self.bg = bg
         
+    def initialize(self):
         for i in range(0,len(self.players)):
             self.players[i].active = False
             self.players[i].rect.left = self.players[i].centerOffset + (300 - (100*i))
@@ -720,26 +744,24 @@ class Cinderling(Enemy):
         Enemy.__init__(self, 'data/Cinderling', 'cinderling_', 200, offset, 60, 60, 5)
 class Brambleback(Enemy):
     def __init__(self):
-        Enemy.__init__(self, 'data/Brambleback', 'brambleback_', 400, 200, 160, 200, 20)
+        Enemy.__init__(self, 'data/Brambleback', 'brambleback_', 400, 0, 160, 200, 20)
         self.zonya = False
         self.zTimer = 0
-        self.sound1 = pygame.mixer.Sound('data/EffectSFX/zonya1.wav')
-        self.sound2 = pygame.mixer.Sound('data/EffectSFX/zonya2.wav')
+        #self.sound1 = pygame.mixer.Sound('data/EffectSFX/zonya1.wav')
+        self.sound = pygame.mixer.Sound('data/EffectSFX/zonya2.wav')
     
     def update(self):
         Enemy.update(self)
         if self.zonya:
             self.zTimer += 1
             if self.zTimer == 80:
-                self.sound1.play()
-                self.sound2.play()
                 self.battle.dungeon.callScene = "redBattle"
         
     def getAttacked(self,damage):
         self.hp -= damage
         if self.hp <= 0:
-            self.sound1.play()
-            self.sound2.play()
+            #self.sound1.play()
+            self.sound.play()
             self.changeImage('zonya')
             self.zonya = True
             
