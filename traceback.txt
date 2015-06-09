@@ -1,28 +1,28 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script00.rpy", line 575, in script call
+  File "game/script00.rpy", line 562, in script call
     call dungeon
-  File "game/script00.rpy", line 656, in script
-    $ dungeon.loadFromVN(pass_list)
-  File "game/script00.rpy", line 656, in <module>
-    $ dungeon.loadFromVN(pass_list)
-AttributeError: 'NoneType' object has no attribute 'loadFromVN'
+  File "game/script00.rpy", line 646, in script
+    $ [giftsReturned,n_bossesDefeated] = dungeon.getRetList()
+  File "game/script00.rpy", line 646, in <module>
+    $ [giftsReturned,n_bossesDefeated] = dungeon.getRetList()
+AttributeError: 'NoneType' object has no attribute 'getRetList'
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/script00.rpy", line 575, in script call
+  File "game/script00.rpy", line 562, in script call
     call dungeon
-  File "game/script00.rpy", line 656, in script
-    $ dungeon.loadFromVN(pass_list)
+  File "game/script00.rpy", line 646, in script
+    $ [giftsReturned,n_bossesDefeated] = dungeon.getRetList()
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 785, in execute
     renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/python.py", line 1382, in py_exec_bytecode
     exec bytecode in globals, locals
-  File "game/script00.rpy", line 656, in <module>
-    $ dungeon.loadFromVN(pass_list)
-AttributeError: 'NoneType' object has no attribute 'loadFromVN'
+  File "game/script00.rpy", line 646, in <module>
+    $ [giftsReturned,n_bossesDefeated] = dungeon.getRetList()
+AttributeError: 'NoneType' object has no attribute 'getRetList'
 
 Linux-3.11.0-26-generic-x86_64-with-debian-wheezy-sid
 Ren'Py 6.18.3.761

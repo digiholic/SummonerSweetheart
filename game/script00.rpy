@@ -70,7 +70,6 @@ init python:
           dungeon.callScene = ""
           renpy.call(callScene)
         if dungeon.finished:
-          dungeon = None
           renpy.end_interaction("Finished")
         else:
           renpy.redraw(self,0.03)
