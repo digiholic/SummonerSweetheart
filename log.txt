@@ -1,4 +1,4 @@
-Tue Jun  9 14:56:41 2015
+Tue Jun  9 15:00:07 2015
 Linux-3.11.0-26-generic-x86_64-with-debian-wheezy-sid
 Ren'Py 6.18.3.761
 Summoner Sweetheart 0.9
@@ -197,18 +197,8 @@ Texture testing:
 Performance test:
 - Target is 5 frames in 0.333333333333 seconds.
 - Frame drawn at 0.000000 seconds.
-- Frame drawn at 0.018291 seconds.
-- Frame drawn at 0.056228 seconds.
-- Frame drawn at 0.069918 seconds.
-- Frame drawn at 0.092294 seconds.
-- 0.092294 seconds to render 5 frames.
-Traceback (most recent call last):
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/execution.py", line 294, in run
-    node.execute()
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 785, in execute
-    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/python.py", line 1382, in py_exec_bytecode
-    exec bytecode in globals, locals
-  File "game/script00.rpy", line 646, in <module>
-    $ [giftsReturned,n_bossesDefeated] = dungeon.getRetList()
-AttributeError: 'NoneType' object has no attribute 'getRetList'
+- Frame drawn at 0.051075 seconds.
+- Frame drawn at 0.087825 seconds.
+- Frame drawn at 0.127302 seconds.
+- Frame drawn at 0.178246 seconds.
+- 0.178246 seconds to render 5 frames.

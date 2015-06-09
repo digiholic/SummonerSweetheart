@@ -52,6 +52,7 @@ class Dungeon():
         self.gifts = pass_list[1]
         self.specialMoves = pass_list[2]
         self.sceneKeys = pass_list[3]
+        
         self.startBattle()
         
     def startBattle(self):
