@@ -4,11 +4,11 @@ label victoryScreen:
     menu:
         "Press on":
             vrmc happy " Let's keep going!"
-            $ getDungeon().battle.onward()
+            $ dungeon.battle.onward()
             call screen dungeon_run()
         "That's enough":
             vrmc flat " I think that's far enough for now, let's heal up and come back later!"
-            $ getDungeon().battle.retreat()
+            $ dungeon.battle.retreat()
             call screen dungeon_run()
     return
             
@@ -30,7 +30,7 @@ label redBattle:
       vrmc sad "Me and my pride…"
       
     $ redCount += 1
-    $ getDungeon().battle.retreat()
+    $ dungeon.battle.retreat()
     call screen dungeon_run()
     return
     
@@ -43,11 +43,11 @@ label afterFirstBattle:
   menu:
     "Get past all of his minions":
       vrmc happy " No problem! We can take anything you throw at us!"
-      $ getDungeon().battle.onward()
+      $ dungeon.battle.onward()
       call screen dungeon_run()
     "I don't stand a chance":
       vrmc sad " He might be right. I'm not ready for this yet. I'll come back later."
-      $ getDungeon().battle.retreat()
+      $ dungeon.battle.retreat()
       call screen dungeon_run()
   return
   
@@ -102,7 +102,7 @@ label beforeHacker:
       so "U-um, actually, nevermind."
       ez happy "Alright! Like I was saying, onward—"
       
-      $ getDungeon().battle.betray()
+      $ dungeon.battle.betray()
       call screen dungeon_run()
       return
       

@@ -1,57 +1,28 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "renpy/common/00action_file.rpy", line 328, in __call__
-    renpy.load(fn)
-TypeError: __init__() takes exactly 4 arguments (1 given)
+  File "game/script00.rpy", line 575, in script call
+    call dungeon
+  File "game/script00.rpy", line 656, in script
+    $ dungeon.loadFromVN(pass_list)
+  File "game/script00.rpy", line 656, in <module>
+    $ dungeon.loadFromVN(pass_list)
+AttributeError: 'NoneType' object has no attribute 'loadFromVN'
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "renpy/common/_layout/screen_main_menu.rpym", line 29, in script
-    $ ui.interact()
+  File "game/script00.rpy", line 575, in script call
+    call dungeon
+  File "game/script00.rpy", line 656, in script
+    $ dungeon.loadFromVN(pass_list)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 785, in execute
     renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/python.py", line 1382, in py_exec_bytecode
     exec bytecode in globals, locals
-  File "renpy/common/_layout/screen_main_menu.rpym", line 29, in <module>
-    $ ui.interact()
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ui.py", line 247, in interact
-    rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/core.py", line 2149, in interact
-    repeat, rv = self.interact_core(preloads=preloads, **kwargs)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/core.py", line 2750, in interact_core
-    rv = root_widget.event(ev, x, y, 0)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/screen.py", line 626, in event
-    rv = self.child.event(ev, x, y, st)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/behavior.py", line 762, in event
-    return handle_click(self.clicked)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/behavior.py", line 705, in handle_click
-    rv = run(action)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/behavior.py", line 274, in run
-    return var(*args, **kwargs)
-  File "renpy/common/00action_file.rpy", line 328, in __call__
-    renpy.load(fn)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/loadsave.py", line 573, in load
-    roots, log = loads(location.load(filename))
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/loadsave.py", line 51, in loads
-    return pickle.loads(s)
-  File "/home/tom/ab/x64lucid-deps/install/lib/python2.7/pickle.py", line 1382, in loads
-  File "/home/tom/ab/x64lucid-deps/install/lib/python2.7/pickle.py", line 858, in load
-  File "/home/tom/ab/x64lucid-deps/install/lib/python2.7/pickle.py", line 1133, in load_reduce
-TypeError: __init__() takes exactly 4 arguments (1 given)
+  File "game/script00.rpy", line 656, in <module>
+    $ dungeon.loadFromVN(pass_list)
+AttributeError: 'NoneType' object has no attribute 'loadFromVN'
 
 Linux-3.11.0-26-generic-x86_64-with-debian-wheezy-sid
 Ren'Py 6.18.3.761

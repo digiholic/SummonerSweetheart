@@ -481,9 +481,9 @@ screen school_map():
                 add "gui/map_viktor_hover.png" xpos class_x ypos class_y
     
 #####
-screen dungeon_run():
+screen dungeon_run(pass_list):
   modal True
-  Return(DungeonRun())
+  add DungeonRun(pass_list) xpos 0.0 ypos 0.0
     
 screen dungeon_scene():
   add DungeonScene() xpos 0.0 ypos 0.0

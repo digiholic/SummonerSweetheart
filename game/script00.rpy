@@ -49,68 +49,51 @@ init python:
   import renpygame
   import summonersRift
   
-  dungeon = None
-  
-  def getDungeon():
-    global dungeon
-    if dungeon:
-        return dungeon
-    else:
-        dungeon = summonersRift.Dungeon()
-        return dungeon
-        
-  def getRetList():
-    global dungeon
-    return [dungeon.gifts,dungeon.bossesDefeated]
-    
+  dungeon = summonersRift.Dungeon()
   
   class DungeonRun(renpy.Displayable):
     def __init__(self, **kwargs):
       super(DungeonRun, self).__init__(**kwargs)
       self.width = 1024
       self.height = 768
-      self.retScreen = None
-      self.dungeon = getDungeon()
       
     def render(self, width, height, st, at):
-      if self.dungeon is None:
+      global dungeon
+      if dungeon is None:
         render = renpy.Render(self.width,self.height)
-        return render
       else:
-        self.retScreen = self.dungeon.update()
+        retScreen = dungeon.update()
         render = renpy.Render(self.width,self.height)
-        render.blit(self.retScreen, (0, 0))
-        if self.dungeon.callScene != "":
-          callScene = self.dungeon.callScene
-          self.dungeon.callScene = ""
+        render.blit(retScreen, (0, 0))
+        if dungeon.callScene != "":
+          callScene = dungeon.callScene
+          dungeon.callScene = ""
           renpy.call(callScene)
-        if self.dungeon.finished:
-          return render
+        if dungeon.finished:
+          dungeon = None
+          renpy.end_interaction("Finished")
         else:
           renpy.redraw(self,0.03)
-        return render
+      return render
       
     def event(self, ev, x, y, st):
-      if not self.dungeon is None:
-        self.dungeon.addEvent(ev)    
-      if self.dungeon.finished:
-        self.dungeon.battleChamps = []
-        self.dungeon.battle = None
-        self.dungeon.finished = False
-        return "Finished Dungeon"
+      global dungeon
+      if dungeon:
+        dungeon.addEvent(ev)    
       
   class DungeonScene(renpy.Displayable):
     def __init__(self, **kwargs):
       super(DungeonScene, self).__init__(**kwargs)
       self.width = 1024
       self.height = 768
-      #self.dungeon = transitionScreen.TransitionScreen([],[])
-      self.dungeon = getDungeon()
       
     def render(self, width, height, st, at):
-      retScreen = self.dungeon.getScreen()
+      global dungeon
       render = renpy.Render(self.width,self.height)
-      render.blit(retScreen, (0,0))
+  
+      if dungeon:
+        retScreen = dungeon.getScreen()
+        render.blit(retScreen, (0,0))
       
       renpy.redraw(self,0.03)
       return render
@@ -645,10 +628,10 @@ label dungeon:
         $ comboSkillsUnlocked = [jayce_combo, rumble_combo, vik_combo]
         $ SceneKeys = (sum(comboSkillsUnlocked), dungeon_visits_no_combo, bosses_defeated, vik_confessed)
         $ pass_list = [False, giftsInventory, comboSkillsUnlocked, SceneKeys]
-        $ getDungeon().loadFromVN(pass_list)
+        $ dungeon().loadFromVN(pass_list)
         call screen dungeon_run()
         scene bg black with dissolve
-        $ [giftsReturned,n_bossesDefeated] = getRetList()
+        $ [giftsReturned,n_bossesDefeated] = dungeon.getRetList()
         $ have_hammer = giftsReturned[0]
         $ have_sketch = giftsReturned[1]
         $ have_rubix = giftsReturned[2]
@@ -657,10 +640,10 @@ label dungeon:
         $ comboSkillsUnlocked = [ahri_combo, rango_combo, raka_combo]
         $ SceneKeys = (sum(comboSkillsUnlocked), dungeon_visits_no_combo, bosses_defeated, raka_confessed)
         $ pass_list = [True, giftsInventory, comboSkillsUnlocked, SceneKeys]
-        $ getDungeon().loadFromVN(pass_list)
+        $ dungeon.loadFromVN(pass_list)
         call screen dungeon_run()
         scene bg black with dissolve
-        $ [giftsReturned,n_bossesDefeated] = getRetList()
+        $ [giftsReturned,n_bossesDefeated] = dungeon.getRetList()
         $ have_charm = giftsReturned[0]
         $ have_bone = giftsReturned[1]
         $ have_clip = giftsReturned[2]

@@ -23,29 +23,15 @@ class Dungeon():
         
         pygame.init()
         self.eventList = []
-        self.screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
         
         self.callScene = ""
         self.finished = False
         
-        loadScreen = screenObjects.StaticObject(self.imageLoader.load_image('data','Loading.png'),(0,0))
-        loadScreen.draw(self.screen,(0,0))
-        
         self.victorySound = pygame.mixer.Sound('data/music/VictoryTheme2.wav')
         
-    """
-    def run(self):
-        self.clock = pygame.time.Clock()
-        self.exitStatus = 0
-        while self.exitStatus == 0:
-            for event in pygame.event.get():
-                self.addEvent(event)
-            self.mscreen.blit(self.update(),(0,0))
-            self.clock.tick(60)
-            pygame.display.flip()
-        return [None,None]
-    """
-
+    def getRetList(self):
+        return [self.gifts,self.bossesDefeated]
+  
     def loadFromVN(self,pass_list):
         if pass_list[0]: #Route == True means Ezreal
             self.battleChamps = [Ezreal(),Ahri(),Soraka(),Rengar()]
@@ -85,9 +71,9 @@ class Dungeon():
     
     def getScreen(self):
         if self.battle:
-            self.screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
-            self.screen = self.battle.updateAnimOnly(self.screen)    
-        return self.screen
+            screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
+            screen = self.battle.updateAnimOnly(screen)    
+            return screen
         
     def initBattle(self,battleNumber):
         gameObjects = []
@@ -142,7 +128,7 @@ class Dungeon():
         return battle
             
     def update(self):
-        self.screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
+        screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
         
         for event in self.eventList:
             if event == pygame.K_ESCAPE:
@@ -161,10 +147,10 @@ class Dungeon():
                 self.battle.doPlayerAttack(0)
         # END EVENT LOOP #
         
-        self.screen = self.battle.update(self.screen)    
+        screen = self.battle.update(screen)    
         self.eventList = []
         
-        return self.screen
+        return screen
         #pygame.display.flip()
 
 
@@ -174,7 +160,7 @@ class Champion(screenObjects.MultiAnimationObject):
         return (self.__class__, ())
     
     def __init__(self):
-        screenObjects.MultiAnimationObject.__init__(self, self.directory, self.prefix, 'idleB',self.offset)
+        screenObjects.MultiAnimationObject.__init__(self, self.directory, self.prefix, 'idle',self.offset)
         self.attacking = False
         self.frame = 0
         self.delay = 0
@@ -201,7 +187,7 @@ class Champion(screenObjects.MultiAnimationObject):
                 if self.attacking != None and self.currentSheet == 'attack':
                     self.attacking.getAttacked(self.attackDamage)
                     self.attacking = None
-                    self.changeImage('idleB')
+                    self.changeImage('idle')
         else:
             self.delay += 1
     
@@ -330,7 +316,7 @@ class Battle():
         self.targetArrow.rect.centerx = self.enemies[self.currentTarget].rect.centerx
         
         self.players[0].rect.right = 0
-        self.players[0].changeImage('walkB')
+        self.players[0].changeImage('walk')
         self.players[0].active = True
     
     def updateAnimOnly(self,screen):
@@ -376,7 +362,7 @@ class Battle():
             
             if mc.rect.left >= 300 + mc.centerOffset:
                 mc.rect.left = 300 + mc.centerOffset
-                mc.changeImage('idleB')
+                mc.changeImage('idle')
                 for en in self.enemies: en.active = True
                 
                 self.ui.add(self.targetArrow)
@@ -401,7 +387,7 @@ class Battle():
             if len(self.enemies) == 0:
                 for ch in self.players:
                     ch.attacking = None
-                    ch.changeImage('idleB')
+                    ch.changeImage('idle')
                 if len(self.effects) == 0:
                     self.dungeon.endBattle()
                   
@@ -454,18 +440,18 @@ class Battle():
     def onward(self):
         self.state = 2
         for pl in self.players:
-                pl.changeImage('idleB',0)
+                pl.changeImage('idle',0)
                 pl.attacking = None
         mc = self.players[0]
-        mc.changeImage('walkB',0)
+        mc.changeImage('walk',0)
         
     def retreat(self):
         self.state = 3
         for pl in self.players:
-                pl.changeImage('idleB',0)
+                pl.changeImage('idle',0)
         mc = self.players[0]
         mc.flipX()
-        mc.changeImage('walkB',0)
+        mc.changeImage('walk',0)
     
     def doPlayerAttack(self,i):
         if self.state == 1:
@@ -534,7 +520,7 @@ class FinalBattle(Battle):
             
             if mc.rect.left >= 300 + mc.centerOffset:
                 mc.rect.left = 300 + mc.centerOffset
-                mc.changeImage('idleB')
+                mc.changeImage('idle')
                 for en in self.enemies: en.active = True
                 
                 self.ui.add(self.targetArrow)
@@ -559,7 +545,7 @@ class FinalBattle(Battle):
             if len(self.enemies) == 0:
                 for ch in self.players:
                     ch.attacking = None
-                    ch.changeImage('idleB')
+                    ch.changeImage('idle')
                 if len(self.effects) == 0:
                     self.dungeon.endBattle()
                   
