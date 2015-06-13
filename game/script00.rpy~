@@ -49,66 +49,6 @@ init python:
   import renpygame
   import summonersRift
   
-  dungeon = summonersRift.Dungeon()
-  
-  class DungeonRun(renpy.Displayable):
-    def __init__(self, **kwargs):
-      super(DungeonRun, self).__init__(**kwargs)
-      self.width = 1024
-      self.height = 768
-      
-    def render(self, width, height, st, at):
-      global dungeon
-      if dungeon is None:
-        render = renpy.Render(self.width,self.height)
-      else:
-        retScreen = dungeon.update()
-        render = renpy.Render(self.width,self.height)
-        render.blit(retScreen, (0, 0))
-        if dungeon.callScene != "":
-          callScene = dungeon.callScene
-          dungeon.callScene = ""
-          renpy.call(callScene)
-        if dungeon.finished:
-          dungeon.finished = False
-          renpy.end_interaction("Finished")
-        else:
-          renpy.redraw(self,0.03)
-      return render
-      
-    def event(self, ev, x, y, st):
-      global dungeon
-      if dungeon:
-        dungeon.addEvent(ev)    
-      
-  class DungeonScene(renpy.Displayable):
-    def __init__(self, **kwargs):
-      super(DungeonScene, self).__init__(**kwargs)
-      self.width = 1024
-      self.height = 768
-      
-    def render(self, width, height, st, at):
-      global dungeon
-      render = renpy.Render(self.width,self.height)
-  
-      if dungeon:
-        retScreen = dungeon.getScreen()
-        render.blit(retScreen, (0,0))
-      
-      renpy.redraw(self,0.03)
-      return render
-      
-    def event(self,ev, x, y, st):
-      return
-      
-      
-  def set_mode():
-    fsflag = 0
-    if _preferences.fullscreen:
-      fsflag = FULLSCREEN
-    screen = renpygame.display.set_mode((1024,768), fsflag, 32)
-    return screen
-
   def mc(what, **kwargs):
     if route == "Ezreal":
       mc1(what, **kwargs)
@@ -632,7 +572,7 @@ label dungeon:
         $ SceneKeys = (sum(comboSkillsUnlocked), dungeon_visits_no_combo, bosses_defeated, vik_confessed)
         $ pass_list = [False, giftsInventory, comboSkillsUnlocked, SceneKeys]
         $ current_battle = Battle()
-        show screen dungeon_run(True)
+        call screen dungeon_run(True)
         scene bg black with dissolve
         $ current_battle = None
     elif route == "Ezreal":
@@ -642,7 +582,7 @@ label dungeon:
         $ pass_list = [True, giftsInventory, comboSkillsUnlocked, SceneKeys]
         $ old_bosses_defeated = bosses_defeated
         $ current_battle = Battle()
-        show screen dungeon_run(True)
+        call screen dungeon_run(True)
         scene bg black with dissolve
         $ current_battle = None
         $ print current_battle

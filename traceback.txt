@@ -1,10 +1,6 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "renpy/common/00gamemenu.rpy", line 163, in script
-    $ ui.interact()
-  File "renpy/common/00gamemenu.rpy", line 163, in <module>
-    $ ui.interact()
   File "renpy/common/00action_file.rpy", line 328, in __call__
     renpy.load(fn)
 TypeError: __init__() takes exactly 4 arguments (1 given)
@@ -12,13 +8,13 @@ TypeError: __init__() takes exactly 4 arguments (1 given)
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "renpy/common/00gamemenu.rpy", line 163, in script
+  File "renpy/common/_layout/screen_main_menu.rpym", line 29, in script
     $ ui.interact()
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 785, in execute
     renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/python.py", line 1382, in py_exec_bytecode
     exec bytecode in globals, locals
-  File "renpy/common/00gamemenu.rpy", line 163, in <module>
+  File "renpy/common/_layout/screen_main_menu.rpym", line 29, in <module>
     $ ui.interact()
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ui.py", line 247, in interact
     rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
@@ -36,8 +32,6 @@ Full traceback:
     rv = self.child.event(ev, x, y, st)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
     rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 183, in event
-    rv = d.event(ev, x - xo, y - yo, st)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
     rv = i.event(ev, x - xo, y - yo, cst)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
@@ -46,8 +40,6 @@ Full traceback:
     return handle_click(self.clicked)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/behavior.py", line 705, in handle_click
     rv = run(action)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/behavior.py", line 267, in run
-    new_rv = run(i, *args, **kwargs)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/behavior.py", line 274, in run
     return var(*args, **kwargs)
   File "renpy/common/00action_file.rpy", line 328, in __call__
