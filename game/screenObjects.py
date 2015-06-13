@@ -5,7 +5,7 @@ import os
 
 class imageLoader():
     def load_image(self,path,fname):
-        fp = path + '/' + fname
+        fp = os.path.join(path,fname)
         #sprite = pygame.image.load(fp)
         sprite = renpy.display.pgrender.load_image(renpy.loader.load(fp), fp)
         return sprite
@@ -135,7 +135,7 @@ class AnimatedObject(ScreenObject):
             fname, ext = os.path.splitext(f)
             if fname.startswith(prefix) and (ext in supportedFileTypes):
                 spriteName = fname[len(prefix):]
-                fp = directory+'/'+f
+                fp = os.path.join(directory,f)
                 sprite = renpy.display.pgrender.load_image(renpy.loader.load(fp), fp)
                 imageDict[spriteName] = sprite
         return imageDict

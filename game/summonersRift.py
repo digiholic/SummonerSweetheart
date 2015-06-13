@@ -5,10 +5,6 @@ import os
 import random
 
 class Dungeon():
-    def __reduce__(self):
-        print self.__class__
-        return (self.__class__, (self.currentBattle,))
-    
     def __init__(self, startingBattle = 0):
         self.camera_rect = pygame.Rect(0,0,1024,768)
         
@@ -27,7 +23,7 @@ class Dungeon():
         self.callScene = ""
         self.finished = False
         
-        self.victorySound = pygame.mixer.Sound('data/music/VictoryTheme2.wav')
+        self.victorySound = pygame.mixer.Sound(os.path.join(*['data','music','VictoryTheme2.wav']))
         
     def getRetList(self):
         return [self.gifts,self.bossesDefeated]
@@ -81,7 +77,7 @@ class Dungeon():
         screen = renpy.display.pgrender.surface(self.camera_rect.size,True)
         enemiesList = []
         endScene = "victoryScreen"
-        music='data/music/BattleStance.wav'
+        music=os.path.join(*['data','music','BattleStance.wav'])
         
         if battleNumber == 0:
             enemiesList = [Poro()]
@@ -90,12 +86,12 @@ class Dungeon():
         
         elif battleNumber == 1:
             enemiesList = [Brambleback(),Cinderling(-50),Cinderling(-50)]
-            music = 'data/music/bossBattle.ogg'
+            music = os.path.join(*['data','music','bossBattle.ogg'])
             # Define this battle's background
         
         elif battleNumber == 2:
             enemiesList = [Baron()]
-            music = 'data/music/bossBattle.ogg'
+            music = os.path.join(*['data','music','bossBattle.ogg'])
             # Define this battle's background
             
         elif battleNumber == 3: return FinalBattle
@@ -105,7 +101,7 @@ class Dungeon():
             sky = screenObjects.StaticObject(self.imageLoader.load_image('data','SKY_BG.png'),(0,0))
             gameObjects.append(sky)
         
-            grndtileImg = self.imageLoader.load_image('data','Grounds/SR_GRND.gif')
+            grndtileImg = self.imageLoader.load_image('data',os.path.join('Grounds','SR_GRND.gif'))
             grndTiles = [screenObjects.StaticObject(grndtileImg, (0, self.camera_rect.bottom - grndtileImg.get_height())),
                          screenObjects.StaticObject(grndtileImg, (grndtileImg.get_width(), self.camera_rect.bottom - grndtileImg.get_height())),
                          screenObjects.StaticObject(grndtileImg, (2 * grndtileImg.get_width(), self.camera_rect.bottom - grndtileImg.get_height())),
@@ -609,13 +605,13 @@ class FinalBattle(Battle):
         
         betrayer.flipX()
         
-        poofSprite = screenObjects.SheetAnimatedObject('data/Soraka/SFX', 'raka_poof.png', 160, 0)
+        poofSprite = screenObjects.SheetAnimatedObject(os.path.join(*['data','Soraka','SFX']), 'raka_poof.png', 160, 0)
         
         poofSprite.rect.bottom = betrayer.rect.bottom
         poofSprite.rect.centerx = betrayer.rect.centerx
         self.effects.add(poofSprite)
         
-        pygame.mixer.Sound('data/EffectSFX/flash.wav').play()
+        pygame.mixer.Sound(os.path.join(*['data','EffectSFX','flash.wav'])).play()
         self.enemies.append(betrayer)
           
 class Effect(screenObjects.AnimatedObject):
@@ -632,7 +628,7 @@ class Arrow(screenObjects.StaticObject):
         return (self.__class__, ())
     
     def __init__(self):
-        img = screenObjects.imageLoader().load_image('data/icons', 'arrow2.png')
+        img = screenObjects.imageLoader().load_image(os.path.join('data','icons'), 'arrow2.png')
         screenObjects.StaticObject.__init__(self, img, (0,0))
         
         self.bounce = -5
@@ -650,15 +646,15 @@ class Ezreal(Champion):
         return (self.__class__, ())
     
     def __init__(self):
-        self.directory = 'data/Ezreal'
+        self.directory = os.path.join('data','Ezreal')
         self.prefix = 'ezreal_'
         self.offset = 250
         self.attackCD = 120
         self.attackDamage = 10
         self.centerOffset = 0
         self.maxHP = 100
-        self.attackSound = pygame.mixer.Sound('data/EffectSFX/EZ_Attack_1.mp3')
-        self.hurtSound = pygame.mixer.Sound('data/EffectSFX/EzDamage.wav')
+        self.attackSound = pygame.mixer.Sound(os.path.join(*['data','EffectSFX','EZ_Attack_1.mp3']))
+        self.hurtSound = pygame.mixer.Sound(os.path.join(*['data','EffectSFX','EzDamage.wav']))
         Champion.__init__(self)
         
 class Leona(Champion):
@@ -667,7 +663,7 @@ class Leona(Champion):
         return (self.__class__, ())
     
     def __init__(self):
-        self.directory = 'data/Leona'
+        self.directory = os.path.join('data','Leona')
         self.prefix = 'leona_'
         #TODO FIX THIS
         self.offset = 275
@@ -675,8 +671,8 @@ class Leona(Champion):
         self.attackDamage = 10
         self.centerOffset = 0
         self.maxHP = 120
-        self.attackSound = pygame.mixer.Sound('data/Leona/LeonaSFX/Attack1.wav')
-        self.hurtSound = pygame.mixer.Sound('data/Leona/LeonaSFX/Damage.wav')
+        self.attackSound = pygame.mixer.Sound(os.path.join(*['data','Leona','LeonaSFX','Attack1.wav']))
+        self.hurtSound = pygame.mixer.Sound(os.path.join(*['data','Leona','LeonaSFX','Damage.wav']))
         Champion.__init__(self)
         
 class Ahri(Champion):
@@ -685,15 +681,15 @@ class Ahri(Champion):
         return (self.__class__, ())
     
     def __init__(self):
-        self.directory = 'data/Ahri'
+        self.directory = os.path.join('data','Ahri')
         self.prefix = 'ahri_'
         self.offset = 275
         self.attackCD = 180
         self.attackDamage = 15
         self.centerOffset = 50
         self.maxHP = 80
-        self.attackSound = pygame.mixer.Sound('data/AhriSFX/Attack1_c.wav')
-        self.hurtSound = pygame.mixer.Sound('data/AhriSFX/AhriDamage.wav')        
+        self.attackSound = pygame.mixer.Sound(os.path.join(*['data','AhriSFX','Attack1_c.wav']))
+        self.hurtSound = pygame.mixer.Sound(os.path.join(*['data','AhriSFX','AhriDamage.wav']))        
         Champion.__init__(self)
         
 class Jayce(Champion):
@@ -702,15 +698,15 @@ class Jayce(Champion):
         return (self.__class__, ())
     
     def __init__(self):
-        self.directory = 'data/Jayce'
+        self.directory = os.path.join('data','Jayce')
         self.prefix = 'jayce_'
         self.offset = -1
         self.attackCD = 120
         self.attackDamage = 10
         self.centerOffset = -1
         self.maxHP = 100
-        self.attackSound = pygame.mixer.Sound('data/EffectSFX/JayceAttack.wav')
-        self.hurtSound = pygame.mixer.Sound('data/EffectSFX/JayceDamage.wav')        
+        self.attackSound = pygame.mixer.Sound(os.path.join(*['data','EffectSFX','JayceAttack.wav']))
+        self.hurtSound = pygame.mixer.Sound(os.path.join(*['data','EffectSFX','JayceDamage.wav']))        
         Champion.__init__(self)
         
 class Soraka(Champion):
@@ -719,15 +715,15 @@ class Soraka(Champion):
         return (self.__class__, ())
     
     def __init__(self):
-        self.directory = 'data/Soraka'
+        self.directory = os.path.join('data','Soraka')
         self.prefix = 'soraka_'
         self.offset = 180
         self.attackCD = 80
         self.attackDamage = 5
         self.centerOffset = 0
         self.maxHP = 100
-        self.attackSound = pygame.mixer.Sound('data/EffectSFX/SorakaAttack1.wav')
-        self.hurtSound = pygame.mixer.Sound('data/EffectSFX/SorakaDamage.wav')        
+        self.attackSound = pygame.mixer.Sound(os.path.join(*['data','EffectSFX','SorakaAttack1.wav']))
+        self.hurtSound = pygame.mixer.Sound(os.path.join(*['data','EffectSFX','SorakaDamage.wav']))        
         Champion.__init__(self)
         
 class Viktor(Champion):
@@ -736,7 +732,7 @@ class Viktor(Champion):
         return (self.__class__, ())
     
     def __init__(self):
-        self.directory = 'data/Viktor'
+        self.directory = os.path.join('data','Viktor')
         self.prefix = 'viktor_'
         self.offset = -1
         self.attackCD = 80
@@ -754,15 +750,15 @@ class Rengar(Champion):
         return (self.__class__, ())
     
     def __init__(self):
-        self.directory = 'data/Rengar'
+        self.directory = os.path.join('data','Rengar')
         self.prefix = 'rengar_'
         self.offset = 250
         self.attackCD = 100
         self.attackDamage = 10
         self.centerOffset = 50
         self.maxHP = 120
-        self.attackSound = pygame.mixer.Sound('data/EffectSFX/Attack3.wav')
-        self.hurtSound = pygame.mixer.Sound('data/EffectSFX/ReceivingDamage2.wav')
+        self.attackSound = pygame.mixer.Sound(os.path.join(*['data','EffectSFX','Attack3.wav']))
+        self.hurtSound = pygame.mixer.Sound(os.path.join(*['data','EffectSFX','ReceivingDamage2.wav']))
         Champion.__init__(self)
         
 class Rumble(Champion):
@@ -771,15 +767,15 @@ class Rumble(Champion):
         return (self.__class__, ())
     
     def __init__(self):
-        self.directory = 'data/Rumble'
+        self.directory = os.path.join('data','Rumble')
         self.prefix = 'rumble_'
         self.offset = -1
         self.attackCD = 180
         self.attackDamage = 15
         self.centerOffset = -1
         self.maxHP = 80
-        self.attackSound = pygame.mixer.Sound('data/EffectSFX/RumbleAttack1.wav')
-        self.hurtSound = pygame.mixer.Sound('data/EffectSFX/RumbleDamage1.wav')   
+        self.attackSound = pygame.mixer.Sound(os.path.join(*['data','EffectSFX','RumbleAttack1.wav']))
+        self.hurtSound = pygame.mixer.Sound(os.path.join(*['data','EffectSFX','RumbleDamage1.wav']))   
         Champion.__init__(self)
         
 class Poro(Enemy):
@@ -788,32 +784,32 @@ class Poro(Enemy):
         return (self.__class__, ())
     
     def __init__(self):
-        Enemy.__init__(self, 'data/Poro1', 'poro_', 200, 0, 160, 40, 10)
+        Enemy.__init__(self, os.path.join('data','Poro1'), 'poro_', 200, 0, 160, 40, 10)
 class MrPoro(Enemy):
     def __reduce__(self):
         print self.__class__
         return (self.__class__, ())
     
     def __init__(self):
-        Enemy.__init__(self, 'data/Poro2', 'mrporo_', 200, 0, 160, 100, 15)
+        Enemy.__init__(self, os.path.join('data','Poro2'), 'mrporo_', 200, 0, 160, 100, 15)
 class Cinderling(Enemy):
     def __reduce__(self):
         print self.__class__
         return (self.__class__, (self.offset,))
     
     def __init__(self,offset = 0):
-        Enemy.__init__(self, 'data/Cinderling', 'cinderling_', 200, offset, 60, 60, 5)
+        Enemy.__init__(self, os.path.join('data','Cinderling'), 'cinderling_', 200, offset, 60, 60, 5)
 class Brambleback(Enemy):
     def __reduce__(self):
         print self.__class__
         return (self.__class__, ())
     
     def __init__(self):
-        Enemy.__init__(self, 'data/Brambleback', 'brambleback_', 400, 0, 160, 200, 20)
+        Enemy.__init__(self, os.path.join('data','Brambleback'), 'brambleback_', 400, 0, 160, 200, 20)
         self.zonya = False
         self.zTimer = 0
         #self.sound1 = pygame.mixer.Sound('data/EffectSFX/zonya1.wav')
-        self.sound = pygame.mixer.Sound('data/EffectSFX/zonya2.wav')
+        self.sound = pygame.mixer.Sound(os.path.join(*['data','EffectSFX','zonya2.wav']))
     
     def update(self):
         Enemy.update(self)
@@ -837,7 +833,7 @@ class Baron(Enemy):
         return (self.__class__, ())
     
     def __init__(self):
-        Enemy.__init__(self, 'data/Nashor', 'baron_', 800, 100, 160, 800, 20)
+        Enemy.__init__(self, os.path.join('data','Nashor'), 'baron_', 800, 100, 160, 800, 20)
         self.eventTimer = 0
         self.eventTrigger = False
         
@@ -865,7 +861,7 @@ class Doran(Enemy):
         return (self.__class__, ())
     
     def __init__(self):
-        Enemy.__init__(self, 'data/Doran', 'doran_', 100, 0, 60, 600, 20)
+        Enemy.__init__(self, os.path.join('data','Doran'), 'doran_', 100, 0, 60, 600, 20)
         
     def getAttacked(self,damage):
         self.hp -= damage
@@ -878,7 +874,7 @@ class EnemyRaka(Enemy):
         return (self.__class__, ())
     
     def __init__(self):
-        Enemy.__init__(self, 'data/Soraka', 'soraka_', 180, 0, 80, 100, 5)
+        Enemy.__init__(self, os.path.join('data','Soraka'), 'soraka_', 180, 0, 80, 100, 5)
         
     def getAttacked(self,damage):
         self.hp -= damage

@@ -1,20 +1,29 @@
+label quitScreen:
+  show screen dungeon_run(False)
+  menu:
+    "Are you sure you want to retreat?"
+    "Never!":
+      pass
+    "Flee!":
+      $ battleFlag = "retreat"
+  call screen dungeon_run(True)
+  return
+  
 label victoryScreen:
-    scene expression DungeonScene()
+    show screen dungeon_run(False)
     "YOU WIN"
     menu:
         "Press on":
             vrmc happy " Let's keep going!"
-            $ dungeon.battle.onward()
-            call screen dungeon_run()
+            $ battleFlag = "onward"
         "That's enough":
             vrmc flat " I think that's far enough for now, let's heal up and come back later!"
-            $ dungeon.battle.retreat()
-            call screen dungeon_run()
+            $ battleFlag = "retreat"
+    show screen dungeon_run(True)
     return
             
 label redBattle:
-    scene expression DungeonScene()
-    
+    show screen dungeon_run(False)
     if redCount == 0:
       vrmc sad "Why is this boss so hard to annihilate?! Nothing seems to be working."
       vrmc surprise "It’s as if this monster has some kind of buff... That’s it! This is the hacker’s doing."
@@ -30,12 +39,10 @@ label redBattle:
       vrmc sad "Me and my pride…"
       
     $ redCount += 1
-    $ dungeon.battle.retreat()
-    call screen dungeon_run()
+    call screen dungeon_run(True)
     return
     
 label afterFirstBattle:
-  scene expression DungeonScene()
   "YOU WIN"
   h "Congratulations, Summoner! You’ve defeated the first minion of the game. You must be brimming with pride and glee."
   h "Well, that will be short-lived, I assure you. No matter how you may try and struggle, you stand no chance of defeating {i}me{/i}!"
@@ -43,25 +50,20 @@ label afterFirstBattle:
   menu:
     "Get past all of his minions":
       vrmc happy " No problem! We can take anything you throw at us!"
-      $ dungeon.battle.onward()
-      call screen dungeon_run()
+      $ battleFlag = "onward"
     "I don't stand a chance":
       vrmc sad " He might be right. I'm not ready for this yet. I'll come back later."
-      $ dungeon.battle.retreat()
-      call screen dungeon_run()
+      $ battleFlag = "retreat"
   return
   
 label killBaron:
-  scene expression DungeonScene()
   na "ARRGHH!"
   na "You’ll never get away with this…"
   vrmc surprise "Wait, what?!"
   "That was beyond weird."
-  call screen dungeon_run()
   return
   
 label waitBaron:
-  scene expression DungeonScene()  
   vrmc surprise "Wait! Nashor, I have a question."
   na "Ergh?!"
   vrmc flat "Yea, I know you can talk. You’re a player aren’t you?"
@@ -79,11 +81,9 @@ label waitBaron:
   na "He has this hack that doesn’t let you leave the game once you face him. You’re stuck in here forever, and if you die, well… You can do the math."
   vrmc sad "…"
   "I never signed up for a death wish. Is this {i}really{/i} worth it?"
-  call screen dungeon_run()
   return
   
 label beforeHacker:
-  scene expression DungeonScene()    
   h "Welcome to your doom, champions! Or should I say losers, since you will soon be {i}losing{/i} your lives."
   h "You are free to die at will. Just say the word and I’ll zap you into mindless bodies."
   vrmc angry "Seriously? You’re one sick hacker."
@@ -103,7 +103,6 @@ label beforeHacker:
       ez happy "Alright! Like I was saying, onward—"
       
       $ dungeon.battle.betray()
-      call screen dungeon_run()
       return
       
     elif raka_confessed == True:
@@ -139,14 +138,12 @@ label beforeHacker:
       so "That’s right! I won’t assist you any further, Dr. Reveck! What you’re doing is wrong, no matter how I look at it."
       so "This isn’t about me anymore; even if I have to bear the weight of Orianna’s death, forcing that despair on others is a fate much worse."
       h "Unable to fulfill your duties until the end, I see. So be it! Fight me if you will, or knowing your own failures, will you turn tail now?"
-      call screen dungeon_run()
       return
       
   elif route == "Leona":
       pass
   
 label betrayal:
-      scene expression DungeonScene()    
       hide raka
       ez surprise "Ergh. Wha… Wh—Huh?!"
       h "I can see your mind is all jumbled. Let me clarify it for you, petty player, since these will be your last thoughts!"
@@ -157,7 +154,6 @@ label betrayal:
       show raka vr sad at right
       so "…"
       so "I must correct my sins, Ezreal. I’m sorry."
-      call screen dungeon_run()
       return
       
 label AfterBetrayal:

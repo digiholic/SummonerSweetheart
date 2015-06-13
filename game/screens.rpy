@@ -481,13 +481,12 @@ screen school_map():
                 add "gui/map_viktor_hover.png" xpos class_x ypos class_y
     
 #####
-screen dungeon_run():
-  modal True
-  add DungeonRun() xpos 0.0 ypos 0.0
+screen dungeon_run(blocked):
+  if blocked:
+    modal True
+  if current_battle:
+    add current_battle xpos 0.0 ypos 0.0
     
-screen dungeon_scene():
-  add DungeonScene() xpos 0.0 ypos 0.0
-  
 ######################################### CLOCK
 screen clock():
     if period == 0:

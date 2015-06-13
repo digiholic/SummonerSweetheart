@@ -147,6 +147,9 @@ label start:
     $ preboss_flag = False
     $ afterconfession_flag = False
     $ afterdungeon_flag = False
+    $ battleNumber = 0
+    $ battleFlag = ""
+    $ current_battle = None
     
     call screen char_select
     $ route = _return
@@ -216,8 +219,8 @@ label prologue:
     $ dungeon_visited = False
     $ dungeon_visits_no_combo = 0
     $ redCount = 0
-    
     $ bosses_defeated = 0
+    
     stop music fadeout 1.0
     scene bg black
     "BZZT."
@@ -628,27 +631,22 @@ label dungeon:
         $ comboSkillsUnlocked = [jayce_combo, rumble_combo, vik_combo]
         $ SceneKeys = (sum(comboSkillsUnlocked), dungeon_visits_no_combo, bosses_defeated, vik_confessed)
         $ pass_list = [False, giftsInventory, comboSkillsUnlocked, SceneKeys]
-        $ dungeon().loadFromVN(pass_list)
-        call screen dungeon_run()
+        $ current_battle = Battle()
+        call screen dungeon_run(True)
         scene bg black with dissolve
-        $ [giftsReturned,n_bossesDefeated] = dungeon.getRetList()
-        $ have_hammer = giftsReturned[0]
-        $ have_sketch = giftsReturned[1]
-        $ have_rubix = giftsReturned[2]
+        $ current_battle = None
     elif route == "Ezreal":
         $ giftsInventory = [have_charm, have_bone, have_clip]
         $ comboSkillsUnlocked = [ahri_combo, rango_combo, raka_combo]
         $ SceneKeys = (sum(comboSkillsUnlocked), dungeon_visits_no_combo, bosses_defeated, raka_confessed)
         $ pass_list = [True, giftsInventory, comboSkillsUnlocked, SceneKeys]
-        $ dungeon.loadFromVN(pass_list)
-        call screen dungeon_run()
+        $ old_bosses_defeated = bosses_defeated
+        $ current_battle = Battle()
+        call screen dungeon_run(True)
         scene bg black with dissolve
-        $ [giftsReturned,n_bossesDefeated] = dungeon.getRetList()
-        $ have_charm = giftsReturned[0]
-        $ have_bone = giftsReturned[1]
-        $ have_clip = giftsReturned[2]
-    if n_bossesDefeated > bosses_defeated:
-        $ bosses_defeated = n_bossesDefeated
+        $ current_battle = None
+        $ print current_battle
+    if bosses_defeated > old_bosses_defeated:
         if route == "Ezreal":
             $ ahri_rp = ahri_rp + 15
             $ rango_rp = rango_rp + 15
