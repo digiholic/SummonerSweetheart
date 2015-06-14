@@ -33,6 +33,9 @@ init python:
       else:
         self.players = [Leona(), Jayce(), Viktor(), Rumble()]
       
+      self.chargingCircles = [ChargingCircle(self.players[0]),ChargingCircle(self.players[1]),ChargingCircle(self.players[2]),ChargingCircle(self.players[3])]
+      self.ui.extend(self.chargingCircles)
+      
       self.state = 0
       self.target = 0
       
@@ -61,6 +64,7 @@ init python:
         self.enemies = [Poro()]
       elif number == 1:
         self.enemies = [Brambleback()]
+      
       self.scenery.append(sky)
       self.scenery.extend(repeatGrnd)
       self.scenery.extend(treetiles)
@@ -76,6 +80,7 @@ init python:
         self.players[i].rect.bottom = 668
         self.players[i].battle = self
         self.players[i].currentCD = 0
+        
       for i in range(0,len(self.enemies)):
         self.enemies[i].active = False
         self.enemies[i].visible = True
@@ -144,6 +149,10 @@ init python:
           mc.changeImage('idle')
           for en in self.enemies: en.active = True
           
+          for i in range(0,len(self.chargingCircles)):
+            c = self.chargingCircles[i]
+            c.rect.centerx = (300 - (100 * i)) + 116
+            c.rect.centery = 408
           for ui in self.ui:
             ui.visible = True
           renpy.music.play(self.music, loop=True)
@@ -265,7 +274,7 @@ init python:
       j = random.randint(0,3)
       while not self.players[j].alive:
         j = (j + 1) % 4
-      
+      print self.enemies[i], " attacks ", self.players[j]
       self.enemies[i].doAttack(self.players[j])
       
     def changeTarget(self,amt):
@@ -318,7 +327,7 @@ init python:
       if self.HP <=0:
         self.alive = False
         self.active = False
-        self.visible = False 
+        self.visible = False
       if self.hurtSprite:
         self.battle.effects.append(self.hurtSprite)
       if self.hurtSound:
@@ -332,7 +341,7 @@ init python:
         if self.active:
           if self.currentCD > 0:
             self.currentCD -= 1
-        if self.animLib.currentImage == 'attack':
+        if self.attacking:
           if self.animLib.frame == len(self.animLib.library[self.animLib.currentImage].frames) - 1:
             self.target.getAttacked(self.attackDamage)
             self.animLib.changeImage('idle')
@@ -377,7 +386,44 @@ init python:
       else:
         return renpy.Render(0,0)
 
-
+  
+  class ChargingCircle(renpy.Displayable):
+    def __init__(self, parent, **kwargs):
+      super(ChargingCircle,self).__init__(**kwargs)
+      self.parent = parent
+      self.rect = pygame.Rect((0,0), (64,64))
+      self.filmstrip = FilmStrip(os.path.join(*['data','icons','chargingCircle.png']), (64,64), (10,1),10,False)
+      
+      self.visible = False
+      
+    def render(self, width, height, st, at):
+      if self.visible:
+        percentage = float(self.parent.currentCD) / float(self.parent.attackCD) * 100
+        
+        if percentage == 0:
+          self.filmstrip.index = 0
+        elif percentage > 0 and percentage <= 10:
+          self.filmstrip.index = 1
+        elif percentage > 10 and percentage <= 20:
+          self.filmstrip.index = 2
+        elif percentage > 20 and percentage <= 30:
+          self.filmstrip.index = 3
+        elif percentage > 30 and percentage <= 40:
+          self.filmstrip.index = 4
+        elif percentage > 40 and percentage <= 50:
+          self.filmstrip.index = 5
+        elif percentage > 50 and percentage <= 60:
+          self.filmstrip.index = 6
+        elif percentage > 60 and percentage <= 70:
+          self.filmstrip.index = 7
+        elif percentage > 70 and percentage <= 90:
+          self.filmstrip.index = 8
+        elif percentage > 90:
+          self.filmstrip.index = 9
+        return self.filmstrip.render(width,height,st,at)
+      else:
+        return renpy.Render(0,0)
+      
 ######################### BEGIN CHAMPION DECLARATION #########################################
         
   class Ezreal(Fighter):
