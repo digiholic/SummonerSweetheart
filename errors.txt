@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/dungeonBattle.rpy", line 398: invalid syntax
-                if percentage = 0:
-                               ^
+File "game/dungeonBattle.rpy", line 446: invalid syntax
+            bar = Transform(self.barimage, crop=(0, 0, percentage * self.barrect.width, self.barrect.height)))
+                                                                                                              ^
     
 
 Ren'Py Version: Ren'Py 6.18.3.761

@@ -34,6 +34,8 @@ init python:
         self.players = [Leona(), Jayce(), Viktor(), Rumble()]
       
       self.chargingCircles = [ChargingCircle(self.players[0]),ChargingCircle(self.players[1]),ChargingCircle(self.players[2]),ChargingCircle(self.players[3])]
+      self.healthBars = [HealthBar(self.players[0]),HealthBar(self.players[1]),HealthBar(self.players[2]),HealthBar(self.players[3])]
+      self.ui.extend(self.healthBars)
       self.ui.extend(self.chargingCircles)
       
       self.state = 0
@@ -151,8 +153,11 @@ init python:
           
           for i in range(0,len(self.chargingCircles)):
             c = self.chargingCircles[i]
+            b = self.healthBars[i]
             c.rect.centerx = (300 - (100 * i)) + 116
             c.rect.centery = 408
+            b.rect.left = 64
+            b.rect.top = 75 * i
           for ui in self.ui:
             ui.visible = True
           renpy.music.play(self.music, loop=True)
@@ -423,7 +428,32 @@ init python:
         return self.filmstrip.render(width,height,st,at)
       else:
         return renpy.Render(0,0)
+    
+  class HealthBar(renpy.Displayable):
+    def __init__(self, parent, **kwargs):
+      super(HealthBar, self).__init__(**kwargs)
+      self.parent = parent
       
+      self.barimage = os.path.join(*['data','icons','healthBar.png'])
+      self.barrect = pygame.Rect((41,35),(168,29))
+      
+      self.image = os.path.join(*['data','icons','battleuiBOX.png'])
+      self.rect = pygame.Rect((0,0),(219,73))
+      
+      self.visible = False
+    
+    def render(self, width, height, st, at):
+      percentage = float(self.parent.HP) / float(self.parent.maxHP)
+      
+      bar = Transform(self.barimage, crop=(0, 0, percentage * self.barrect.width, self.barrect.height))
+      barrender = bar.render(width,height,st,at)
+      
+      render = Image(self.image).render(width,height,st,at)
+      render.blit(barrender, self.barrect.topleft)
+      if self.visible:
+        return render
+      else:
+        return renpy.Render(0,0)
 ######################### BEGIN CHAMPION DECLARATION #########################################
         
   class Ezreal(Fighter):
