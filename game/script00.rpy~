@@ -44,11 +44,6 @@ define h = Character('Hacker')
 define na = Character('Baron Nashor')
 
 init python:
-  import pygame
-  pygame.font.init()
-  import renpygame
-  import summonersRift
-  
   def mc(what, **kwargs):
     if route == "Ezreal":
       mc1(what, **kwargs)

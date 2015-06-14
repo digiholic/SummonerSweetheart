@@ -568,6 +568,7 @@ label dungeon:
         $ pass_list = [False, giftsInventory, comboSkillsUnlocked, SceneKeys]
         $ current_battle = Battle()
         call screen dungeon_run(True)
+        show screen dungeon_run(False)
         scene bg black with dissolve
         $ current_battle = None
     elif route == "Ezreal":
@@ -578,6 +579,7 @@ label dungeon:
         $ old_bosses_defeated = bosses_defeated
         $ current_battle = Battle()
         call screen dungeon_run(True)
+        show screen dungeon_run(False)
         scene bg black with dissolve
         $ current_battle = None
         $ print current_battle

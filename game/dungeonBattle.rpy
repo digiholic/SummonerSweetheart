@@ -5,7 +5,9 @@ init python:
   import summonersRift
   import os
   import random
-  
+ 
+######################### BEGIN BATTLE OBJECT #########################################
+ 
   class Battle(renpy.Displayable):
     def __init__(self, **kwargs):
       global battleNumber
@@ -23,14 +25,19 @@ init python:
       self.effects = []
       self.ui = []
       
+      self.arrow = TargetArrow()
+      self.ui.append(self.arrow)
+      
       if route == "Ezreal":
         self.players = [Ezreal(), Ahri(), Soraka(), Rengar()]
       else:
         self.players = [Leona(), Jayce(), Viktor(), Rumble()]
       
-      self.loadBattle(battleNumber)
       self.state = 0
-      self.target = 0      
+      self.target = 0
+      
+      self.loadBattle(battleNumber)
+            
       
     def loadBattle(self, number):
       sky = Scenery(os.path.join('data','SKY_BG.png'),(0,0))
@@ -79,6 +86,9 @@ init python:
       # Gotta find a way to do this with no rect
       # self.targetArrow...
       
+      self.arrow.rect.bottom = self.enemies[self.target].rect.centery
+      self.arrow.rect.centerx = self.enemies[self.target].rect.centerx
+        
       self.players[0].rect.right = 0
       self.players[0].active = True
       self.players[0].visible = True
@@ -134,7 +144,8 @@ init python:
           mc.changeImage('idle')
           for en in self.enemies: en.active = True
           
-          # self.ui.add(TargetArrow())
+          for ui in self.ui:
+            ui.visible = True
           renpy.music.play(self.music, loop=True)
           self.state = 1
       
@@ -212,6 +223,8 @@ init python:
       renpy.music.stop()
       renpy.music.play(self.victorySound,loop=False)
       battleNumber += 1
+      for ui in self.ui:
+        ui.visible = False
       
       self.toggleActive()
       renpy.call(self.endScene)
@@ -245,7 +258,7 @@ init python:
             en = self.enemies[self.target]
             while not en.alive:
               self.changeTarget(1)
-              en = self.enemies[self.currentTarget]
+              en = self.enemies[self.target]
             self.players[i].doAttack(en)
             
     def doEnemyAttack(self,i):
@@ -260,8 +273,11 @@ init python:
       l = len(self.enemies)
       if l > 0:
         self.target = (l + self.target) % l
-        # arrow bounce
-        
+        self.arrow.rect.bottom = self.enemies[self.target].rect.centery
+        self.arrow.rect.centerx = self.enemies[self.target].rect.centerx
+      
+######################### END BATTLE OBJECT #########################################
+
   # Things that are fighting in a battle
   class Fighter(renpy.Displayable):
     def __init__(self, animLib, position, centerOffset, attackCD, attackDamage, maxHP, **kwargs):
@@ -284,12 +300,18 @@ init python:
       self.battle = None
       self.target = None
       
+      self.attackSound = None
+      self.hurtSound = None
+      self.hurtSprite = None
+      
     def doAttack(self,target):
       if not self.attacking and self.currentCD == 0:
           self.attacking = True
           self.currentCD = self.attackCD
           self.animLib.changeImage('attack')
           self.target = target      
+          if self.attackSound:
+            renpy.sound.play(self.attackSound)
           
     def getAttacked(self,damage):
       self.HP -= damage
@@ -297,8 +319,10 @@ init python:
         self.alive = False
         self.active = False
         self.visible = False 
-      #if self.hurtSprite:
-        #self.battle.effects.append(self.hurtSprite)
+      if self.hurtSprite:
+        self.battle.effects.append(self.hurtSprite)
+      if self.hurtSound:
+        renpy.sound.play(self.hurtSound)
         
     def changeImage(self,newImage):
       self.animLib.changeImage(newImage)
@@ -316,9 +340,124 @@ init python:
             
       if self.visible:
         return self.animLib.render(width, height, st, at)
-      return renpy.Render(0,0)  
+      return renpy.Render(0,0)     
+  
+  class Scenery(renpy.Displayable):
+    def __init__(self,image,position,**kwargs):
+      super(Scenery,self).__init__(**kwargs)
+      self.image = image
+      im = Image(image)
+      rn = im.render(0,0,0,0)
+      self.rect = pygame.Rect(position, rn.get_size())
+      
+    def render(self, width, height, st, at):
+      return Image(self.image).render(width,height,st,at)
+      
+######################### BEGIN UI DECLARATION #########################################
+
+  class TargetArrow(renpy.Displayable):
+    def __init__(self, **kwargs):
+      super(TargetArrow,self).__init__(**kwargs)
+      self.image = os.path.join(*['data','icons','arrow2.png'])
+      im = Image(self.image)
+      rn = im.render(0,0,0,0)
+      self.rect = pygame.Rect((0,0), rn.get_size())
+      
+      self.bounce = -5
+      self.bounceDir = 1
+      self.visible = False
+      
+    def render(self,width, height, st, at):
+      self.rect.y += self.bounce
+      self.bounce += self.bounceDir
+      if self.bounce == 5: self.bounceDir = -1
+      if self.bounce == -5: self.bounceDir = 1
+      if self.visible:
+        return Image(self.image).render(width, height, st, at)
+      else:
+        return renpy.Render(0,0)
+
+
+######################### BEGIN CHAMPION DECLARATION #########################################
+        
+  class Ezreal(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Ezreal'), 'ezreal_', 'idle', (250,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 80, attackDamage = 10, maxHP = 100)
+      self.hurtSound = os.path.join(*['data','EffectSFX','EzDamage.wav'])
+      self.attackSound = os.path.join(*['data','EffectSFX','EZ_Attack_1.mp3'])
+      
+  class Leona(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Leona'), 'leona_', 'idle', (275,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 50, attackCD = 80, attackDamage = 10, maxHP = 120)
+      self.attackSound = os.path.join(*['data','Leona','LeonaSFX','Attack1.wav'])
+      self.hurtSound = os.path.join(*['data','Leona','LeonaSFX','Damage.wav'])
+        
+  class Ahri(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Ahri'), 'ahri_', 'idle', (275,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 50, attackCD = 120, attackDamage = 15, maxHP = 80)
+      self.attackSound = os.path.join(*['data','AhriSFX','Attack1_c.wav'])
+      self.hurtSound = os.path.join(*['data','AhriSFX','AhriDamage.wav'])
+        
+  class Soraka(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Soraka'), 'soraka_', 'idle', (180,250), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 60, attackDamage = 5, maxHP = 100)
+      self.attackSound = os.path.join(*['data','EffectSFX','SorakaAttack1.wav'])
+      self.hurtSound = os.path.join(*['data','EffectSFX','SorakaDamage.wav'])        
+        
+      
+  class Rengar(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Rengar'), 'rengar_', 'idle', (250,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 50, attackCD = 80, attackDamage = 10, maxHP = 120)
+      self.attackSound = os.path.join(*['data','EffectSFX','Attack3.wav'])
+      self.hurtSound = os.path.join(*['data','EffectSFX','ReceivingDamage2.wav'])
+      
+      
+      
+######################### BEGIN ENEMY DECLARATION #########################################
+  class Poro(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Poro1'), 'poro_', 'idle', (200,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 10, maxHP = 40)
+      self.currentCD = random.randint(0,self.attackCD)
+        
+  class Brambleback(Fighter):
+    def __init__(self):
+        animLib = AnimLib(os.path.join('data','Brambleback'), 'brambleback_', 'idle', (400,400), 0.3)
+        Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 20, maxHP = 200)
+        self.currentCD = 120
+        self.zonya = False
+        self.zTimer = 0
+        #self.sound1 = pygame.mixer.Sound('data/EffectSFX/zonya1.wav')
+        self.sound = (os.path.join(*['data','EffectSFX','zonya2.wav']))
     
-  # A way to manage multiple sprite sheets.
+    def render(self, height, width, st, at):
+      render = Fighter.render(self, height, width, st, at)
+      if self.zonya:
+        self.zTimer += 1
+        if self.zTimer == 40:
+          self.zonya = False
+          self.changeImage('idle')
+          self.zTimer = 0
+          self.HP = 100
+          renpy.call("redBattle")
+      return render
+        
+    def getAttacked(self,damage):
+        self.HP -= damage
+        if self.HP <= 0:
+            #self.sound1.play()
+            renpy.sound.play(self.sound)
+            self.changeImage('zonya')
+            self.zonya = True
+            
+######################### END ENEMY DECLARATION #########################################
+
+# A way to manage multiple sprite sheets.
   class AnimLib(renpy.Displayable):
     def __init__(self, directory, prefix, defaultImage, framesize, delay, loop = True, **kwargs):
       super(AnimLib, self).__init__(**kwargs)
@@ -436,69 +575,3 @@ init python:
         def visit(self):
             return [self.image]
   
-  class Scenery(renpy.Displayable):
-    def __init__(self,image,position,**kwargs):
-      super(Scenery,self).__init__(**kwargs)
-      self.image = image
-      im = Image(image)
-      rn = im.render(0,0,0,0)
-      self.rect = pygame.Rect(position, rn.get_size())
-      
-    def render(self, width, height, st, at):
-      return Image(self.image).render(width,height,st,at)
-      
-  class Ezreal(Fighter):
-    def __init__(self):
-      animLib = AnimLib(os.path.join('data','Ezreal'), 'ezreal_', 'idle', (250,200), 0.3)
-      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 80, attackDamage = 10, maxHP = 100)
-      
-  class Ahri(Fighter):
-    def __init__(self):
-      animLib = AnimLib(os.path.join('data','Ahri'), 'ahri_', 'idle', (275,200), 0.3)
-      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 50, attackCD = 120, attackDamage = 15, maxHP = 80)
-      
-  class Soraka(Fighter):
-    def __init__(self):
-      animLib = AnimLib(os.path.join('data','Soraka'), 'soraka_', 'idle', (180,250), 0.3)
-      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 60, attackDamage = 5, maxHP = 100)
-      
-  class Rengar(Fighter):
-    def __init__(self):
-      animLib = AnimLib(os.path.join('data','Rengar'), 'rengar_', 'idle', (250,200), 0.3)
-      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 50, attackCD = 80, attackDamage = 10, maxHP = 120)
-      
-  class Poro(Fighter):
-    def __init__(self):
-      animLib = AnimLib(os.path.join('data','Poro1'), 'poro_', 'idle', (200,200), 0.3)
-      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 10, maxHP = 40)
-      self.currentCD = random.randint(0,self.attackCD)
-      
-  class Brambleback(Fighter):
-    def __init__(self):
-        animLib = AnimLib(os.path.join('data','Brambleback'), 'brambleback_', 'idle', (400,400), 0.3)
-        Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 20, maxHP = 200)
-        self.currentCD = 120
-        self.zonya = False
-        self.zTimer = 0
-        #self.sound1 = pygame.mixer.Sound('data/EffectSFX/zonya1.wav')
-        self.sound = (os.path.join(*['data','EffectSFX','zonya2.wav']))
-    
-    def render(self, height, width, st, at):
-      render = Fighter.render(self, height, width, st, at)
-      if self.zonya:
-        self.zTimer += 1
-        if self.zTimer == 80:
-          self.zonya = False
-          self.changeImage('idle')
-          self.zTimer = 0
-          self.HP = 100
-          renpy.call("redBattle")
-      return render
-        
-    def getAttacked(self,damage):
-        self.HP -= damage
-        if self.HP <= 0:
-            #self.sound1.play()
-            renpy.sound.play(self.sound)
-            self.changeImage('zonya')
-            self.zonya = True

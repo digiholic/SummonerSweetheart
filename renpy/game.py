@@ -162,6 +162,9 @@ class CallException(Exception):
         self.label = label
         self.args = args
         self.kwargs = kwargs
+        
+    def __reduce__(self):
+        return (CallException, (self.label, self.args, self.kwargs))
 
 class EndReplay(Exception):
     """
