@@ -482,9 +482,10 @@ screen school_map():
     
 #####
 screen dungeon_run(blocked):
-  modal False
   if blocked:
     modal True
+    if current_battle:
+      $ current_battle.reActivate()
   if current_battle:
     add current_battle xpos 0.0 ypos 0.0
     

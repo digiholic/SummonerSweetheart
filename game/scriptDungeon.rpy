@@ -6,6 +6,8 @@ label quitScreen:
       pass
     "Flee!":
       $ battleFlag = "retreat"
+  
+  $ current_battle.reActivate()
   call screen dungeon_run(True)
   return
   
@@ -39,6 +41,7 @@ label redBattle:
       vrmc sad "Me and my pride…"
       
     $ redCount += 1
+    $ current_battle.reActivate()
     call screen dungeon_run(True)
     return
     

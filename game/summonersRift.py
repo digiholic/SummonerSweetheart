@@ -380,7 +380,7 @@ class Battle():
                     self.enemies.remove(en)
                     self.effects.add(en.getHurtSprite())
                     self.changeTarget(1)
-            
+                    
             if len(self.enemies) == 0:
                 for ch in self.players:
                     ch.attacking = None

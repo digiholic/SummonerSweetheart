@@ -6,6 +6,8 @@ label quitScreen:
       pass
     "Flee!":
       $ battleFlag = "retreat"
+  
+  $ current_battle.reActivate()
   call screen dungeon_run(True)
   return
   
@@ -19,11 +21,14 @@ label victoryScreen:
         "That's enough":
             vrmc flat " I think that's far enough for now, let's heal up and come back later!"
             $ battleFlag = "retreat"
-    show screen dungeon_run(True)
+    call screen dungeon_run(True)
     return
             
 label redBattle:
     show screen dungeon_run(False)
+    if ahri_combo:
+      vrmc happy "There we go, now I use the attack Teemo taught me!"
+      $ canCombo = True
     if redCount == 0:
       vrmc sad "Why is this boss so hard to annihilate?! Nothing seems to be working."
       vrmc surprise "It’s as if this monster has some kind of buff... That’s it! This is the hacker’s doing."
@@ -39,6 +44,7 @@ label redBattle:
       vrmc sad "Me and my pride…"
       
     $ redCount += 1
+    $ current_battle.reActivate()
     call screen dungeon_run(True)
     return
     

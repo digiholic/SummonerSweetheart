@@ -25,6 +25,10 @@ init python:
       self.effects = []
       self.ui = []
       
+      self.lastThreeAttacks = []
+      self.comboTimer = 0
+      self.queueCombo = ()
+      
       self.arrow = TargetArrow()
       self.ui.append(self.arrow)
       
@@ -90,9 +94,7 @@ init python:
         self.enemies[i].rect.bottom = 668
         self.enemies[i].battle = self
         
-      # Gotta find a way to do this with no rect
-      # self.targetArrow...
-      
+      self.target = 0
       self.arrow.rect.bottom = self.enemies[self.target].rect.centery
       self.arrow.rect.centerx = self.enemies[self.target].rect.centerx
         
@@ -102,25 +104,29 @@ init python:
       self.players[0].changeImage('walk')
     
       self.state = 0
-      self.target = 0
       
-    def toggleActive(self):
+    def deActivate(self):
       for ch in self.players:
-        if ch.oldActiveState:
-          ch.active = ch.oldActiveState
-          ch.oldActiveState = None
-        else:
-          ch.oldActiveState = ch.active
-          ch.active = False
+        ch.oldActiveState = ch.active
+        ch.active = False
       
       for en in self.enemies:
-        if en.oldActiveState:
-          en.active = en.oldActiveState
-          en.oldActiveState = None
-        else:
-          en.oldActiveState = en.active
-          ch.active = False
-    
+        en.oldActiveState = en.active
+        en.active = False
+        
+      for ui in self.ui:
+        ui.visible = False
+        
+    def reActivate(self):
+      for ch in self.players:
+        ch.active = ch.oldActiveState
+        
+      for en in self.enemies:
+        en.active = en.oldActiveState
+        
+      for ui in self.ui:
+        ui.visible = True
+      
     def render(self, width, height, st, at):
       global battleFlag
       
@@ -172,16 +178,17 @@ init python:
             en.currentCD = en.attackCD
           if not en.alive:
               self.enemies.remove(en)
-              #self.effects.add(en.getHurtSprite())
+              self.effects.append(HitFlash(en))
               self.changeTarget(1)  
             
-          if len(self.enemies) == 0:
-            for ch in self.players:
-              ch.attacking = None
-              ch.changeImage('idle')
-            if len(self.effects) == 0:
-              self.endBattle()
-              
+        if len(self.enemies) == 0:
+          for ch in self.players:
+            ch.attacking = None
+            ch.changeImage('idle')
+          if len(self.effects) == 0:
+            self.state = -1
+            self.endBattle()
+            
       # Onward animation
       elif self.state == 2:
         mc = self.players[0]
@@ -207,17 +214,26 @@ init python:
       for en in self.enemies:
         child_render = en.render(width, height, st, at)
         render.blit(child_render, en.rect.topleft)
+      for ui in self.ui:
+        child_render = ui.render(width, height, st, at)
+        render.blit(child_render, ui.rect.topleft)
       for ef in self.effects:
         child_render = ef.render(width, height, st, at)
         render.blit(child_render, ef.rect.topleft)
         if ef.done:
           self.effects.remove(ef)
-      for ui in self.ui:
-        child_render = ui.render(width, height, st, at)
-        render.blit(child_render, ui.rect.topleft)
-      
+        
+      self.comboTimer += 1
+      if self.comboTimer == 5:
+        self.lastThreeAttacks = []
+        self.comboTimer = 0
+        
       renpy.redraw(self, 0.1)
       return render
+      
+    def callScene(self,scene):
+      self.deActivate()
+      renpy.call(scene)
       
     def event(self, ev, x, y, st):
       if ev.type == pygame.KEYDOWN:
@@ -230,7 +246,7 @@ init python:
         elif ev.key == pygame.K_r:
           self.doPlayerAttack(0)
         elif ev.key == pygame.K_ESCAPE:
-          renpy.call("quitScreen")
+          self.callScene("quitScreen")
       
     def endBattle(self):
       global battleNumber
@@ -239,10 +255,7 @@ init python:
       battleNumber += 1
       for ui in self.ui:
         ui.visible = False
-      
-      self.toggleActive()
-      renpy.call(self.endScene)
-      self.toggleActive()
+      self.callScene(self.endScene)
       
     def nextBattle(self):
       global battleNumber
@@ -266,6 +279,10 @@ init python:
       
       
     def doPlayerAttack(self,i):
+      global ahri_combo
+      global rango_combo
+      global raka_combo
+      
       if self.state == 1:
         if len(self.enemies) > 0:
           if self.players[i].active:
@@ -273,13 +290,29 @@ init python:
             while not en.alive:
               self.changeTarget(1)
               en = self.enemies[self.target]
+            if len(self.lastThreeAttacks) == 3:
+              self.lastThreeAttacks.pop(0)
+              self.lastThreeAttacks.append(i)
+              self.comboTimer = 0
+            else:
+              self.lastThreeAttacks.append(i)
+              self.comboTimer = 0
+            if self.lastThreeAttacks == [0,3,1]:
+              self.effects.append(CharSuperAnim(self,self.players[i].superSprite))
+              self.queueCombo = ([0,3,1],en)
             self.players[i].doAttack(en)
-            
+    
+    def doPlayerCombo(self):
+      players = self.queueCombo[0]
+      target = self.queueCombo[1]
+      exCh = players.pop()
+      self.players[exCh].doComboAttack(target, [self.players[players[0]], self.players[players[1]]])
+      self.queueCombo = ()
+      
     def doEnemyAttack(self,i):
       j = random.randint(0,3)
       while not self.players[j].alive:
         j = (j + 1) % 4
-      print self.enemies[i], " attacks ", self.players[j]
       self.enemies[i].doAttack(self.players[j])
       
     def changeTarget(self,amt):
@@ -308,12 +341,15 @@ init python:
       
       self.alive = True
       self.attacking = False
+      
       self.active = False
       self.oldActiveState = None
       self.visible = False
       self.battle = None
       self.target = None
       
+      self.superSprite = None
+
       self.attackSound = None
       self.hurtSound = None
       self.hurtSprite = None
@@ -326,15 +362,32 @@ init python:
           self.target = target      
           if self.attackSound:
             renpy.sound.play(self.attackSound)
-          
+    
+    def doComboAttack(self,target,assists):
+      self.attacking = True
+      self.currentCD = self.attackCD
+      self.animLib.changeImage('attack')
+      self.target = target
+      totalDamage = self.attackDamage
+      renpy.sound.play(self.attackSound)
+      for ch in assists:
+        renpy.sound.play(ch.attackSound)
+        ch.animLib.changeImage('attack')
+        ch.attacking = True
+        ch.target = target
+        totalDamage += ch.attackDamage
+      if hasattr(target, 'gotCombod'):
+        target.gotCombod = True
+      
     def getAttacked(self,damage):
       self.HP -= damage
+      print self, self.HP
       if self.HP <=0:
         self.alive = False
         self.active = False
         self.visible = False
       if self.hurtSprite:
-        self.battle.effects.append(self.hurtSprite)
+        self.battle.effects.append(HitFlash(self))
       if self.hurtSound:
         renpy.sound.play(self.hurtSound)
         
@@ -454,6 +507,58 @@ init python:
         return render
       else:
         return renpy.Render(0,0)
+        
+  class HitFlash(renpy.Displayable):
+    def __init__(self, parent, **kwargs):
+      super(HitFlash, self).__init__(**kwargs)
+      self.parent = parent
+      self.filmstrip = self.parent.animLib.library['die']
+      self.frame = 0
+      self.lastFrame = self.filmstrip.get_length()
+      self.done = False
+      self.rect = self.parent.rect
+      
+    def render(self, width, height, st, at):
+      t = self.filmstrip.frames[self.frame]
+      self.frame += 1
+      if self.frame == self.lastFrame:
+        self.done = True
+        return renpy.Render(0,0)
+      else:
+        render = t.render(width, height, st, at)
+        return render
+    
+  class CharSuperAnim(renpy.Displayable):
+    def __init__(self, battle, image, **kwargs):
+      super(CharSuperAnim, self).__init__(**kwargs)
+      self.battle = battle
+      self.image = image
+      self.holdTime = 0
+      self.done = False
+      
+      im = Image(self.image)
+      rn = im.render(0,0,0,0)
+      self.rect = pygame.Rect((0,0), rn.get_size())
+      
+      self.rect.right = 0
+      self.rect.bottom = 768
+      
+    def render(self, width, height, st, at):
+      if self.rect.right == 0:
+        renpy.sound.play(os.path.join(*['data','effectSFX','tpStart.wav']))
+      
+      if self.rect.centerx < 300:
+        self.rect.x += 150
+      else:
+        self.holdTime += 1
+      if self.holdTime == 14:
+        renpy.sound.play(os.path.join(*['data','effectSFX','tpFinish.wav']))
+      if self.holdTime >= 15:
+        self.rect.x += 200
+        if self.rect.left > 1024:
+          self.battle.doPlayerCombo()
+          self.done = True
+      return Image(self.image).render(width, height, st, at)
 ######################### BEGIN CHAMPION DECLARATION #########################################
         
   class Ezreal(Fighter):
@@ -476,7 +581,8 @@ init python:
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 50, attackCD = 120, attackDamage = 15, maxHP = 80)
       self.attackSound = os.path.join(*['data','AhriSFX','Attack1_c.wav'])
       self.hurtSound = os.path.join(*['data','AhriSFX','AhriDamage.wav'])
-        
+      self.superSprite = os.path.join(*['ahri','vr','ahriwink.png'])  
+      
   class Soraka(Fighter):
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Soraka'), 'soraka_', 'idle', (180,250), 0.3)
@@ -500,6 +606,7 @@ init python:
       animLib = AnimLib(os.path.join('data','Poro1'), 'poro_', 'idle', (200,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 10, maxHP = 40)
       self.currentCD = random.randint(0,self.attackCD)
+      self.hurtSprite = True
         
   class Brambleback(Fighter):
     def __init__(self):
@@ -508,6 +615,7 @@ init python:
         self.currentCD = 120
         self.zonya = False
         self.zTimer = 0
+        self.gotCombod = False
         #self.sound1 = pygame.mixer.Sound('data/EffectSFX/zonya1.wav')
         self.sound = (os.path.join(*['data','EffectSFX','zonya2.wav']))
     
@@ -519,13 +627,22 @@ init python:
           self.zonya = False
           self.changeImage('idle')
           self.zTimer = 0
-          self.HP = 100
-          renpy.call("redBattle")
+          self.HP = 50
+          self.battle.callScene("redBattle")
       return render
         
     def getAttacked(self,damage):
         self.HP -= damage
-        if self.HP <= 0:
+      
+        if self.HP <=0:
+          if self.gotCombod == True:
+            self.alive = False
+            self.active = False
+            self.visible = False
+            if self.hurtSprite:
+              self.battle.effects.append(HitFlash(self))
+      
+          else:
             #self.sound1.play()
             renpy.sound.play(self.sound)
             self.changeImage('zonya')
