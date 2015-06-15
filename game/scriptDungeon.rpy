@@ -46,6 +46,7 @@ label redBattle:
     return
     
 label afterFirstBattle:
+  show screen dungeon_run(False)
   "YOU WIN"
   h "Congratulations, Summoner! You’ve defeated the first minion of the game. You must be brimming with pride and glee."
   h "Well, that will be short-lived, I assure you. No matter how you may try and struggle, you stand no chance of defeating {i}me{/i}!"
@@ -57,6 +58,8 @@ label afterFirstBattle:
     "I don't stand a chance":
       vrmc sad " He might be right. I'm not ready for this yet. I'll come back later."
       $ battleFlag = "retreat"
+  $ current_battle.reActivate()
+  call screen dungeon_run(True)
   return
   
 label killBaron:

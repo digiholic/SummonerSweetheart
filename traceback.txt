@@ -7,13 +7,11 @@ While running game code:
     call screen dungeon_run(True)
   File "renpy/common/000statements.rpy", line 457, in execute_call_screen
     store._return = renpy.call_screen(name, *args, **kwargs)
-  File "game/dungeonBattle.rpy", line 250, in event
-    self.callScene("quitScreen")
-  File "game/dungeonBattle.rpy", line 235, in callScene
-    self.toggleActive()
-  File "game/dungeonBattle.rpy", line 128, in toggleActive
-    ui.visible = reactivate
-UnboundLocalError: local variable 'reactivate' referenced before assignment
+  File "game/dungeonBattle.rpy", line 221, in render
+    child_render = ef.render(width, height, st, at)
+  File "game/dungeonBattle.rpy", line 441, in render
+    if self.filmStrip.index == frames:
+NameError: global name 'frames' is not defined
 
 -- Full Traceback ------------------------------------------------------------
 
@@ -36,27 +34,39 @@ Full traceback:
     rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/core.py", line 2149, in interact
     repeat, rv = self.interact_core(preloads=preloads, **kwargs)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/core.py", line 2750, in interact_core
-    rv = root_widget.event(ev, x, y, 0)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/screen.py", line 626, in event
-    rv = self.child.event(ev, x, y, st)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/motion.py", line 827, in event
-    rv = d.event(ev, cx, cy, st)
-  File "game/dungeonBattle.rpy", line 250, in event
-    self.callScene("quitScreen")
-  File "game/dungeonBattle.rpy", line 235, in callScene
-    self.toggleActive()
-  File "game/dungeonBattle.rpy", line 128, in toggleActive
-    ui.visible = reactivate
-UnboundLocalError: local variable 'reactivate' referenced before assignment
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/core.py", line 2478, in interact_core
+    self.draw_screen(root_widget, fullscreen_video, (not fullscreen_video) or video_frame_drawn)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/core.py", line 1677, in draw_screen
+    renpy.config.screen_height,
+  File "render.pyx", line 363, in renpy.display.render.render_screen (gen/renpy.display.render.c:5330)
+  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 618, in render
+    surf = render(child, width, height, cst, cat)
+  File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
+  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 618, in render
+    surf = render(child, width, height, cst, cat)
+  File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
+  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 618, in render
+    surf = render(child, width, height, cst, cat)
+  File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
+  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/screen.py", line 598, in render
+    child = renpy.display.render.render(self.child, w, h, st, at)
+  File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
+  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 618, in render
+    surf = render(child, width, height, cst, cat)
+  File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
+  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
+  File "accelerator.pyx", line 108, in renpy.display.accelerator.transform_render (gen/renpy.display.accelerator.c:1922)
+  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
+  File "game/dungeonBattle.rpy", line 221, in render
+    child_render = ef.render(width, height, st, at)
+  File "game/dungeonBattle.rpy", line 441, in render
+    if self.filmStrip.index == frames:
+NameError: global name 'frames' is not defined
 
 Linux-3.11.0-26-generic-x86_64-with-debian-wheezy-sid
 Ren'Py 6.18.3.761

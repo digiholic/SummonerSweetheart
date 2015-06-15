@@ -26,9 +26,6 @@ label victoryScreen:
             
 label redBattle:
     show screen dungeon_run(False)
-    if ahri_combo:
-      vrmc happy "There we go, now I use the attack Teemo taught me!"
-      $ canCombo = True
     if redCount == 0:
       vrmc sad "Why is this boss so hard to annihilate?! Nothing seems to be working."
       vrmc surprise "It’s as if this monster has some kind of buff... That’s it! This is the hacker’s doing."

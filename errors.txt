@@ -2,8 +2,8 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 488: u'current_battle' is not a keyword argument or valid child for the screen statement.
-    current_battle.reActivate()
-                  ^
+File "game/dungeonBattle.rpy", line 591: non-keyword arg after keyword arg
+    Fighter.__init__(self, animLib, position = (0,0), centerOffset - 0, attackCD = 100, attackDamage = 15, maxHP = 80)
+    
 
 Ren'Py Version: Ren'Py 6.18.3.761

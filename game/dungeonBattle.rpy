@@ -148,7 +148,7 @@ init python:
         mc.rect.x += 20
         
         for i in range (1, len(self.players)):
-          if mc.rect.left >= self.players[i].centerOffset + (300 - (100 * i)):
+          if mc.rect.left >= (300 - (100 * i)):
             self.players[i].active = True
             self.players[i].visible = True
         
@@ -208,7 +208,7 @@ init python:
             self.players[i].active = False
             self.players[i].visible = False
         
-      for ch in self.players:
+      for ch in reversed(self.players):
         child_render = ch.render(width, height, st, at)
         render.blit(child_render, ch.rect.topleft)
       for en in self.enemies:
@@ -290,17 +290,19 @@ init python:
             while not en.alive:
               self.changeTarget(1)
               en = self.enemies[self.target]
-            if len(self.lastThreeAttacks) == 3:
-              self.lastThreeAttacks.pop(0)
-              self.lastThreeAttacks.append(i)
-              self.comboTimer = 0
-            else:
-              self.lastThreeAttacks.append(i)
-              self.comboTimer = 0
-            if self.lastThreeAttacks == [0,3,1]:
-              self.effects.append(CharSuperAnim(self,self.players[i].superSprite))
-              self.queueCombo = ([0,3,1],en)
-            self.players[i].doAttack(en)
+            if self.players[i].currentCD == 0:
+              if len(self.lastThreeAttacks) == 3:
+                self.lastThreeAttacks.pop(0)
+                self.lastThreeAttacks.append(i)
+                self.comboTimer = 0
+              else:
+                self.lastThreeAttacks.append(i)
+                self.comboTimer = 0
+              if self.lastThreeAttacks == [0,3,1]:
+                self.effects = []
+                self.effects.append(CharSuperAnim(self,self.players[i].superSprite))
+                self.queueCombo = ([0,3,1],en)
+              self.players[i].doAttack(en)
     
     def doPlayerCombo(self):
       players = self.queueCombo[0]
@@ -349,7 +351,10 @@ init python:
       self.target = None
       
       self.superSprite = None
-
+      self.attackEffect = None
+      self.attackEffectSize = ()
+      self.attackEffectLength = 0
+      
       self.attackSound = None
       self.hurtSound = None
       self.hurtSprite = None
@@ -362,27 +367,37 @@ init python:
           self.target = target      
           if self.attackSound:
             renpy.sound.play(self.attackSound)
-    
+          if self.attackEffect:
+            ef = Effect(self.attackEffect,self.attackEffectSize,self.attackEffectLength)
+            ef.rect.midbottom = target.rect.midbottom
+            self.battle.effects.append(ef)
+            
     def doComboAttack(self,target,assists):
-      global canCombo
       self.attacking = True
       self.currentCD = self.attackCD
       self.animLib.changeImage('attack')
       self.target = target
       totalDamage = self.attackDamage
       renpy.sound.play(self.attackSound)
+      ef = Effect(self.attackEffect,self.attackEffectSize,self.attackEffectLength)
+      ef.rect.midbottom = target.rect.midbottom
+      self.battle.effects.append(ef)
       for ch in assists:
         renpy.sound.play(ch.attackSound)
         ch.animLib.changeImage('attack')
         ch.attacking = True
         ch.target = target
         totalDamage += ch.attackDamage
+        ef = Effect(ch.attackEffect,ch.attackEffectSize,ch.attackEffectLength)
+        ef.rect.bottom = target.rect.bottom
+        ef.rect.center = target.rect.center
+        self.battle.effects.append(ef)
+      
       if hasattr(target, 'gotCombod'):
         target.gotCombod = True
       
     def getAttacked(self,damage):
       self.HP -= damage
-      print self, self.HP
       if self.HP <=0:
         self.alive = False
         self.active = False
@@ -420,6 +435,19 @@ init python:
       
     def render(self, width, height, st, at):
       return Image(self.image).render(width,height,st,at)
+      
+  class Effect(renpy.Displayable):
+    def __init__(self,image, framesize, frames, **kwargs):
+      super(Effect,self).__init__(**kwargs)
+      self.filmStrip = FilmStrip(image, framesize, (frames,1), frames)
+      self.rect = pygame.Rect((0,0), framesize)
+      self.done = False
+      
+    def render(self, width, height, st, at):
+      if self.filmStrip.index == self.filmStrip.get_length() - 1:
+        self.done = True
+        
+      return self.filmStrip.render(width, height, st, at)
       
 ######################### BEGIN UI DECLARATION #########################################
 
@@ -569,6 +597,10 @@ init python:
       self.hurtSound = os.path.join(*['data','EffectSFX','EzDamage.wav'])
       self.attackSound = os.path.join(*['data','EffectSFX','EZ_Attack_1.mp3'])
       
+      self.attackEffect = os.path.join(*['data','ArrowAttack2','effect_arrow.png'])
+      self.attackEffectSize = (250,150)
+      self.attackEffectLength = 6
+      
   class Leona(Fighter):
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Leona'), 'leona_', 'idle', (275,200), 0.3)
@@ -579,18 +611,42 @@ init python:
   class Ahri(Fighter):
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Ahri'), 'ahri_', 'idle', (275,200), 0.3)
-      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 50, attackCD = 120, attackDamage = 15, maxHP = 80)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 50, attackCD = 100, attackDamage = 15, maxHP = 80)
       self.attackSound = os.path.join(*['data','AhriSFX','Attack1_c.wav'])
       self.hurtSound = os.path.join(*['data','AhriSFX','AhriDamage.wav'])
       self.superSprite = os.path.join(*['ahri','vr','ahriwink.png'])  
+  
+      self.attackEffect = os.path.join(*['data','fire_effect','effect_fire.png'])
+      self.attackEffectSize = (150,150)
+      self.attackEffectLength = 18
       
+  class Jayce(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Jayce'), 'jayce_', 'idle', (400,250), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = -50, attackCD = 100, attackDamage = 15, maxHP = 80)
+      self.attackSound = os.path.join(*['data','EffectSFX','JayceAttack.wav'])
+      self.hurtSound = os.path.join(*['data','EffectSFX','JayceDamage.wav'])
+      self.superSprite = os.path.join(*['jayce','vr','happy.png'])  
+  
   class Soraka(Fighter):
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Soraka'), 'soraka_', 'idle', (180,250), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 60, attackDamage = 5, maxHP = 100)
       self.attackSound = os.path.join(*['data','EffectSFX','SorakaAttack1.wav'])
       self.hurtSound = os.path.join(*['data','EffectSFX','SorakaDamage.wav'])        
-        
+      self.superSprite = os.path.join(*['raka','vr','angry.png'])
+  
+      self.attackEffect = os.path.join(*['data','Soraka','SFX', 'raka_poof.png'])
+      self.attackEffectSize = (160,260)
+      self.attackEffectLength = 13
+      
+  class Viktor(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Viktor'), 'viktor_', 'idle', (150,300), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 30, attackCD = 60, attackDamage = 5, maxHP = 100)
+      self.attackSound = os.path.join(*['data','EffectSFX','viktor_Attack.wav'])
+      self.hurtSound = os.path.join(*['data','EffectSFX','viktor_ReceiveDamage.wav'])
+      self.superSprite = os.path.join(*['vik','vr','happy.png'])
       
   class Rengar(Fighter):
     def __init__(self):
@@ -598,8 +654,21 @@ init python:
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 50, attackCD = 80, attackDamage = 10, maxHP = 120)
       self.attackSound = os.path.join(*['data','EffectSFX','Attack3.wav'])
       self.hurtSound = os.path.join(*['data','EffectSFX','ReceivingDamage2.wav'])
+      self.superSprite = os.path.join(*['rango','vr','confident.png'])
+      
+      self.attackEffect = os.path.join(*['data','sword_slash','effect_sword.png'])
+      self.attackEffectSize = (150,150)
+      self.attackEffectLength = 5
       
       
+  class Rumble(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Rumble'), 'rumble_', 'idle', (300,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 80, attackDamage = 10, maxHP = 120)
+      self.attackSound = os.path.join(*['data','EffectSFX','RumbleAttack1.wav'])
+      self.hurtSound = os.path.join(*['data','EffectSFX','RumbleDamage1.wav'])
+      self.superSprite = os.path.join(*['rumble','vr','flat.png'])  
+        
       
 ######################### BEGIN ENEMY DECLARATION #########################################
   class Poro(Fighter):
@@ -617,8 +686,8 @@ init python:
         self.zonya = False
         self.zTimer = 0
         self.gotCombod = False
-        #self.sound1 = pygame.mixer.Sound('data/EffectSFX/zonya1.wav')
-        self.sound = (os.path.join(*['data','EffectSFX','zonya2.wav']))
+        self.sound1 = os.path.join(*['data','EffectSFX','zonya1.wav'])
+        self.sound2 = os.path.join(*['data','EffectSFX','zonya2.wav'])
     
     def render(self, height, width, st, at):
       render = Fighter.render(self, height, width, st, at)
@@ -644,8 +713,8 @@ init python:
               self.battle.effects.append(HitFlash(self))
       
           else:
-            #self.sound1.play()
-            renpy.sound.play(self.sound)
+            renpy.sound.play(self.sound1)
+            renpy.sound.play(self.sound2)
             self.changeImage('zonya')
             self.zonya = True
             
