@@ -45,18 +45,27 @@ init python:
       self.state = 0
       self.target = 0
       
-      self.loadBattle(battleNumber)
+      self.loadBattle(battleNumber+13)
             
       
     def loadBattle(self, number):
       sky = Scenery(os.path.join('data','SKY_BG.png'),(0,0))
-      grnd = Scenery(os.path.join(*['data','GROUNDS','SR_GRND.gif']),(0,0))
       
       off = 0
-      repeatGrnd = []
+      baseGrnd = []
+      riftGrnd = []
+      riverGrnd = []
       while off < 1024:
-        repeatGrnd.append(Scenery(os.path.join(*['data','GROUNDS','SR_GRND.gif']), (off, 768 - grnd.rect.height)))
-        off += grnd.rect.width
+        baseGrnd.append(Scenery(os.path.join(*['data','GROUNDS','SR_GRND.gif']), (off, 768 - 668)))
+        riftGrnd.extend([Scenery(os.path.join(*['data','GROUNDS','SumRift_Ground_GrassMiddleLoop.png']), (off, 668)),
+                         Scenery(os.path.join(*['data','GROUNDS','SumRift_Ground_GrassMiddleLoop.png']), (off+100, 668)),
+                         Scenery(os.path.join(*['data','GROUNDS','SumRift_Ground_GrassMiddleLoop.png']), (off+200, 668))])
+        riverGrnd.extend([Scenery(os.path.join(*['data','River','tileM.png']), (off, 668)),
+                          Scenery(os.path.join(*['data','River','tileM.png']), (off+100, 668)),
+                          Scenery(os.path.join(*['data','River','tileM.png']), (off+200, 668))])
+                         
+                         
+        off += 300
         
       treetile = Scenery(os.path.join('data','summoner rift tree [repeatable].png'),(0,0))
       if number % 2 == 0:
@@ -65,15 +74,58 @@ init python:
       else:
         treetiles = [Scenery(os.path.join('data','summoner rift tree [repeatable].png'),(-88, 668 - treetile.rect.height)),
                      Scenery(os.path.join('data','summoner rift tree [repeatable].png'),(treetile.rect.width - 88, 668 - treetile.rect.height))]
-                     
-      if number == 0:
-        self.enemies = [Poro()]
-      elif number == 1:
-        self.enemies = [Brambleback()]
       
       self.scenery.append(sky)
-      self.scenery.extend(repeatGrnd)
       self.scenery.extend(treetiles)
+                     
+      if number == 0:
+        self.scenery.extend(baseGrnd)
+        self.enemies = [Poro()]
+      elif number == 1:
+        self.scenery.extend(baseGrnd)
+        self.enemies = [Poro(), Poro()]
+      elif number == 2:
+        self.scenery.extend(baseGrnd)
+        self.enemies = [Poro(), MrPoro(), Poro()]
+      elif number == 3:
+        self.scenery.extend(baseGrnd)
+        self.enemies = [MrPoro(), MeleeMinion(), MrPoro()]
+      elif number == 4:
+        self.scenery.extend(baseGrnd)
+        self.enemies = [Sentry()]
+      elif number == 5:  #Transition into lane
+        self.scenery.extend(riftGrnd)
+        self.enemies = [MeleeMinion(), MeleeMinion(), MeleeMinion()]
+      elif number == 6:
+        self.scenery.extend(riftGrnd)
+        self.enemies = [CasterMinion(), MeleeMinion(), MeleeMinion()]
+      elif number == 7:
+        self.scenery.extend(riftGrnd)
+        self.enemies = [CasterMinion(), CasterMinion(), CasterMinion()]
+      elif number == 8:
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Sentry(), CasterMinion(), MeleeMinion()]
+      elif number == 9: #Transition into jungle
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Wolf()]
+      elif number == 10:
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Wraith(), Wolf(), Wolf()]
+      if number == 11:
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Wraith(), Wraith(), Wraith()]
+      if number == 12:
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Wight(), Wraith(), Wraith()]
+      if number == 13: #Transition to Red Buff area
+        self.scenery.extend(riftGrnd)
+        self.scenery.append(Scenery(os.path.join('data','redpit.png'),(928,68)))
+        self.enemies = [Cinderling(), Cinderling()]
+      if number == 14:
+        self.scenery.extend(riftGrnd)
+        self.scenery.append(Scenery(os.path.join('data','redpit.png'),(-96,68)))
+        self.enemies = [Brambleback(), Cinderling(), Cinderling()]
+     
       
       self.initialize()
       
@@ -171,16 +223,19 @@ init python:
       
       # The actual battle
       elif self.state == 1:
+        removeList = []
         for i in range(0,len(self.enemies)):
           en = self.enemies[i]
           if en.alive and en.currentCD == 0:
             self.doEnemyAttack(i)
             en.currentCD = en.attackCD
           if not en.alive:
-              self.enemies.remove(en)
-              self.effects.append(HitFlash(en))
-              self.changeTarget(1)  
-            
+            removeList.append(en)
+            self.effects.append(HitFlash(en,True))
+        for en in removeList:
+          self.enemies.remove(en)
+          self.changeTarget(1)
+          
         if len(self.enemies) == 0:
           for ch in self.players:
             ch.attacking = None
@@ -402,8 +457,11 @@ init python:
         self.alive = False
         self.active = False
         self.visible = False
+      if self.attacking:
+        self.attacking = False
+        self.animLib.changeImage('idle')
       if self.hurtSprite:
-        self.battle.effects.append(HitFlash(self))
+        self.battle.effects.append(HitFlash(self,False))
       if self.hurtSound:
         renpy.sound.play(self.hurtSound)
         
@@ -538,10 +596,15 @@ init python:
         return renpy.Render(0,0)
         
   class HitFlash(renpy.Displayable):
-    def __init__(self, parent, **kwargs):
+    def __init__(self, parent, death, **kwargs):
       super(HitFlash, self).__init__(**kwargs)
       self.parent = parent
-      self.filmstrip = self.parent.animLib.library['die']
+      print self.parent, death
+      if death:
+        self.filmstrip = self.parent.animLib.library['die']
+      else:
+        self.filmstrip = self.parent.animLib.library['damage']
+      
       self.frame = 0
       self.lastFrame = self.filmstrip.get_length()
       self.done = False
@@ -674,10 +737,74 @@ init python:
   class Poro(Fighter):
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Poro1'), 'poro_', 'idle', (200,200), 0.3)
-      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 10, maxHP = 40)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 100, attackDamage = 10, maxHP = 40)
       self.currentCD = random.randint(0,self.attackCD)
       self.hurtSprite = True
-        
+  
+  class MrPoro(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Poro2'), 'mrporo_', 'idle', (200,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 100, attackDamage = 12, maxHP = 80)
+      self.currentCD = random.randint(0,self.attackCD)
+      self.hurtSprite = True
+
+
+  class Cinderling(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Cinderling'), 'cinderling_', 'idle', (200,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 40, attackDamage = 5, maxHP = 40)
+      self.currentCD = random.randint(0,self.attackCD)
+      self.hurtSprite = True
+     
+  class MeleeMinion(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Minion'), 'minion_', 'idle', (200,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 90, attackDamage = 15, maxHP = 80)
+      self.currentCD = random.randint(0,self.attackCD)
+      self.hurtSprite = True
+  
+  class CasterMinion(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Ranged'), 'caster_', 'idle', (200,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 130, attackDamage = 25, maxHP = 50)
+      self.currentCD = random.randint(0,self.attackCD)
+      self.hurtSprite = True
+  
+  class RiftScuttler(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Crab'), 'crab_', 'idle', (200,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 100, attackDamage = 10, maxHP = 100)
+      self.currentCD = random.randint(0,self.attackCD)
+      self.hurtSprite = True
+  
+  class Sentry(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Sentry'), 'sentry_', 'idle', (200,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 35, maxHP = 60)
+      self.currentCD = random.randint(0,self.attackCD)
+      self.hurtSprite = True
+  
+  class Wolf(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','Wolf'), 'wolf_', 'idle', (200,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 60, attackDamage = 15, maxHP = 50)
+      self.currentCD = random.randint(0,self.attackCD)
+      self.hurtSprite = True
+  
+  class Wraith(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','WraithG'), 'wraith_', 'idle', (200,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 60, attackDamage = 10, maxHP = 40)
+      self.currentCD = random.randint(0,self.attackCD)
+      self.hurtSprite = True
+  
+  class Wight(Fighter):
+    def __init__(self):
+      animLib = AnimLib(os.path.join('data','WraithW'), 'wight_', 'idle', (200,200), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 60, attackDamage = 15, maxHP = 90)
+      self.currentCD = random.randint(0,self.attackCD)
+      self.hurtSprite = True
+  
   class Brambleback(Fighter):
     def __init__(self):
         animLib = AnimLib(os.path.join('data','Brambleback'), 'brambleback_', 'idle', (400,400), 0.3)
@@ -688,6 +815,7 @@ init python:
         self.gotCombod = False
         self.sound1 = os.path.join(*['data','EffectSFX','zonya1.wav'])
         self.sound2 = os.path.join(*['data','EffectSFX','zonya2.wav'])
+        self.hurtSprite = True
     
     def render(self, height, width, st, at):
       render = Fighter.render(self, height, width, st, at)
@@ -709,9 +837,7 @@ init python:
             self.alive = False
             self.active = False
             self.visible = False
-            if self.hurtSprite:
-              self.battle.effects.append(HitFlash(self))
-      
+            
           else:
             renpy.sound.play(self.sound1)
             renpy.sound.play(self.sound2)
