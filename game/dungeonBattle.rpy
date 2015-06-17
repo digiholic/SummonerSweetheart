@@ -45,7 +45,7 @@ init python:
       self.state = 0
       self.target = 0
       
-      self.loadBattle(battleNumber+13)
+      self.loadBattle(battleNumber)
             
       
     def loadBattle(self, number):
@@ -77,7 +77,12 @@ init python:
       
       self.scenery.append(sky)
       self.scenery.extend(treetiles)
-                     
+      
+
+      ####### HERE IS WHERE YOU DEFINE THE BATTLES #####
+      # Use this to define a scenery object
+      # self.scenery.append(Scenery(os.path.join(*[<path to file seperated by commas>]), (leftmost , rightmost)))
+      # If you build a list of Sceneries, use extend instead of append, and pass the list.               
       if number == 0:
         self.scenery.extend(baseGrnd)
         self.enemies = [Poro()]
