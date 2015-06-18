@@ -361,6 +361,10 @@ init python:
       global rango_combo
       global raka_combo
       
+      global jayce_combo
+      global rumble_combo
+      global vik_combo
+      
       if self.state == 1:
         if len(self.enemies) > 0:
           if self.players[i].active:
@@ -378,7 +382,7 @@ init python:
                 self.comboTimer = 0
               if self.lastThreeAttacks == [0,3,1]:
                 if not i in self.combosDone:
-                  if (i == 1 and ahri_combo) or (i == 2 and raka_combo) or (i == 3 and rango_combo):
+                  if (i == 1 and ahri_combo) or (i == 1 and jayce_combo) or (i == 2 and raka_combo) or (i == 2 and vik_combo) or (i == 3 and rango_combo) or (i == 3 and rumble_combo):
                     self.effects = []
                     self.effects.append(CharSuperAnim(self,self.players[i].superSprite))
                     self.queueCombo = ([0,3,1],en)

@@ -361,6 +361,10 @@ init python:
       global rango_combo
       global raka_combo
       
+      global jayce_combo
+      global rumble_combo
+      global vik_combo
+      
       if self.state == 1:
         if len(self.enemies) > 0:
           if self.players[i].active:
@@ -874,6 +878,7 @@ init python:
           self.changeImage('idle')
           self.zTimer = 0
           self.HP = 50
+          self.active = True
           self.battle.callScene("redBattle")
       return render
         

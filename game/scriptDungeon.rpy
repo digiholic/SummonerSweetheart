@@ -26,7 +26,7 @@ label victoryScreen:
             
 label redBattle:
     show screen dungeon_run(False)
-    if ahri_combo or raka_combo or rango_combo:
+    if (ahri_combo or raka_combo or rango_combo) or (jayce_combo or rumble_combo or vik_combo):
       vrmc happy "All right, now I should use that combo that Teemo taught me."
     elif redCount == 0:
       vrmc sad "Why is this boss so hard to annihilate?! Nothing seems to be working."
