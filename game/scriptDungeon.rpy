@@ -26,7 +26,9 @@ label victoryScreen:
             
 label redBattle:
     show screen dungeon_run(False)
-    if redCount == 0:
+    if ahri_combo or raka_combo or rango_combo:
+      vrmc happy "All right, now I should use that combo that Teemo taught me."
+    elif redCount == 0:
       vrmc sad "Why is this boss so hard to annihilate?! Nothing seems to be working."
       vrmc surprise "It’s as if this monster has some kind of buff... That’s it! This is the hacker’s doing."
       vrmc surprise "Wait, that golden stance – that’s Zhonya’s! A players-only item that lets you become invulnerable for a couple seconds. How does he have it?"
@@ -45,6 +47,25 @@ label redBattle:
     call screen dungeon_run(True)
     return
     
+label killRed:
+  show screen dungeon_run(False)
+  rb "Urgh…"
+  rb "…"
+  vrmc surprise "W-what was that?"
+  vrmc surprise "Did the boss just {i}talk{/i}? I mean, if you can call it talking."
+  vrmc flat "Nah, that must be my imagination."
+  "-ZZZZZZZZ-"
+  vrmc angry "Again with the static? It’s getting old, Mr. Hacker. Speaking of which, where is he—"
+  h "You! It seems you are truly intent on disturbing my plans! You dare defy me?!"
+  vrmc angry "Well, duh. I mean, you were the one who invited us after all."
+  h "Heh. Fair enough. When the day strikes seven, I will offer you a special portal to enter into my lair for the final challenge. You will receive a very warm welcome."
+  h "Be sure to gather as many allies until then – members that you can {i}trust{/i}. Keke."
+  vrmc flat "That I can trust? What does he mean by that…"
+  $ current_battle.reActivate()
+  $ current_battle.enemies[0].alive = False
+  call screen dungeon_run(True)
+  return
+    
 label afterFirstBattle:
   show screen dungeon_run(False)
   "YOU WIN"
@@ -61,15 +82,22 @@ label afterFirstBattle:
   $ current_battle.reActivate()
   call screen dungeon_run(True)
   return
+    
   
 label killBaron:
+  show screen dungeon_run(False)
   na "ARRGHH!"
   na "You’ll never get away with this…"
   vrmc surprise "Wait, what?!"
   "That was beyond weird."
+  $ current_battle.reActivate()
+  $ current_battle.enemies[0].die()
+  call screen dungeon_run(True)
   return
+    
   
 label waitBaron:
+  show screen dungeon_run(False)
   vrmc surprise "Wait! Nashor, I have a question."
   na "Ergh?!"
   vrmc flat "Yea, I know you can talk. You’re a player aren’t you?"
@@ -87,9 +115,12 @@ label waitBaron:
   na "He has this hack that doesn’t let you leave the game once you face him. You’re stuck in here forever, and if you die, well… You can do the math."
   vrmc sad "…"
   "I never signed up for a death wish. Is this {i}really{/i} worth it?"
+  $ current_battle.reActivate()
+  call screen dungeon_run(True)
   return
-  
+    
 label beforeHacker:
+  show screen dungeon_run(False)
   h "Welcome to your doom, champions! Or should I say losers, since you will soon be {i}losing{/i} your lives."
   h "You are free to die at will. Just say the word and I’ll zap you into mindless bodies."
   vrmc angry "Seriously? You’re one sick hacker."
@@ -108,9 +139,11 @@ label beforeHacker:
       so "U-um, actually, nevermind."
       ez happy "Alright! Like I was saying, onward—"
       
-      $ dungeon.battle.betray()
+      $ current_battle.betray()
+      $ current_battle.reActivate()
+      call screen dungeon_run(True)
       return
-      
+    
     elif raka_confessed == True:
       show raka vr flatclose at right
       so "E-Ezreal! Wait!"
@@ -144,12 +177,17 @@ label beforeHacker:
       so "That’s right! I won’t assist you any further, Dr. Reveck! What you’re doing is wrong, no matter how I look at it."
       so "This isn’t about me anymore; even if I have to bear the weight of Orianna’s death, forcing that despair on others is a fate much worse."
       h "Unable to fulfill your duties until the end, I see. So be it! Fight me if you will, or knowing your own failures, will you turn tail now?"
+      $ current_battle.reActivate()
+      call screen dungeon_run(True)
       return
-      
+    
   elif route == "Leona":
-      pass
-  
+      $ current_battle.reActivate()
+      call screen dungeon_run(True)
+      return
+    
 label betrayal:
+      show screen dungeon_run(False)
       hide raka
       ez surprise "Ergh. Wha… Wh—Huh?!"
       h "I can see your mind is all jumbled. Let me clarify it for you, petty player, since these will be your last thoughts!"
@@ -160,7 +198,9 @@ label betrayal:
       show raka vr sad at right
       so "…"
       so "I must correct my sins, Ezreal. I’m sorry."
+      $ current_battle.reActivate()
+      call screen dungeon_run(True)
       return
-      
+    
 label AfterBetrayal:
     pass

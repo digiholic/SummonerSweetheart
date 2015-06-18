@@ -42,6 +42,7 @@ define z = Character('Dr. Zen')
 define te = Character('Teemo')
 define h = Character('Hacker')
 define na = Character('Baron Nashor')
+define rb = Character('The Brambleback')
 
 init python:
   def mc(what, **kwargs):

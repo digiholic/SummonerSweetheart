@@ -1,59 +1,37 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script00.rpy", line 500, in script call
+  File "game/script00.rpy", line 501, in script call
     call dungeon
   File "game/script00.rpy", line 581, in script
-    call screen dungeon_run(True)
-  File "renpy/common/000statements.rpy", line 457, in execute_call_screen
-    store._return = renpy.call_screen(name, *args, **kwargs)
-  File "game/dungeonBattle.rpy", line 304, in event
-    self.doPlayerAttack(0)
-  File "game/dungeonBattle.rpy", line 346, in doPlayerAttack
-    en = self.enemies[self.target]
-IndexError: list index out of range
+    $ current_battle = Battle()
+  File "game/script00.rpy", line 581, in <module>
+    $ current_battle = Battle()
+  File "game/dungeonBattle.rpy", line 49, in __init__
+    self.loadBattle(battleNumber)
+  File "game/dungeonBattle.rpy", line 137, in loadBattle
+    if self.number ==16:
+AttributeError: 'Battle' object has no attribute 'number'
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/script00.rpy", line 500, in script call
+  File "game/script00.rpy", line 501, in script call
     call dungeon
   File "game/script00.rpy", line 581, in script
-    call screen dungeon_run(True)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 1635, in execute
-    self.call("execute")
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 1653, in call
-    renpy.statements.call(method, parsed, *args, **kwargs)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/statements.py", line 144, in call
-    return method(parsed, *args, **kwargs)
-  File "renpy/common/000statements.rpy", line 457, in execute_call_screen
-    store._return = renpy.call_screen(name, *args, **kwargs)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/exports.py", line 2311, in call_screen
-    rv = renpy.ui.interact(mouse="screen", type="screen", roll_forward=roll_forward)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ui.py", line 247, in interact
-    rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/core.py", line 2149, in interact
-    repeat, rv = self.interact_core(preloads=preloads, **kwargs)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/core.py", line 2750, in interact_core
-    rv = root_widget.event(ev, x, y, 0)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/screen.py", line 626, in event
-    rv = self.child.event(ev, x, y, st)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 846, in event
-    rv = i.event(ev, x - xo, y - yo, cst)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/motion.py", line 827, in event
-    rv = d.event(ev, cx, cy, st)
-  File "game/dungeonBattle.rpy", line 304, in event
-    self.doPlayerAttack(0)
-  File "game/dungeonBattle.rpy", line 346, in doPlayerAttack
-    en = self.enemies[self.target]
-IndexError: list index out of range
+    $ current_battle = Battle()
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 785, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/python.py", line 1382, in py_exec_bytecode
+    exec bytecode in globals, locals
+  File "game/script00.rpy", line 581, in <module>
+    $ current_battle = Battle()
+  File "game/dungeonBattle.rpy", line 49, in __init__
+    self.loadBattle(battleNumber)
+  File "game/dungeonBattle.rpy", line 137, in loadBattle
+    if self.number ==16:
+AttributeError: 'Battle' object has no attribute 'number'
 
-Linux-3.11.0-26-generic-x86_64-with-debian-wheezy-sid
+Linux-3.16.0-41-generic-x86_64-with-debian-jessie-sid
 Ren'Py 6.18.3.761
 Summoner Sweetheart 0.9

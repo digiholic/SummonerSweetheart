@@ -28,7 +28,8 @@ init python:
       self.lastThreeAttacks = []
       self.comboTimer = 0
       self.queueCombo = ()
-      
+      self.combosDone = []      
+
       self.arrow = TargetArrow()
       self.ui.append(self.arrow)
       
@@ -44,8 +45,8 @@ init python:
       
       self.state = 0
       self.target = 0
-      
-      self.loadBattle(battleNumber+13)
+      battleNumber = 10
+      self.loadBattle(battleNumber)
             
       
     def loadBattle(self, number):
@@ -56,7 +57,7 @@ init python:
       riftGrnd = []
       riverGrnd = []
       while off < 1024:
-        baseGrnd.append(Scenery(os.path.join(*['data','GROUNDS','SR_GRND.gif']), (off, 768 - 668)))
+        baseGrnd.append(Scenery(os.path.join(*['data','GROUNDS','SR_GRND.gif']), (off,668)))
         riftGrnd.extend([Scenery(os.path.join(*['data','GROUNDS','SumRift_Ground_GrassMiddleLoop.png']), (off, 668)),
                          Scenery(os.path.join(*['data','GROUNDS','SumRift_Ground_GrassMiddleLoop.png']), (off+100, 668)),
                          Scenery(os.path.join(*['data','GROUNDS','SumRift_Ground_GrassMiddleLoop.png']), (off+200, 668))])
@@ -77,7 +78,12 @@ init python:
       
       self.scenery.append(sky)
       self.scenery.extend(treetiles)
-                     
+      
+
+      ####### HERE IS WHERE YOU DEFINE THE BATTLES #####
+      # Use this to define a scenery object
+      # self.scenery.append(Scenery(os.path.join(*[<path to file seperated by commas>]), (leftmost , rightmost)))
+      # If you build a list of Sceneries, use extend instead of append, and pass the list.               
       if number == 0:
         self.scenery.extend(baseGrnd)
         self.enemies = [Poro()]
@@ -105,28 +111,35 @@ init python:
       elif number == 8:
         self.scenery.extend(riftGrnd)
         self.enemies = [Sentry(), CasterMinion(), MeleeMinion()]
-      elif number == 9: #Transition into jungle
-        self.scenery.extend(riftGrnd)
-        self.enemies = [Wolf()]
-      elif number == 10:
-        self.scenery.extend(riftGrnd)
-        self.enemies = [Wraith(), Wolf(), Wolf()]
-      if number == 11:
-        self.scenery.extend(riftGrnd)
-        self.enemies = [Wraith(), Wraith(), Wraith()]
-      if number == 12:
-        self.scenery.extend(riftGrnd)
-        self.enemies = [Wight(), Wraith(), Wraith()]
-      if number == 13: #Transition to Red Buff area
+      elif number == 9: #Transition to Red Buff area
         self.scenery.extend(riftGrnd)
         self.scenery.append(Scenery(os.path.join('data','redpit.png'),(928,68)))
         self.enemies = [Cinderling(), Cinderling()]
-      if number == 14:
+      elif number == 10:
         self.scenery.extend(riftGrnd)
         self.scenery.append(Scenery(os.path.join('data','redpit.png'),(-96,68)))
         self.enemies = [Brambleback(), Cinderling(), Cinderling()]
-     
-      
+      elif number == 11: #Transition into jungle
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Wolf()]
+      elif number == 12:
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Wraith(), Wolf(), Wolf()]
+      if number == 13:
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Wraith(), Wraith(), Wraith()]
+      if number == 14:
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Wight(), Wraith(), Wraith()]
+      if number == 15:
+        self.scenery.extend(riverGrnd)
+        self.enemies = [Crab(), Crab()]
+      if number ==16:
+        self.scenery.extend(riverGrnd)
+        self.enemies = [Wight(), Crab(), Wolf()]
+      if number == 17:
+        self.scenery.extend(riverGrnd)
+        self.enemies = [Baron()]
       self.initialize()
       
     
@@ -154,7 +167,8 @@ init python:
       self.players[0].active = True
       self.players[0].visible = True
       self.players[0].changeImage('walk')
-    
+      self.combosDone = []
+
       self.state = 0
       
     def deActivate(self):
@@ -287,6 +301,9 @@ init python:
       return render
       
     def callScene(self,scene):
+      for ch in self.players:
+        ch.changeImage('idle')
+        ch.attacking = False
       self.deActivate()
       renpy.call(scene)
       
@@ -300,6 +317,12 @@ init python:
           self.doPlayerAttack(1)
         elif ev.key == pygame.K_r:
           self.doPlayerAttack(0)
+        elif ev.key == pygame.K_LEFT:
+          self.changeTarget(1)
+        elif ev.key == pygame.K_RIGHT:
+          self.changeTarget(-1)
+        elif ev.key == pygame.K_TAB:
+          self.changeTarget(1)
         elif ev.key == pygame.K_ESCAPE:
           self.callScene("quitScreen")
       
@@ -354,9 +377,12 @@ init python:
                 self.lastThreeAttacks.append(i)
                 self.comboTimer = 0
               if self.lastThreeAttacks == [0,3,1]:
-                self.effects = []
-                self.effects.append(CharSuperAnim(self,self.players[i].superSprite))
-                self.queueCombo = ([0,3,1],en)
+                if not i in self.combosDone:
+                  if (i == 1 and ahri_combo) or (i == 2 and raka_combo) or (i == 3 and rango_combo):
+                    self.effects = []
+                    self.effects.append(CharSuperAnim(self,self.players[i].superSprite))
+                    self.queueCombo = ([0,3,1],en)
+                    self.combosDone.append(i)
               self.players[i].doAttack(en)
     
     def doPlayerCombo(self):
@@ -379,6 +405,22 @@ init python:
         self.target = (l + self.target) % l
         self.arrow.rect.bottom = self.enemies[self.target].rect.centery
         self.arrow.rect.centerx = self.enemies[self.target].rect.centerx
+    
+    def betray(self):
+        self.players[2].active = False
+        self.players[2].alive = False
+        betrayer = EnemyRaka()
+        betrayer.rect.x = self.enemies[0].rect.x - 150
+        betrayer.rect.bottom = self.enemies[0].rect.bottom
+        
+        poofSprite = screenObjects.SheetAnimatedObject(os.path.join(*['data','Soraka','SFX']), 'raka_poof.png', 160, 0)
+        
+        poofSprite.rect.bottom = betrayer.rect.bottom
+        poofSprite.rect.centerx = betrayer.rect.centerx
+        self.effects.add(poofSprite)
+        
+        renpy.Sound.play(os.path.join(*['data','EffectSFX','flash.wav']))
+        self.enemies.append(betrayer)
       
 ######################### END BATTLE OBJECT #########################################
 
@@ -599,7 +641,6 @@ init python:
     def __init__(self, parent, death, **kwargs):
       super(HitFlash, self).__init__(**kwargs)
       self.parent = parent
-      print self.parent, death
       if death:
         self.filmstrip = self.parent.animLib.library['die']
       else:
@@ -808,20 +849,27 @@ init python:
   class Brambleback(Fighter):
     def __init__(self):
         animLib = AnimLib(os.path.join('data','Brambleback'), 'brambleback_', 'idle', (400,400), 0.3)
-        Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 20, maxHP = 200)
+        Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 20, maxHP = 40)
         self.currentCD = 120
         self.zonya = False
         self.zTimer = 0
         self.gotCombod = False
+        self.zReady = True
         self.sound1 = os.path.join(*['data','EffectSFX','zonya1.wav'])
         self.sound2 = os.path.join(*['data','EffectSFX','zonya2.wav'])
         self.hurtSprite = True
     
     def render(self, height, width, st, at):
       render = Fighter.render(self, height, width, st, at)
+      if self.zReady:
+        self.battle.combosDone = [1,2,3]
+      else:
+        self.battle.combosDone = []
       if self.zonya:
+        self.attackCD = 120
+        self.active = False
         self.zTimer += 1
-        if self.zTimer == 40:
+        if self.zTimer == 80:
           self.zonya = False
           self.changeImage('idle')
           self.zTimer = 0
@@ -831,19 +879,74 @@ init python:
         
     def getAttacked(self,damage):
         self.HP -= damage
-      
-        if self.HP <=0:
-          if self.gotCombod == True:
-            self.alive = False
-            self.active = False
-            self.visible = False
-            
-          else:
+        
+        if self.HP <=0 and self.gotCombod:
+          self.active = False
+          self.zonya = False
+          self.attackCD = 120
+          self.attacking = False
+          self.changeImage('idle')
+          self.battle.callScene("killRed")    
+        
+        if not self.zonya:
+          self.battle.effects.append(HitFlash(self,False))
+          if self.HP <= 0:
             renpy.sound.play(self.sound1)
             renpy.sound.play(self.sound2)
             self.changeImage('zonya')
             self.zonya = True
+            self.zReady = False
+    
+    def die(self):
+      self.visible = False
+      self.active = False
+      self.alive = False
+  
+  class Baron(Fighter):
+      def __init__(self):
+        animLib = AnimLib(os.path.join('data','Nashor'), 'baron_', 'idle', (800,800), 0.3)
+        Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 160, attackDamage = 30, maxHP = 600)
+        self.eventTimer = 0
+        self.eventTrigger = False
+        
+      def render(self, height, width, st, at):
+        render = Fighter.render(self, height, width, st, at)
+        if self.eventTrigger:
+          self.eventTimer += 1
+          if self.eventTimer == 200:
+            self.battle.callScene("waitBaron")
+        return render
+        
+      def getAttacked(self,damage):
+        self.HP -= damage
+        #self.battle.effects.append(HitFlash(self,False))
+          
+        if self.HP <= self.maxHP / 2:
+            if not self.eventTrigger:
+              renpy.sound.play(os.path.join(*['data','EffectSFX','baronspissed.wav']))
+              self.attackCD = 60
+              self.attackDamage = 15
+            self.eventTrigger = True
+            self.eventTimer = 0
             
+        if self.hp <= 0:
+            self.alive = False
+            self.active = False
+            self.visible = False
+            self.battle.callScene("killBaron")
+
+  class Doran(Fighter):
+    def __init__(self):
+      pass
+      
+  class EnemyRaka(Fighter):
+    def __init__(self):
+      pass
+  
+  class EnemyViktor(Fighter):
+    def __init__(self):
+      pass
+      
 ######################### END ENEMY DECLARATION #########################################
 
 # A way to manage multiple sprite sheets.
