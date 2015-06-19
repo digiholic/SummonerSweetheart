@@ -146,7 +146,7 @@ label beforeHacker:
       show raka vr surprisedclose at right onlayer screens
       so "U-um, actually, nevermind."
       ez happy "Alright! Like I was saying, onward—"
-      hide raka
+      hide raka onlayer screens
       $ current_battle.betray()
       $ current_battle.reActivate()
       call screen dungeon_run(True)
@@ -171,21 +171,20 @@ label beforeHacker:
       show raka vr happyclose at right onlayer screens
       so "Thanks, Ezreal. I know this isn’t much, but at the least, I want to give you this buff that I stole from the hacker."
       so "It should make the battle a bit easier for you, but this is the most I can do outside of being in your party."
-
-      #Ezreal starts glowing
-      #TODO: In-game, Ez's stats go up a bunch
+      
+      $ current_battle.getBeefy()
       
       ez happy "Wow! I’m sure this’ll come in handy for us! Thanks a ton!"
       show raka vr happyblushclose at right onlayer screens
       so "… I’m the one who should be saying thank you, but you’re welcome!"
-      hide raka
+      hide raka onlayer screens
       h "Hmm? Is that a look of defiance I see?"
       show raka vr angry onlayer screens
       # Start battle music
       so "That’s right! I won’t assist you any further, Dr. Reveck! What you’re doing is wrong, no matter how I look at it."
       so "This isn’t about me anymore; even if I have to bear the weight of Orianna’s death, forcing that despair on others is a fate much worse."
       h "Unable to fulfill your duties until the end, I see. So be it! Fight me if you will, or knowing your own failures, will you turn tail now?"
-      hide raka
+      hide raka onlayer screens
       $ current_battle.reActivate()
       call screen dungeon_run(True)
       return
@@ -201,7 +200,7 @@ label beforeHacker:
       vi "It is as you say: a bit too late to attempt to rationalize and justify my regrets."
       le sad "We’re all just as uneasy as you, Viktor. Don’t worry about it too much, okay?"
       vi "..."
-      hide vik
+      hide vik onlayer screens
       $ current_battle.betray()
       $ current_battle.reActivate()
       call screen dungeon_run(True)
@@ -223,18 +222,18 @@ label beforeHacker:
       show vik vr happyclose at right onlayer screens
       vi "As a form of compensation, I was able to emulate a buff immune to the limitations of this world. Although it is a trivial amount, it may assist you in defeating the hacker. Please accept it as well as my apology for not informing you sooner."
 
-      #Leona starts glowing
-
+      $ current_battle.getBeefy()
+      
       le happyblush "Well, I guess you gotta do it the Viktor way, don’t you? I accept your apology!"
       le happy "Come on, let’s go, Viktor! We have a hacker’s butt to kick! And thanks for the buff~!"
-      hide vik
+      hide vik onlayer screens
       h "Hmm? Is that a look of defiance I see?"
       show vik vr angry onlayer screens
       vi "I will abstain from any further support for your actions, Dr. Reveck. I will battle you alongside my allies. Although they may be less than ideal partners, they hold signs of great promise."
       le flat "You know, those aren’t exactly comforting words..."
       vi "Although you possess the intellectual capacity of an average person, you fall short when it comes to the influences of society."
       h "So be it! Fight me if you will, or knowing the incompetence of your partners, will you turn tail now?"
-      hide vik
+      hide vik onlayer screens
       $ current_battle.reActivate()
       call screen dungeon_run(True)
       return
@@ -242,27 +241,29 @@ label beforeHacker:
 label betrayal:
     if route == "Ezreal":
       show screen dungeon_run(False)
-      hide raka
+      hide raka onlayer screens
       ez surprise "Ergh. Wha… Wh—Huh?!"
       h "I can see your mind is all jumbled. Let me clarify it for you, petty player, since these will be your last thoughts!"
       h "After the death of my daughter, the parties to blame include Rito Games, myself, and your beloved \"friend\" Soraka."
       h "Because of her incompetent help, Soraka lay beside my daughter – her friend – unharmed while she was left to die a horrible death."
       h "As such, Soraka is now an instrument of aid for my tale of revenge; all to atone for her failure."
       ez sad "Soraka… is that true?"
-      show raka vr sad at right
+      show raka vr sad at right onlayer screens
       so "…"
       so "I must correct my sins, Ezreal. I’m sorry."
+      hide raka onlayer screens
       jump afterBetrayal
       
     else:
       show screen dungeon_run(False)
-      hide vik
+      hide vik onlayer screens
       le surprise "Hnng?! Why did you –"
       h "To fulfill my revenge, I have recruited one of the most brilliant minds to carry out my plans! That is, of course, none other than Viktor, the Machine Herald!"
       h "With his thirst for knowledge and my conviction to avenge my daughter’s death –"
       le angry "Viktor? Then what I saw before was..."
-      show vik vr angry at right
+      show vik vr angry at right onlayer screens
       vi "That is correct, Leona. Those lines of texts you lauded were for your own demise. For the sake of knowledge, I will do whatever it takes."
+      hide vik onlayer screens
       jump afterBetrayal
     
 label afterBetrayal:
@@ -307,13 +308,13 @@ label loseFinalBattle:
   un "Stand united!"
   play sound "music/standUnited.wav"
   #Shen POOFs on screen
-  
-  show shen with dissolve onlayer screens
+  $ renpy.pause(1, hard=True)
+    
+  show char shen at left with dissolve
   s "Leona/Ezreal, I have come to assist you. While the classroom remains in panic, I believe my help will benefit in your valiant quest."
   vrmc surprise "Shen? What are you doing here?"
   hide shen
   h "So, it was {i}you{/i}. You have been chasing my trail, Shen?"
-  show shen at left onlayer screens
   s "That is so. As a former colleague, I would not forget your presence, even after five years."
   h "You are the one who condemned me for the sake of your own profits! Are you here to take away the last form of self-gratification I can offer myself?"
   vrmc angry "Shen, what’s going on? Who are you?"
@@ -347,9 +348,9 @@ label loseFinalBattle:
   h "…"
   scene bg black with fade
   
-  if route == "Ezreal" and raka_confessed = False:
+  if route == "Ezreal" and raka_confessed == False:
     h "Soraka."
-    show raka surprise with dissolve onlayer screens
+    show raka surprise onlayer screens with dissolve
     so "Y-yes, Dr. Reveck?!"
     h "The end was inevitable. Orianna was sure to die without the appropriate equipment."
     h "I understand your regret for failing to save your friend, but there is no reason for you to shoulder the weight of her death on your shoulders."
@@ -360,15 +361,15 @@ label loseFinalBattle:
 
     h "With that, farewell."
     scene bg black with fade
-    #fade black
     
+    hide raka
     $ renpy.pause(0.5, hard=True)
     "The end of an unthinkably torrential event has finally ended."
     "What was there to say after this nightmare? We all silently returned to our homes with our respective VR helmets and called in for the night after a short salutation, with our advisor nowhere in sight."
     
-  elif route == "Leona" and vik_confessed = False:
+  elif route == "Leona" and vik_confessed == False:
     h "Viktor. You are a man of great wisdom, but your definition of knowledge is too narrow."
-    show vik angry with dissolve onlayer screens
+    show vik angry onlayer screens with dissolve
     vi "Are you saying I am incompetent?"
     h "In some ways, yes."
     show vik flat onlayer screens
@@ -378,7 +379,42 @@ label loseFinalBattle:
 
     h "With that, farewell."
     scene bg black with fade
-    
+    hide vik
     $ renpy.pause(0.5, hard=True)
     "The end of an unthinkably torrential event has finally ended."
     "What was there to say after this nightmare? We all silently returned to our homes with our respective VR helmets and called in for the night after a short salutation, with our advisor nowhere in sight."
+  return
+  
+label winFinalBattle:
+  h "This is impossible! I am stronger!"
+  vrmc flat "That may be true, but I have the support of all my comrades, and a few tricks up my sleeve."
+  h "To think my plan would be foiled by a system in the game that I failed to recognize. How can this be?"
+  vrmc angry "Well, it’s over now! Give it up!"
+  "-SHIIING"
+  play sound "music/standUnited.wav"
+  $ renpy.pause(1.0, hard=True)
+    
+  show char shen at left with dissolve
+  s "Doran."
+  vrmc surprise "Shen?!"
+  h "Shen…"
+  vrmc surprise "What? You know him, too?"
+  h "Of course. I would never forget the face who forsake my daughter."
+  vrmc flat "What is he talking about? What’s going on?"
+  s "It is a story for another day, young one."
+  h "Did you come here to gloat about my defeat, Shen? That some puny Summoner thwarted my plans?"
+  s "On the contrary, I want to clear up a misunderstanding that should have been done sooner."
+  s "We tried everything to save your daughter, Corin. You were blinded by your hatred that you could not see our efforts."
+  h "Oh, please. Save me the sob story. All you’re doing now is trying to save face and appeasing my years of rage."
+  h "You and I both know that whatever petty excuses Rito devised isn’t worth either of our times."
+  s "They’re not –"
+  h "Well, whatever. You’ve won for now. I’ll be back another day, Summoners."
+  
+  scene bg black with fade
+  $ renpy.pause(0.5, hard=True)
+    
+  "The end of an unthinkably torrential event has finally ended."
+  "We all slowly come to consciousness and shine a weak smile to each other, recognizing our accomplishment. Although the hacker did make the others unable to act, apparently they were merely transferred to a spectating state to oversee the events."
+  "Our advisor joins and congratulates us on our achievements, although we’re all too tired to do more than give a weak response."
+  "He sends us home with our respective VR helmets, and we quickly head off to bed as a reward for our achievements."
+  return

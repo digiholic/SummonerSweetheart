@@ -10,7 +10,7 @@ init python:
   renpy.music.register_channel('sounds2',"sfx",True)
   renpy.music.register_channel('sounds3',"sfx",True)
   renpy.music.register_channel('sounds4',"sfx",True)
-  
+  config.layers = [ 'master', 'transient', 'screens', 'dungeonScene', 'overlay' ]
  
 ######################### BEGIN BATTLE OBJECT #########################################
  
@@ -24,6 +24,7 @@ init python:
       
       self.startScene = None
       self.endScene = 'victoryScreen'
+      self.lossScene = 'gameOver'
       
       self.music = os.path.join(*['data','music','BattleStance.wav'])      
       self.victorySound = os.path.join(*['data','music','VictoryTheme2.wav'])
@@ -97,16 +98,9 @@ init python:
       # If you build a list of Sceneries, use extend instead of append, and pass the list.               
       
       if number == 0:
+        self.endScene = 'afterFirstBattle'
         self.scenery.extend(baseGrnd)
-        self.startScene = 'beforeHacker'
-        self.enemies = [Doran()]
-        
-        
-      #if number == 0:
-        #self.endScene = 'afterFirstBattle'
-        #self.scenery.extend(baseGrnd)
-        #self.enemies = [Poro()]
-      
+        self.enemies = [Poro()]
       elif number == 1:
         self.scenery.extend(baseGrnd)
         self.enemies = [Poro(), Poro()]
@@ -161,6 +155,34 @@ init python:
       if number == 17:
         self.scenery.extend(riverGrnd)
         self.enemies = [Baron()]
+      if number == 18: #Transition into Twisted Treeline
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Wight(), Wight()]
+      if number == 19: 
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Wight(), Sentry(), Wight()]
+      if number == 20: 
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Wolf(), Wolf(), Wolf(), Wolf()]
+      if number == 21: 
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Crab(), Crab(), Crab()]
+      if number == 22: 
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Cinderling(), Cinderling(), Cinderling(), Cinderling()]
+      if number == 23: 
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Wight(), Wight(), Wight()]
+      if number == 24: #Transition into enemy base
+        self.scenery.extend(riftGrnd)
+        self.enemies = [Sentry(), Sentry(), Sentry()]
+      if number == 25: 
+        self.scenery.extend(baseGrnd)
+        self.startScene = 'beforeHacker'
+        self.lossScene = 'loseFinalBattle'
+        self.endScene = 'winFinalBattle'
+        self.enemies = [Doran()]
+        
       self.initialize()
       
     
@@ -278,7 +300,7 @@ init python:
           self.changeTarget(1)
         if not self.players[0].alive:
           if len(self.effects) == 0:
-            self.callScene("gameOver")
+            self.callScene(self.lossScene)
         if len(self.enemies) == 0:
           for ch in self.players:
             ch.attacking = None
@@ -489,18 +511,34 @@ init python:
       for hb in self.healthBars:
         if hb.parent in allies:
           self.ui.remove(hb)
-          self.healthBars.remove(hb)
+      if len(self.enemies) > 1:
+        en = self.enemies[1]
+        en.alive = False
+        en.visible = False
+        en.active = False
+        self.effects.append(HitFlash(en,True))
+        self.enemies.remove(en)
       for a in allies:
+        if a.alive:
+          self.effects.append(HitFlash(a,True))
         a.alive = False
         a.visible = False
         a.active = False
-        self.effects.append(HitFlash(a,True))
-      if len(self.enemies) > 1:
-        self.enemies[1].alive = False
-        self.enemies[1].visible = False
-        self.enemies[1].active = False
-        self.effects.append(HitFlash(self.enemies[1],True))
+      self.players[0].HP = self.players[0].maxHP
+      self.players[0].currentCD = 0
       self.state = 5
+    
+    def getBeefy(self):
+      global route
+      mc = self.players[0]
+      if route == "Ezreal":
+        mc.animLib = AnimLib(os.path.join('data','Ezreal'), 'ezreal_buffed_', 'idle', (250,200), 0.3)
+      else:
+        mc.animLib = AnimLib(os.path.join('data','Leona'), 'leona_buffed_', 'idle', (275,200), 0.3)
+      mc.changeImage('idle')
+      mc.attackDamage = 40
+      mc.maxHP = 200
+      mc.HP = 200
       
     def playOnNextAvailableChannel(self,soundEffect):
       for channel in self.soundChannels:
@@ -576,7 +614,7 @@ init python:
         totalDamage += ch.attackDamage
         ef = Effect(ch.attackEffect,ch.attackEffectSize,ch.attackEffectLength)
         ef.rect.bottom = target.rect.bottom
-        ef.rect.center = target.rect.center
+        ef.rect.center = target.rect.center + target.centerOffset
         self.battle.effects.append(ef)
       
       if hasattr(target, 'gotCombod'):
@@ -625,7 +663,7 @@ init python:
       
     def render(self, width, height, st, at):
       return Image(self.image).render(width,height,st,at)
-      
+  
   class Effect(renpy.Displayable):
     def __init__(self,image, framesize, frames, **kwargs):
       super(Effect,self).__init__(**kwargs)
@@ -1063,15 +1101,17 @@ init python:
   class Doran(Fighter):
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Doran'), 'doran_', 'idle', (100,150), 0.3)
-      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 80, attackDamage = 15, maxHP = 100)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 80, attackDamage = 15, maxHP = 800)
       self.currentCD = self.attackCD
       self.halfHealthScene = False
       
     def getAttacked(self,damage):
         self.HP -= damage
+        self.battle.effects.append(HitFlash(self,False))
         if self.HP <= self.maxHP / 2 and self.halfHealthScene == False:
-          self.halfHealthScene = True
-          self.battle.callScene('hackerHalfHealth')
+          if len(self.battle.effects) == 0:
+            self.halfHealthScene = True
+            self.battle.callScene('hackerHalfHealth')
         if self.HP <= 0:
             self.alive = False
     
