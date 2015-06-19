@@ -55,7 +55,7 @@ init python:
     if route == "Ezreal":
       ez(what, **kwargs)
     elif route == "Leona":
-      mc2(what, **kwargs)
+      le(what, **kwargs)
       
 ######################################### GAME SCRIPT
 ## The splash screen.

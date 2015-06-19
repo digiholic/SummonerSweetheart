@@ -5,6 +5,12 @@ init python:
   import summonersRift
   import os
   import random
+  
+  renpy.music.register_channel('sounds1',"sfx",True)
+  renpy.music.register_channel('sounds2',"sfx",True)
+  renpy.music.register_channel('sounds3',"sfx",True)
+  renpy.music.register_channel('sounds4',"sfx",True)
+  
  
 ######################### BEGIN BATTLE OBJECT #########################################
  
@@ -15,7 +21,10 @@ init python:
       super(Battle, self).__init__(**kwargs)
       self.width = 1024
       self.height = 768
+      
+      self.startScene = None
       self.endScene = 'victoryScreen'
+      
       self.music = os.path.join(*['data','music','BattleStance.wav'])      
       self.victorySound = os.path.join(*['data','music','VictoryTheme2.wav'])
             
@@ -33,6 +42,8 @@ init python:
       self.arrow = TargetArrow()
       self.ui.append(self.arrow)
       
+      self.soundChannels = ['sound','sounds1','sounds2','sounds3','sounds4']
+      
       if route == "Ezreal":
         self.players = [Ezreal(), Ahri(), Soraka(), Rengar()]
       else:
@@ -45,7 +56,7 @@ init python:
       
       self.state = 0
       self.target = 0
-      battleNumber = 10
+      
       self.loadBattle(battleNumber)
             
       
@@ -84,9 +95,18 @@ init python:
       # Use this to define a scenery object
       # self.scenery.append(Scenery(os.path.join(*[<path to file seperated by commas>]), (leftmost , rightmost)))
       # If you build a list of Sceneries, use extend instead of append, and pass the list.               
+      
       if number == 0:
         self.scenery.extend(baseGrnd)
-        self.enemies = [Poro()]
+        self.startScene = 'beforeHacker'
+        self.enemies = [Doran()]
+        
+        
+      #if number == 0:
+        #self.endScene = 'afterFirstBattle'
+        #self.scenery.extend(baseGrnd)
+        #self.enemies = [Poro()]
+      
       elif number == 1:
         self.scenery.extend(baseGrnd)
         self.enemies = [Poro(), Poro()]
@@ -116,6 +136,7 @@ init python:
         self.scenery.append(Scenery(os.path.join('data','redpit.png'),(928,68)))
         self.enemies = [Cinderling(), Cinderling()]
       elif number == 10:
+        self.music = os.path.join(*['data','music','bossBattle.ogg'])
         self.scenery.extend(riftGrnd)
         self.scenery.append(Scenery(os.path.join('data','redpit.png'),(-96,68)))
         self.enemies = [Brambleback(), Cinderling(), Cinderling()]
@@ -215,12 +236,14 @@ init python:
         
         for i in range (1, len(self.players)):
           if mc.rect.left >= (300 - (100 * i)):
-            self.players[i].active = True
-            self.players[i].visible = True
+            if self.players[i].alive:
+              self.players[i].active = True
+              self.players[i].visible = True
         
         if mc.rect.left >= 300 + mc.centerOffset:
           mc.rect.left = 300 + mc.centerOffset
           mc.changeImage('idle')
+          
           for en in self.enemies: en.active = True
           
           for i in range(0,len(self.chargingCircles)):
@@ -232,9 +255,13 @@ init python:
             b.rect.top = 75 * i
           for ui in self.ui:
             ui.visible = True
-          renpy.music.play(self.music, loop=True)
           self.state = 1
-      
+          
+          if self.startScene:
+            self.callScene(self.startScene)
+          else:
+            renpy.music.play(self.music, loop=True)
+            
       # The actual battle
       elif self.state == 1:
         removeList = []
@@ -249,7 +276,9 @@ init python:
         for en in removeList:
           self.enemies.remove(en)
           self.changeTarget(1)
-          
+        if not self.players[0].alive:
+          if len(self.effects) == 0:
+            self.callScene("gameOver")
         if len(self.enemies) == 0:
           for ch in self.players:
             ch.attacking = None
@@ -276,6 +305,16 @@ init python:
           if mc.rect.left <= self.players[i].centerOffset + (300 - (100*i)):
             self.players[i].active = False
             self.players[i].visible = False
+      
+      elif self.state == 4: #betrayal
+        if len(self.effects) == 0:
+          self.state = 1
+          self.callScene('betrayal')
+          
+      elif self.state == 5:
+        if len(self.effects) == 0:
+          self.state = 1
+          self.callScene('hackerBeforeDuel')
         
       for ch in reversed(self.players):
         child_render = ch.render(width, height, st, at)
@@ -357,13 +396,15 @@ init python:
       
       
     def doPlayerAttack(self,i):
-      global ahri_combo
-      global rango_combo
-      global raka_combo
-      
-      global jayce_combo
-      global rumble_combo
-      global vik_combo
+      global route
+      if route == "Ezreal":
+        global ahri_combo
+        global rango_combo
+        global raka_combo
+      else:
+        global jayce_combo
+        global rumble_combo
+        global vik_combo
       
       if self.state == 1:
         if len(self.enemies) > 0:
@@ -382,7 +423,7 @@ init python:
                 self.comboTimer = 0
               if self.lastThreeAttacks == [0,3,1]:
                 if not i in self.combosDone:
-                  if (i == 1 and ahri_combo) or (i == 1 and jayce_combo) or (i == 2 and raka_combo) or (i == 2 and vik_combo) or (i == 3 and rango_combo) or (i == 3 and rumble_combo):
+                  if (route == "Ezreal" and ((i == 1 and ahri_combo) or (i == 2 and raka_combo) or (i == 3 and rango_combo))) or (route == "Leona" and ((i == 1 and jayce_combo) or (i == 2 and vik_combo) or (i == 3 and rumble_combo))):
                     self.effects = []
                     self.effects.append(CharSuperAnim(self,self.players[i].superSprite))
                     self.queueCombo = ([0,3,1],en)
@@ -411,21 +452,64 @@ init python:
         self.arrow.rect.centerx = self.enemies[self.target].rect.centerx
     
     def betray(self):
+        global route
         self.players[2].active = False
+        self.players[2].visible = False
         self.players[2].alive = False
-        betrayer = EnemyRaka()
+        if route == "Ezreal":
+          betrayer = EnemyRaka()
+        else:
+          betrayer = EnemyViktor()
         betrayer.rect.x = self.enemies[0].rect.x - 150
         betrayer.rect.bottom = self.enemies[0].rect.bottom
         
-        poofSprite = screenObjects.SheetAnimatedObject(os.path.join(*['data','Soraka','SFX']), 'raka_poof.png', 160, 0)
+        betrayer.active = False
+        betrayer.oldActiveState = True
+        betrayer.visible = True
+        betrayer.alive = True
+        betrayer.battle = self
+        
+        for hb in self.healthBars:
+          if hb.parent == self.players[2]:
+            self.ui.remove(hb)
+            self.healthBars.remove(hb)
+        poofSprite = Effect(os.path.join(*['data','Soraka','SFX', 'raka_poof.png']), (160,260),13)
         
         poofSprite.rect.bottom = betrayer.rect.bottom
-        poofSprite.rect.centerx = betrayer.rect.centerx
-        self.effects.add(poofSprite)
+        poofSprite.rect.centerx = betrayer.rect.centerx - 20
+        self.effects.append(poofSprite)
         
-        renpy.Sound.play(os.path.join(*['data','EffectSFX','flash.wav']))
+        self.playOnNextAvailableChannel(os.path.join(*['data','EffectSFX','flash.wav']))
         self.enemies.append(betrayer)
+        
+        self.state = 4
+        
+    def oneOnOne(self):
+      allies = self.players[1:]
+      for hb in self.healthBars:
+        if hb.parent in allies:
+          self.ui.remove(hb)
+          self.healthBars.remove(hb)
+      for a in allies:
+        a.alive = False
+        a.visible = False
+        a.active = False
+        self.effects.append(HitFlash(a,True))
+      if len(self.enemies) > 1:
+        self.enemies[1].alive = False
+        self.enemies[1].visible = False
+        self.enemies[1].active = False
+        self.effects.append(HitFlash(self.enemies[1],True))
+      self.state = 5
       
+    def playOnNextAvailableChannel(self,soundEffect):
+      for channel in self.soundChannels:
+        if not renpy.sound.is_playing(channel):
+          renpy.sound.play(soundEffect,channel)
+          return
+      print "channel overload"
+      return
+          
 ######################### END BATTLE OBJECT #########################################
 
   # Things that are fighting in a battle
@@ -457,6 +541,7 @@ init python:
       self.attackEffectLength = 0
       
       self.attackSound = None
+      self.attackVoice = None
       self.hurtSound = None
       self.hurtSprite = None
       
@@ -466,8 +551,8 @@ init python:
           self.currentCD = self.attackCD
           self.animLib.changeImage('attack')
           self.target = target      
-          if self.attackSound:
-            renpy.sound.play(self.attackSound)
+          if self.attackVoice:
+            self.battle.playOnNextAvailableChannel(self.attackVoice)
           if self.attackEffect:
             ef = Effect(self.attackEffect,self.attackEffectSize,self.attackEffectLength)
             ef.rect.midbottom = target.rect.midbottom
@@ -479,12 +564,12 @@ init python:
       self.animLib.changeImage('attack')
       self.target = target
       totalDamage = self.attackDamage
-      renpy.sound.play(self.attackSound)
+      self.battle.playOnNextAvailableChannel(self.attackSound)
       ef = Effect(self.attackEffect,self.attackEffectSize,self.attackEffectLength)
       ef.rect.midbottom = target.rect.midbottom
       self.battle.effects.append(ef)
       for ch in assists:
-        renpy.sound.play(ch.attackSound)
+        self.battle.playOnNextAvailableChannel(ch.attackSound)
         ch.animLib.changeImage('attack')
         ch.attacking = True
         ch.target = target
@@ -506,10 +591,9 @@ init python:
       if self.attacking:
         self.attacking = False
         self.animLib.changeImage('idle')
-      if self.hurtSprite:
-        self.battle.effects.append(HitFlash(self,False))
+      self.battle.effects.append(HitFlash(self,False))
       if self.hurtSound:
-        renpy.sound.play(self.hurtSound)
+        self.battle.playOnNextAvailableChannel(self.hurtSound)
         
     def changeImage(self,newImage):
       self.animLib.changeImage(newImage)
@@ -522,6 +606,8 @@ init python:
         if self.attacking:
           if self.animLib.frame == len(self.animLib.library[self.animLib.currentImage].frames) - 1:
             self.target.getAttacked(self.attackDamage)
+            if self.attackSound:
+              self.battle.playOnNextAvailableChannel(self.attackSound)
             self.animLib.changeImage('idle')
             self.attacking = False
             
@@ -588,6 +674,8 @@ init python:
       self.visible = False
       
     def render(self, width, height, st, at):
+      if not self.parent.alive:
+        self.visible = False
       if self.visible:
         percentage = float(self.parent.currentCD) / float(self.parent.attackCD) * 100
         
@@ -682,14 +770,14 @@ init python:
       
     def render(self, width, height, st, at):
       if self.rect.right == 0:
-        renpy.sound.play(os.path.join(*['data','effectSFX','tpStart.wav']))
+        self.battle.playOnNextAvailableChannel(os.path.join(*['data','effectSFX','tpStart.wav']))
       
       if self.rect.centerx < 300:
         self.rect.x += 150
       else:
         self.holdTime += 1
       if self.holdTime == 14:
-        renpy.sound.play(os.path.join(*['data','effectSFX','tpFinish.wav']))
+        self.battle.playOnNextAvailableChannel(os.path.join(*['data','effectSFX','tpFinish.wav']))
       if self.holdTime >= 15:
         self.rect.x += 200
         if self.rect.left > 1024:
@@ -702,8 +790,10 @@ init python:
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Ezreal'), 'ezreal_', 'idle', (250,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 80, attackDamage = 10, maxHP = 100)
+      self.attackVoice = os.path.join(*['data','EffectSFX','EZ_Attack_1.mp3'])
+      self.attackSound = os.path.join(*['data','EffectSFX','ezBolt.wav'])
+      
       self.hurtSound = os.path.join(*['data','EffectSFX','EzDamage.wav'])
-      self.attackSound = os.path.join(*['data','EffectSFX','EZ_Attack_1.mp3'])
       
       self.attackEffect = os.path.join(*['data','ArrowAttack2','effect_arrow.png'])
       self.attackEffectSize = (250,150)
@@ -713,14 +803,23 @@ init python:
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Leona'), 'leona_', 'idle', (275,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 50, attackCD = 80, attackDamage = 10, maxHP = 120)
-      self.attackSound = os.path.join(*['data','Leona','LeonaSFX','Attack1.wav'])
+      self.attackVoice = os.path.join(*['data','Leona','LeonaSFX','Attack1.wav'])
+      self.attackSound = os.path.join(*['data','EffectSFX','daggerSound2.wav'])
+      
       self.hurtSound = os.path.join(*['data','Leona','LeonaSFX','Damage.wav'])
+      
+      self.attackEffect = os.path.join(*['data','sword_slash','effect_sword.png'])
+      self.attackEffectSize = (150,150)
+      self.attackEffectLength = 5
+      
         
   class Ahri(Fighter):
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Ahri'), 'ahri_', 'idle', (275,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 50, attackCD = 100, attackDamage = 15, maxHP = 80)
-      self.attackSound = os.path.join(*['data','AhriSFX','Attack1_c.wav'])
+      self.attackVoice = os.path.join(*['data','AhriSFX','Attack1_c.wav'])
+      self.attackSound = os.path.join(*['data','EffectSFX','FireBall.wav'])
+      
       self.hurtSound = os.path.join(*['data','AhriSFX','AhriDamage.wav'])
       self.superSprite = os.path.join(*['ahri','vr','ahriwink.png'])  
   
@@ -732,18 +831,26 @@ init python:
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Jayce'), 'jayce_', 'idle', (400,250), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = -50, attackCD = 100, attackDamage = 15, maxHP = 80)
-      self.attackSound = os.path.join(*['data','EffectSFX','JayceAttack.wav'])
+      self.attackVoice = os.path.join(*['data','EffectSFX','JayceAttack.wav'])
+      self.attackSound = os.path.join(*['data','EffectSFX','hammertime.wav'])
+      
       self.hurtSound = os.path.join(*['data','EffectSFX','JayceDamage.wav'])
-      self.superSprite = os.path.join(*['jayce','vr','happy.png'])  
+      self.superSprite = os.path.join(*['jayce','vr','happy.png'])
+      
+      self.attackEffect = os.path.join(*['data','sword_slash','effect_sword_gold.png'])
+      self.attackEffectSize = (150,150)
+      self.attackEffectLength = 5
+      
   
   class Soraka(Fighter):
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Soraka'), 'soraka_', 'idle', (180,250), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 60, attackDamage = 5, maxHP = 100)
-      self.attackSound = os.path.join(*['data','EffectSFX','SorakaAttack1.wav'])
+      self.attackVoice = os.path.join(*['data','EffectSFX','SorakaAttack1.wav'])
+      self.attackSound = os.path.join(*['data','EffectSFX','rakaBolt.wav'])
       self.hurtSound = os.path.join(*['data','EffectSFX','SorakaDamage.wav'])        
       self.superSprite = os.path.join(*['raka','vr','angry.png'])
-  
+      
       self.attackEffect = os.path.join(*['data','Soraka','SFX', 'raka_poof.png'])
       self.attackEffectSize = (160,260)
       self.attackEffectLength = 13
@@ -752,15 +859,22 @@ init python:
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Viktor'), 'viktor_', 'idle', (150,300), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 30, attackCD = 60, attackDamage = 5, maxHP = 100)
-      self.attackSound = os.path.join(*['data','EffectSFX','viktor_Attack.wav'])
+      self.attackVoice = os.path.join(*['data','EffectSFX','viktor_Attack.wav'])
+      self.attackSound = os.path.join(*['data','EffectSFX','vikBolt.wav'])
+      
       self.hurtSound = os.path.join(*['data','EffectSFX','viktor_ReceiveDamage.wav'])
       self.superSprite = os.path.join(*['vik','vr','happy.png'])
+      
+      self.attackEffect = os.path.join(*['data','Viktor_FX', 'pink_explosion.png'])
+      self.attackEffectSize = (550,400)
+      self.attackEffectLength = 13
       
   class Rengar(Fighter):
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Rengar'), 'rengar_', 'idle', (250,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 50, attackCD = 80, attackDamage = 10, maxHP = 120)
-      self.attackSound = os.path.join(*['data','EffectSFX','Attack3.wav'])
+      self.attackVoice = os.path.join(*['data','EffectSFX','Attack3.wav'])
+      self.attackSound = os.path.join(*['data','EffectSFX','daggerSound.wav'])
       self.hurtSound = os.path.join(*['data','EffectSFX','ReceivingDamage2.wav'])
       self.superSprite = os.path.join(*['rango','vr','confident.png'])
       
@@ -773,9 +887,15 @@ init python:
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Rumble'), 'rumble_', 'idle', (300,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 80, attackDamage = 10, maxHP = 120)
-      self.attackSound = os.path.join(*['data','EffectSFX','RumbleAttack1.wav'])
+      self.attackVoice = os.path.join(*['data','EffectSFX','RumbleAttack1.wav'])
+      self.attackSound = os.path.join(*['data','EffectSFX','rumbleHit.wav'])
+      
       self.hurtSound = os.path.join(*['data','EffectSFX','RumbleDamage1.wav'])
       self.superSprite = os.path.join(*['rumble','vr','flat.png'])  
+      
+      self.attackEffect = os.path.join(*['data','smoke_puff_up','smoke_puff.png'])
+      self.attackEffectSize = (500,500)
+      self.attackEffectLength = 13
         
       
 ######################### BEGIN ENEMY DECLARATION #########################################
@@ -853,7 +973,7 @@ init python:
   class Brambleback(Fighter):
     def __init__(self):
         animLib = AnimLib(os.path.join('data','Brambleback'), 'brambleback_', 'idle', (400,400), 0.3)
-        Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 20, maxHP = 40)
+        Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 20, maxHP = 200)
         self.currentCD = 120
         self.zonya = False
         self.zTimer = 0
@@ -896,8 +1016,8 @@ init python:
         if not self.zonya:
           self.battle.effects.append(HitFlash(self,False))
           if self.HP <= 0:
-            renpy.sound.play(self.sound1)
-            renpy.sound.play(self.sound2)
+            self.battle.playOnNextAvailableChannel(self.sound1)
+            self.battle.playOnNextAvailableChannel(self.sound2)
             self.changeImage('zonya')
             self.zonya = True
             self.zReady = False
@@ -928,7 +1048,7 @@ init python:
           
         if self.HP <= self.maxHP / 2:
             if not self.eventTrigger:
-              renpy.sound.play(os.path.join(*['data','EffectSFX','baronspissed.wav']))
+              self.battle.playOnNextAvailableChannel(os.path.join(*['data','EffectSFX','baronspissed.wav']))
               self.attackCD = 60
               self.attackDamage = 15
             self.eventTrigger = True
@@ -942,15 +1062,54 @@ init python:
 
   class Doran(Fighter):
     def __init__(self):
-      pass
+      animLib = AnimLib(os.path.join('data','Doran'), 'doran_', 'idle', (100,150), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 80, attackDamage = 15, maxHP = 100)
+      self.currentCD = self.attackCD
+      self.halfHealthScene = False
       
+    def getAttacked(self,damage):
+        self.HP -= damage
+        if self.HP <= self.maxHP / 2 and self.halfHealthScene == False:
+          self.halfHealthScene = True
+          self.battle.callScene('hackerHalfHealth')
+        if self.HP <= 0:
+            self.alive = False
+    
   class EnemyRaka(Fighter):
     def __init__(self):
-      pass
+      animLib = AnimLib(os.path.join('data','Soraka'), 'soraka_enemy_', 'idle', (180,250), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 60, attackDamage = 5, maxHP = 100)
+      self.attackVoice = os.path.join(*['data','EffectSFX','SorakaAttack1.wav'])
+      self.attackSound = os.path.join(*['data','EffectSFX','rakaBolt.wav'])
+      self.hurtSound = os.path.join(*['data','EffectSFX','SorakaDamage.wav'])        
+      self.superSprite = os.path.join(*['raka','vr','angry.png'])
+      
+      self.attackEffect = os.path.join(*['data','Soraka','SFX', 'raka_poof.png'])
+      self.attackEffectSize = (160,260)
+      self.attackEffectLength = 13
+      
+      self.currentCD = self.attackCD
+    
+    def render(self,width,height,st,at):
+      render = Fighter.render(self,width,height,st,at)
+      #print self.active
+      return render   
   
   class EnemyViktor(Fighter):
     def __init__(self):
-      pass
+      animLib = AnimLib(os.path.join('data','Viktor'), 'viktor_enemy_', 'idle', (150,300), 0.3)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 30, attackCD = 60, attackDamage = 5, maxHP = 100)
+      self.attackVoice = os.path.join(*['data','EffectSFX','viktor_Attack.wav'])
+      self.attackSound = os.path.join(*['data','EffectSFX','vikBolt.wav'])
+      
+      self.hurtSound = os.path.join(*['data','EffectSFX','viktor_ReceiveDamage.wav'])
+      self.superSprite = os.path.join(*['vik','vr','happy.png'])
+      
+      self.attackEffect = os.path.join(*['data','Viktor_FX', 'pink_explosion.png'])
+      self.attackEffectSize = (550,400)
+      self.attackEffectLength = 13
+      
+      self.currentCD = self.attackCD
       
 ######################### END ENEMY DECLARATION #########################################
 
