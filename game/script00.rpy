@@ -566,6 +566,7 @@ label dungeon:
         $ old_bosses_defeated = bosses_defeated
         $ current_battle = Battle()
         call screen dungeon_run(True)
+        $ renpy.block_rollback()
         show screen dungeon_run(False)
         scene bg black with dissolve
         $ current_battle = None
@@ -573,6 +574,7 @@ label dungeon:
         $ old_bosses_defeated = bosses_defeated
         $ current_battle = Battle()
         call screen dungeon_run(True)
+        $ renpy.block_rollback()
         show screen dungeon_run(False)
         scene bg black with dissolve
         $ current_battle = None

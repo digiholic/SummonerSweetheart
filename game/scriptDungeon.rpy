@@ -1,5 +1,6 @@
 label quitScreen:
   show screen dungeon_run(False)
+  $ renpy.block_rollback()
   menu:
     "Are you sure you want to retreat?"
     "Never!":
@@ -13,6 +14,7 @@ label quitScreen:
   
 label victoryScreen:
     show screen dungeon_run(False)
+    $ renpy.block_rollback()
     "YOU WIN"
     if route == "Ezreal":
       if have_charm == False and random.randint(0,10) == 0:
@@ -46,6 +48,7 @@ label victoryScreen:
 
 label afterFirstBattle:
   show screen dungeon_run(False)
+  $ renpy.block_rollback()
   "YOU WIN"
   h "Congratulations, Summoner! You’ve defeated the first minion of the game. You must be brimming with pride and glee."
   h "Well, that will be short-lived, I assure you. No matter how you may try and struggle, you stand no chance of defeating {i}me{/i}!"
@@ -62,6 +65,7 @@ label afterFirstBattle:
             
 label redBattle:
     show screen dungeon_run(False)
+    $ renpy.block_rollback()
     if (route == "Ezreal" and (ahri_combo or raka_combo or rango_combo)) or (route == "Leona" and (jayce_combo or rumble_combo or vik_combo)):
       vrmc happy "All right, now I should use that combo that Teemo taught me."
     elif redCount == 0:
@@ -85,6 +89,7 @@ label redBattle:
     
 label killRed:
   show screen dungeon_run(False)
+  $ renpy.block_rollback()
   rb "Urgh…"
   rb "…"
   vrmc surprise "W-what was that?"
@@ -99,12 +104,13 @@ label killRed:
   vrmc flat "That I can trust? What does he mean by that…"
   $ bosses_defeated += 1
   $ current_battle.reActivate()
-  $ current_battle.enemies[0].alive = False
+  $ current_battle.enemies[0].die()
   call screen dungeon_run(True)
   return
     
 label killBaron:
   show screen dungeon_run(False)
+  $ renpy.block_rollback()
   na "ARRGHH!"
   na "You’ll never get away with this…"
   vrmc surprise "Wait, what?!"
@@ -118,6 +124,7 @@ label killBaron:
   
 label waitBaron:
   show screen dungeon_run(False)
+  $ renpy.block_rollback()
   $ renpy.music.stop(fadeout=5)
   vrmc surprise "Wait! Nashor, I have a question."
   na "Ergh?!"
@@ -137,12 +144,18 @@ label waitBaron:
   vrmc sad "…"
   "I never signed up for a death wish. Is this {i}really{/i} worth it?"
   $ bosses_defeated += 1
-  $ current_battle.onward()
-  call screen dungeon_run(True)
+  scene bg black with fade
   return
     
 label beforeHacker:
   show screen dungeon_run(False)
+  $ renpy.block_rollback()
+  if day != 7:
+    vrmc angry "There's some sort of... force pushing me back. I think the hacker's set up a force field. He'll have to lower it to destroy the game, I'll have to come back right before that happens!"
+    $ battleFlag = "retreat"
+    call screen dungeon_run(True)
+    return
+  
   h "Welcome to your doom, champions! Or should I say losers, since you will soon be {i}losing{/i} your lives."
   h "You are free to die at will. Just say the word and I’ll zap you into mindless bodies."
   vrmc angry "Seriously? You’re one sick hacker."
@@ -256,6 +269,7 @@ label beforeHacker:
 label betrayal:
     if route == "Ezreal":
       show screen dungeon_run(False)
+      $ renpy.block_rollback()
       hide raka onlayer screens
       ez surprise "Ergh. Wha… Wh—Huh?!"
       h "I can see your mind is all jumbled. Let me clarify it for you, petty player, since these will be your last thoughts!"
@@ -271,6 +285,7 @@ label betrayal:
       
     else:
       show screen dungeon_run(False)
+      $ renpy.block_rollback()
       hide vik onlayer screens
       le surprise "Hnng?! Why did you –"
       h "To fulfill my revenge, I have recruited one of the most brilliant minds to carry out my plans! That is, of course, none other than Viktor, the Machine Herald!"
@@ -297,6 +312,7 @@ label afterBetrayal:
     
 label hackerHalfHealth:
   show screen dungeon_run(False)
+  $ renpy.block_rollback()
   $ renpy.music.stop(fadeout=3)
   h "I see you come with more than mere determination!"
   h "I will wager everything on you, to see how strong your resolve is! I will delete your teammates so that we may have a fair match, with the future of League of Legends at stake!"
@@ -310,6 +326,7 @@ label hackerHalfHealth:
   
 label hackerBeforeDuel:
   show screen dungeon_run(False)
+  $ renpy.block_rollback()
   vrmc angry "What have you done?? I’ll never forgive you for this!"
   h "Fear not! Even now, your loved ones suffer!"
   vrmc sad "D... Does that mean..?"
@@ -322,6 +339,7 @@ label hackerBeforeDuel:
 label loseFinalBattle:
   show screen dungeon_run(False)  
   scene bg black with fade
+  $ renpy.block_rollback()
   $ renpy.music.stop(fadeout=1)
   vrmc sad "I... I can’t go on. Will I die here?"
   h "AHAHA! Now {i}that{/i} is the face of defeat. I should put this picture on my wall."
@@ -408,6 +426,7 @@ label loseFinalBattle:
 label winFinalBattle:
   show screen dungeon_run(False)  
   scene bg black with fade
+  $ renpy.block_rollback()
   $ renpy.music.stop(fadeout=1)
   h "This is impossible! I am stronger!"
   vrmc flat "That may be true, but I have the support of all my comrades, and a few tricks up my sleeve."
@@ -445,6 +464,7 @@ label winFinalBattle:
 label gameOver:
   $ renpy.music.stop(fadeout=1)
   scene bg black with fade
+  $ renpy.block_rollback()
   "CONNECTION LOST{w}.{w}.{w}."
   "GAME OVER"
   
