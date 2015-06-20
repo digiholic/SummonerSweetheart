@@ -1,0 +1,593 @@
+######################################### EVENT DECLARATION
+init:
+    $ event("ahri_1", "act == 'library'", event.once(), "route == 'Ezreal'", priority = 190)
+    $ event("ahri_2", "act == 'vr'", event.once(), event.depends("ahri_1"), "day >= 2", priority = 180)
+    $ event("ahri_3", "act == 'museum'", event.once(), event.depends("ahri_2"), priority = 170)
+    $ event("ahri_4", "act == 'vr'", event.once(), event.depends("ahri_3"), priority = 160)
+    $ event("ahri_5", "act == 'vr'", event.once(), event.depends("ahri_4"),priority=150)
+    $ event("ahri_6", "act == 'vr'", event.once(), event.depends("ahri_5"),priority=140)
+    $ event("ahri_7", event.once(), event.depends("ahri_6"), priority = 130)
+
+######################################### AHRI SCRIPT
+label ahri_1:
+    scene bg library
+    play music "music/ambient2.mp3" fadein 2.0
+    "I walk to the library, hoping that I could find some information about the hacker."
+    show ahri happy at left with dissolve
+    "However, quickly after entering, I notice Ami sitting close by, studying, with literature books 
+     scattered around her table."
+    "She doesn’t seem to have noticed me, and I can’t decide if I should get her attention..."
+    "Ami is one of the most well-known club members, and she is infamous throughout the school for 
+     different reasons."
+    "In the real world, she is Ami Tohsaka, the sole heir to the Kamioka family: a fabulouly wealthy 
+     group that pays little mind to outsiders."
+    "She always maintains an elegant air about her - one that seems to both draw you in, 
+     and push you away."
+    "However, her alter ego, /”Ahri, the Nine-Tailed Fox/”, is anything but reserved. Like her or 
+     not, no one can resist her charms."
+    "She’s already developed a large fanbase; it’s surprising her sharp tongue and quick wits 
+     actually worked in her favor to this regard."
+    "Although it may not be the most proper hobby for such an esteemed goddess, 
+     only a select few know about the face behind the character."
+    "–however, be that as it may, I find it difficult to speak a word to her, in fear of being quickly 
+     shut down. I've never seen her associate with anyone, much less someone like me. 
+     Still, I have no choice. 
+     I prepare myself for the worst, taking a deep breath..."
+    show ahri surprised at center with dissolve
+    mc "Hey Ami, how’s it going?"
+    show ahri angry at center with dissolve
+    voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line1.ogg"
+    am "Oh... [name]. What brings you here? Finally doing some real work for once?"
+    "Unsurprisingly, she’s quick to start attacking me.."
+    mc "It's good to see that you know me already. Better than being completely ignored, I guess..."
+    voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line2.ogg"
+    am "Don't think that just because I know you means I desire to help you. 
+        You may as well just be another piece of trash, blowing in the wind that is this underachieving school."
+    "And there’s the infamous kick in the gut…"
+    voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line3.ogg"
+    am "If even the developers can't catch the hacker, 
+        what makes you believe that someone of your caliber would be able to produce any results?"
+    voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line4.ogg"
+    am "You won't find anything useful here. You may as well just quit while you're ahead."
+    mc "I didn't come here to ask for your advice - running into you was just a coincidence."
+    voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line5.ogg"
+    am "Oh... are you implying that I'm not worth asking?"
+    mc "N-No, I-"
+    voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line6.ogg"
+    am "Forget it. Just leave already..."
+
+    menu:
+        "I might as well do some research before searching aimlessly like the others.":
+            $ renpy.fix_rollback()
+            "She obviously doesn’t like me all that much. 
+             But, I guess being approached by strangers can get pretty tiresome after a while."
+            "When all’s said and done, she despises commoners in general, not me because of me— I hope.."
+            "If that is the case, then, as the one who started the conversation, 
+             I have the responsibility of giving her a legitimate response."
+            mc "Well, there's a lot of people flooding the servers looking for clues within the game, 
+                so I thought it’d be more efficient to check the road less ventured."
+            mc "Whatever they find inside the game will be known to the general public anyways, 
+                so I figured I might as well check something other than the forums."
+            show ahri surprised at center with dissolve
+            voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line7.ogg"
+            am "That does make sense... in a [name] sort of way."
+            mc "Uhh... thanks? I guess?"
+            "I turn to leave, when Ami reaches out towards me, as if to stop me."
+            show ahri angry at center with dissolve
+            voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line8.ogg"
+            am "Hey, [name]... before you start browsing the shelves, you should probably come up with a plan."
+            voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line9.ogg"
+            am "Otherwise, you're liable to waste your time. And that would be a shame, 
+                considering the circumstances."
+            "Unable to comprehend what has just occurred, I just stand there with my mouth open."
+            "After believing she was just a cold-hearted demon from all those rumors just make me feel all the more 
+             flabbergasted by the current situation."
+            "It’s not that she showed me any special form of kindness. 
+             All she did was give me a reasonable opinion, but even just that makes me feel so much more at ease."
+            "–or, that's what I’d like to say, but all that comes out of my mouth is a stifled squeak."
+            mc "I... didn't think of that. 
+                Well, I appreciate the kind help!"
+            show ahri angryblushmid at center with dissolve
+            voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line10.ogg"
+            am "Kind...? 
+                W-Wait, I didn't mean it like that! I was just trying to expedite things!"
+            mc "I dunno... it seemed to me like you really cared about me."
+            show ahri angryblush at center with dissolve
+            voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line11.ogg"
+            am "That's not... you're just... I..."
+            "She puts her book squarely over her face, to hide what appear to be blushing cheeks. 
+             I can't understand this girl."
+            "Figuring she won't be willing to talk to me any further, I amble away from the table."
+            call gift_check("Ami")
+            scene bg black with dissolve
+            pause 0.5
+            stop music fadeout 2.0
+            jump events_end_period
+            
+        "Truth be told I just wanted to see what type of person you are.":
+            $ renpy.fix_rollback()
+            "This conversation is going nowhere. 
+               I figure that if I can't talk with her, I might as well try to throw her off her guard."
+            mc "Actually, I just wanted to see if the rumors were true. You know, whether you're an ice queen. 
+                But, I have to say, they were right."
+            show ahri angryclose at center with dissolve
+            # The purpose of this isn't purely just for comedic purposes. In the long run this option could help unlock a small extra scene about how this bluntness is what helped her
+            # better realize how people may view her due to her current guise.
+            # In the long-run, this event may have been the better choice when it comes to unlocking more scenes with the heroine.
+            voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line12.ogg"
+            am "Wha— w-who told you I was... this is absolutely beyond the pale!"
+            voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line13.ogg"
+            am "How dare you? 
+                You... you cretin!"
+            show ahri angry at center with dissolve
+            am "Get out of my sight!"
+            "People in the library start to look around, hearing the commotion. 
+               I realize that I may have gone a little too far... 
+               hopefully, it doesn't attract too much attention."
+            "I should try to minimize the damage before things get any worse.."
+            mc "Uh, sorry, I just blurted it out without thinking..."
+            voice "voice/ahri/1/AhriRoute_Ami_Scene1_Line14.ogg"
+            am "Sigh... it was a mistake to expect something resembing proper human interaction. 
+                Clearly, you just want to have fun at my expense."
+            hide ahri with moveoutleft
+            "Ami quickly packs her study materials and storms out of the library. 
+               Now that she’s gone, all eyes are directed towards me."
+            "Because I’m not even able to focus with all of these curious stares, 
+               I follow suit once a bit of time has passed to avoid a second awkward encounter."
+            "Well, at least a cretin is better than a piece of trash..."
+            call gift_check("Ami")
+            scene bg black with dissolve
+            pause 0.5
+            stop music fadeout 2.0
+            jump events_end_period
+            
+label ahri_2:
+    scene bg fountain
+    "When I log into the game, I notice that Ami is online."
+    play music "music/ambient1.mp3" fadein 2.0
+    "I decide to join her at the shop. Though I've played against her several times, I haven't had much
+     of a chance to talk to her character."
+    "Besides knowing that her name is Ahri, I don't know an awful lot about her."
+    scene bg vr shop
+    ez "Hi, Ahri."
+    show ahri veryhappy at center with dissolve
+    voice "voice/ahri/2/Ahri1.ogg"
+    ah "Oh, hello there. What compels a human to seek out little old me?"
+    "A girl with luscious long hair and nine swaying tails steps closer, her gait perfectly
+     measured. Could this really be someone I know?"
+    ez "I... er... I just wanted to talk, I guess?"
+    show ahri happymid at center with dissolve
+    voice "voice/ahri/2/Ahri2.ogg"
+    ah "You guess? Oh ho hoh... how adorable. I think you'll soon find that I'm quite the fun
+        person to be around."
+    ez "I really don't doubt that... ahaha."
+    "Ahri presses closer against me, her... prodigious chest touching my own. She wraps her arms 
+     around me, staring into my eyes as her ears twitch lightly."
+    "She rubs her soft, pale fingers across my face, and I can feel her breath grow quicker. My cheeks 
+     turn a shade of beet red as I am transfixed by her."
+    show ahri veryhappymid at center
+    voice "voice/ahri/2/Ahri3.ogg"
+    ah "You've already fallen for my charms, haven't you?"
+    ez "Y-Yes! I mean, no! I mean... maybe?"
+    voice "voice/ahri/2/Ahri4.ogg"
+    ah "What's the matter? Don't you trust me~"
+    ez "Of course I do..."
+    show ahri happymid at center
+    voice "voice/ahri/2/Ahri5.ogg"
+    ah "Then, surrender to me... yes, just like that..."
+    ez "It just feels... wrong doing this kind of thing with you, Ami. Aren't you afraid that people 
+        will find out?"
+    voice "voice/ahri/2/Ahri6.ogg"
+    ah "Who's Ami? My {i}name{/i} is Ahri, the Nine-Tailed Fox. And this is a private serv- 
+        I mean, location. Trust me, no one will notice."
+    ez "But, I thought you didn't like me."
+    show ahri angry at center with dissolve
+    voice "voice/ahri/2/Ahri7.ogg"
+    ah "This is my character, not me. She's different. I mean, I'm different from her....
+        Ami, that is... ARGH! Now you ruined the mood."
+    "Ahri's alluring voice is still there, but speaking in Ami's tone - it's weird, to say the least."
+    ez "Heh... I guess I was able to defeat your charms after all."
+    voice "voice/ahri/2/Ahri8.ogg"
+    ah "Grr... you really are good. I'll have to think of some new strategies."
+    ez "That sounds like it could be... exciting."
+    voice "voice/ahri/2/Ahri9.ogg"
+    ah "Yes, indeed~ Maybe this time I might just suck the life out of you."
+    ez "Erm... {i}that{/i} kind of sounds less than exciting."
+    hide ahri
+    scene bg black with dissolve
+    pause 0.5
+    stop music fadeout 2.0
+    jump events_end_period
+    
+label ahri_3:
+    scene bg museum
+    "All this business with hackers has gotten me worn out. I decide to take a trip
+     to the museum to cool my nerves."
+    play music "music/museum.mp3" fadein 2.0
+    "But, as I walk through the doors into the main hall, I catch a glimpse of someone
+     I recognize."
+    show ahri angry at left with dissolve
+    hide ahri with moveoutleft
+    "She turns the corner, going out of sight, and I rush to meet her before she can pass the
+     ticket counter."
+    mc "Ami!"
+    show ahri surprised at center with moveinright
+    am "Wha- Is that you, [name]? I can't believe you're-- I mean, what brings someone like
+        you to a place like this?"
+    mc "For your information, I have an appreciation of fine art."
+    show ahri angry at center
+    am "The only thing you can appreciate is a comic book. You don't deserve to be in this 
+        establishment."
+    mc "You're still going to be like that? What happened to sexy Ahri?"
+    show ahri angrymid at center with dissolve
+    show ahri angry at center with dissolve
+    "Ami blushes, scowling at me."
+    am "Don't mention that in public! I told you, that's just how my character works."
+    mc "Oh, really? And there's no ulterior motive there?"
+    am "Of course not! Look, just... leave me alone, okay? I can't associate with people like you."
+    mc "What? Says who?"
+    am "My family. They don't want me talking to the \"normal people\". I'm supposed to study
+        and get into Princeton."
+    mc "I... didn't realize you were that dedicated."
+    am "Do I not look dedicated enough to you? Well, excuse me."
+    mc "It's just that... you were so completely different."
+    show ahri angryblush at center
+    am "I said, DON'T TALK ABOUT THAT!"
+    show ahri angry at center
+    am "Now, if you'll excuse me, I'm leaving. I have to bone up on my knowledge of early 
+        Egyptian heiroglyphics."
+    mc "What kind of crazy class project is that?"
+    am "Sigh... that imbecile..."
+    call gift_check("Ami")
+    hide ahri with dissolve
+    scene bg black with dissolve
+    pause 0.5
+    stop music fadeout 2.0
+    jump events_end_period
+    
+label ahri_4:
+    scene bg fountain
+    "To my surprise, Ami - or, should I say, Ahri, is online again."
+    play music "music/ambient1.mp3" fadein 2.0
+    "She appears to be in the same place as usual, the shop. I figure I might as well go and 
+     say hello... although I fear what might be awaiting me."
+    scene bg vr shop with fade
+    show ahri wink with dissolve
+    voice "voice/ahri/4/Ahri10.ogg"
+    ah "Well, well, if it isn't Ezreal. Come back for more?"
+    ez "I just wanted to-"
+    hide ahri
+    show ahri veryhappymid with dissolve
+    voice "voice/ahri/4/Ahri11.ogg"
+    ah "Now, now, you don't have to say a word. I know ex-ac-tly what you desire."
+    ez "You do!?"
+    hide ahri
+    show ahri veryhappyblushclose with dissolve
+    voice "voice/ahri/4/Ahri12.ogg"
+    ah "Let's have some real fun."
+    "I gasp as Ahri surrounds herself with a blue aura, her tails standing on end as she lifts 
+     me off the ground."
+    "She floats upwards towards me, cradling her in her tails. Gripping my body, she slowly begins
+     to unbutton my shirt."
+    ez "Isn't this a little hasty!?"
+    show ahri winkclose
+    voice "voice/ahri/4/Ahri13.ogg"
+    ah "It's too late for mercy. Now I'll sap every last bit of your delicious strength."
+    "I feel a pleasurable, paralyzing sensation envelop my body. She moves closer towards me, 
+     her long, black hair draping over my face as the sweet smell of perfume wafts through the air."
+    voice "voice/ahri/4/Ahri14.ogg"
+    ah "Feel the power of my charms..."
+    show ahri surprisedmid with dissolve
+    "She floats there for a moment, smirking, before looking around with surprise."
+    show ahri angrymid
+    voice "voice/ahri/4/Ahri15.ogg"
+    ah "I said, my {i}charms{/i}!"
+    show ahri angryblush with dissolve
+    "She floats away from me, with an annoyed look on her face."
+    voice "voice/ahri/4/Ahri16.ogg"
+    ah "My magic is glitching out! Stupid hacker... my controls aren't - okay, here we go!"
+    "Far from hypnotizing me, we both drop to the ground, the aura flickering away from her body."
+    with hpunch
+    voice "voice/ahri/4/Ahri17.ogg"
+    ah "OWW!"
+    ez "Hey, you're lucky you have those tails to cushion your fall."
+    show ahri angry
+    voice "voice/ahri/4/Ahri18.ogg"
+    ah "Forget that, I was hoping I could have more fun with you. Sigh... this sucks."
+    ez "In character, remember?"
+    show ahri surprised
+    hide ahri with dissolve
+    show ahri wink
+    voice "voice/ahri/4/Ahri19.ogg"
+    ah "Oh... right. Erm... it seems that my spells had no effect. You are stronger than I 
+        thought. I like a man who's strong~"
+    ez "I think I'll just... excuse myself for now."
+    show ahri winkmid with dissolve
+    voice "voice/ahri/4/Ahri20.ogg"
+    ah "You'll be back... I know you can't resist me. None of my other fans can, either."
+    hide ahri with dissolve
+    "The scary thing is, she might be right. Even if it might mean bad news for me if I come back..."
+    scene bg black with dissolve
+    pause 0.5
+    stop music fadeout 2.0
+    jump events_end_period
+
+label ahri_5:
+    scene bg bedroom
+    play music "music/bedroom.mp3" fadein 2.0
+    "It's nighttime, but I don't feel like logging onto Summoner's Rift today. 
+     After all, I have plenty of homework to catch up on."
+    "I've just finished taking out my books and making myself comfortable when the doorbell rings."
+    "Figuring my parents have just ordered takeout, I pay it no mind. But a few moments later..."
+    "Dad" "Hey, [name]! There's someone here to see you! Do you know an \"Ami\"?"
+    mc "Uhh, sure... let her in."
+    "Dad" "Don't worry, we won't come upstairs. We know your \"privacy\" is important!"
+    mc "It's not like that!"
+    "I hear someone walking upstairs to my room, and, to my surprise, 
+     Ami, in the flesh, walks in, shutting the door behind her."
+    show ahri angryblush at left with moveinleft
+    mc "Well, well... what brings you to my humble abode?"
+    am "..."
+    am "..." 
+    am "..."
+    mc "Here to gloat about how sparse my accomodations are? Or that I don't have a butler?"
+    show ahri angryblushclose with dissolve
+    with hpunch
+    mc "Oh, I know... 
+        it's probably because I don't have the latest model of virtual-- OOF!"
+    "Ami puts her arms around me in a very atypical way. I wasn't expecting a hug, but I can't exactly complain."
+    mc "Woah, what's the big idea? Did your brain get replaced by aliens on the way here?"
+    show ahri angryblushmid with dissolve
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line1.ogg"
+    am "No, you idiot... I just wanted to see someone who was on my side."
+    mc "On your side? As opposed to what, exactly?"
+    show ahri sad with dissolve
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line2.ogg"
+    am "I got into an argument with my stupid, moronical parents. 
+        They were angry that I was spending too much time with... people like you."
+    mc "Maybe you are. 
+        I'm not really rich person material, anyway..."
+    show ahri angrymid with dissolve
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line3.ogg"
+    am "That's not the point! How wealthy you are doesn't determine your character. At least, to me, it doesn't."
+    show ahri angryblushmid
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line4.ogg"
+    am "You may not be the sharpest tool in the shed, but at least you have a shred of decency left... 
+        unlike them."
+    mc "I guess, coming from you, that's a pretty big complement."
+    show ahri veryhappy with dissolve
+    "Ami pulls away and sits down on my bed, taking off her shoes."
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line5.ogg"
+    am "Well, as long as I'm here, I might as well get comfortable."
+    mc "C-Comfortable?"
+    show ahri wink
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line6.ogg"
+    am "Don't worry, I won't do anything too rash. Or... maybe I will."
+    mc "I'm not really sure if that's such a good idea..."
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line7.ogg"
+    am "What? Why not?"
+    mc "Wait, what exactly are we talking about here?"
+    "Ami pulls me over to the bed, wearing a sly grin that almost seems like it came right out of the virtual world."
+    show ahri winkmid with dissolve
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line8.ogg"
+    am "Well, the truth is... me and my character aren't actually that different."
+    mc "You... you aren't!?"
+    show ahri winkclose with dissolve
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line9.ogg"
+    am "In fact, we're much more similar than you think... human."
+    mc "Hu-Human!? You're... but she's... I don't understand..."
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line10.ogg"
+    am "What's there to understand? I just take this form... so I can hide my true identity."
+    mc "No friggin' way... this can't be real..."
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line11.ogg"
+    am "Now, then, maybe we should have a little fun. Should I make your pulse rise? Or... stop? Hee hee..."
+    mc "W-Wow..."
+    "Seeing Ahri talk to me in virtual reality was one thing, but listening to Ami's soft voice in real life is something else entirely. She leans towards me, her breathing rough."
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line12.ogg"
+    am "Play time's over. You're mine now." 
+    "Ami is making me feel something I can't quite explain in words. Or... maybe it is explainable, just in words I'd rather not say in public."
+    show ahri surprisedclose
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line13.ogg"
+    am "What's wrong? Come closer! Why are you hesitating?"
+    mc "No... I can't do this any more. This isn't you. You're just trying to escape from reality."
+    show ahri angryclose
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line14.ogg"
+    am "I am not-"
+    show ahri surprisedmid with dissolve
+    mc "Listen to me. 
+        You're Ami the person, not Ahri the character. Don't just try to run away from your real self."
+    show ahri sad with dissolve
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line15.ogg"
+    am "But... but, I can't..."
+    mc "Come on, what do you really want? I know you didn't just come here to hang out."
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line16.ogg"
+    am "I want... to actually be able to control something for once."
+    mc "Coming from someone like you, that's surprising. You've got legions of fans under your thumb."
+    show ahri angry
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line17.ogg"
+    am "Yeah, the virtual world is the only place where I actually am in control. 
+        Everyone loves me! 
+        I'm beautiful, powerful..."
+    show ahri sad
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line18.ogg"
+    am "But, in real life, my parents tell me what to do and when to do it. 
+        I have to act that way, to secure my future. I feel like a lone little fox."
+    mc "Don't give up. The last thing I would want is to see you lose your \"self\" and become someone else. 
+        The \"you\" right now is a good person."
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line19.ogg"
+    am "You... you really think that? 
+        I... I'm sorry for being so dismissive towards you before. Will you forgive me?"
+    mc "Yeah, of course."
+    show ahri veryhappyblush
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line20.ogg"
+    am "Thank you."
+    show ahri surprised at left with dissolve
+    am "Oh... I should probably get going, or my parents are going to be even more pissed."
+    mc "Probably. But, it was nice meeting you without the histronics for once."
+    show ahri angry at left
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line21.ogg"
+    am "What!? That wasn't... nnnrgh, you have some nerve! 
+        I should have just gone to someone else's house instead!"
+    mc "I'd really like it if you came back to mine, though."
+    show ahri veryhappy at left
+    voice "voice/ahri/5/AhriRoute_Ami_Scene5_Line22.ogg"
+    am "Hmph. I'll consider it. Au revoir."
+    hide ahri with moveoutleft
+    call gift_check("Ami")
+    "Ami tromps down the stairs, back to her usual self again. 
+     This certainly didn't turn out to be the night I thought it was going to be."
+    "Now, where was I? Oh, homework..."
+    "*SLAM*"
+    scene bg black with dissolve
+    pause 0.5
+    stop music fadeout 2.0
+    jump events_end_period
+
+label ahri_6:
+    scene bg vr shop
+    play music "music/ambient1.mp3" fadein 2.0
+    "I log into Summoner's Rift, and realize that Ahri is there. I wonder what she'll say if I enter her world. 
+     It might be foolhardy, but I feel like I should at least try."
+    "When I arrive, there doesn't seem to be anyone around. 
+     Strange..."
+    "Suddenly, I hear the bushes shake and swing around. I realize that there's someone hiding in the grass."
+    mc "Show yourself!"
+    show ahri veryhappyblush at left with moveinleft
+    "I point my blaster at the bushes, but to my surprise, Ahri herself walks out, a bit embarrassed."
+    mc "What's that matter, Ahri? Having another magical mishap? Or are you hiding from your family?"
+    show ahri surprised at left
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line1.ogg"
+    ah "Oh, no, nothing like that. In fact, everything is working perfectly fine. 
+        Strangely enough, there haven't been any issues with my magic so far."
+    show ahri angry with dissolve
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line2.ogg"
+    ah "As far as my family goes... I'm just ignoring them now. I won't let them tell me who I can play with."
+    mc "So, then, what's the problem?"
+    show ahri sad
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line3.ogg"
+    ah "I was going to mess around with you some more, but then I just got this... horrible feeling."
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line4.ogg"
+    ah "It's not like I'm charming you..."
+    show ahri angrymid with dissolve
+    ah "it's like you're charming me! How could this be... you're the one sapping my powers of love!"
+    mc "I was sapping them? Without even being here?"
+    show ahri angryclose with dissolve
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line5.ogg"
+    ah "Yes, that's right... all I can think about is you!"
+    show ahri angry with dissolve
+    ah "That monstrous creature, Rengar, showed himself and challenged me to a duel, but my powers were too weak, and I had to flee."
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line6.ogg"
+    ah "Losing to a beast like him... how pitiful. 
+        This is terrible... at this rate, my abilities will be completely useless!"
+    mc "Well, I think I know the solution to that. You should satiate your desires."
+    show ahri surprised
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line7.ogg"
+    ah "Wh-what!?"
+    mc "Gaze upon the mighty Ezreal, conqueror of worlds! *flex* *flex*"
+    show ahri veryhappy
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line8.ogg"
+    ah "Pffthahaha! Now you're just embarrassing yourself~"
+    mc "Hey... I thought I was pretty cool."
+    show ahri wink
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line9.ogg"
+    ah "Actually, I do feel a tad tempted... maybe your idea wasn't so bad after all."
+    show ahri winkclose with dissolve
+    "Ahri slinks up to me, pulling open her kimono a little."
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line10.ogg"
+    ah "In here, we can have complete peace and quiet. Nothing to disturb us whatsoever."
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line11.ogg"
+    ah "I promise I won't use any magic this time. I won't try to sap your life force, either. 
+        What you're looking at is my true self... hehehe~"
+    mc "Oh, wow... this I've gotta see."
+    "Ahri puckers her lips and leans towards me as she wraps her arms around my waist, her tails grazing against my legs. 
+     I can't believe it... I'm actually going to kiss someone this beautiful. 
+     Never in my wildest dreams would I have expected this outcome from our investigation into the hacker."
+    show ahri surprisedclose
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line12.ogg"
+    ah "Oh, Ezreal, I- huh?"
+    "I look down and realize that Ahri's kimono is flickering in different places. 
+     A few glitchy holes appear in it, not leaving much to the imagination. 
+     She screams and puts her hands over it, her ears twitching wildly."
+    show ahri surprisedmid with dissolve
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line13.ogg"
+    ah "EEK! What's going on!? What the- kimono.exe has encountered an error, attempting to reboot!?"
+    show ahri angrymid
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line14.ogg"
+    ah "The hacker didn't attack my magic this time... he attacked my clothes! THAT PERVERT!"
+    mc "Um... yeah. 
+        I should probably help you stop that attack. This is totally... unacceptable. And wrong. 
+        Can't stop looking..."
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line15.ogg"
+    ah "Don't tell me you're in league with him too! Grr... maybe this should do it. There!"
+    show ahri angry with dissolve
+    "Ahri's clothes phase back into reality. She puts her hands on her hips, clearly miffed."
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line16.ogg"
+    ah "Well, so much for having a private moment. Now I have to worry about attacks like these... 
+        I should probably just lay low for now."
+    mc "I guess maybe that would be for the best. 
+        But as long as we can count on your support in the upcoming battle, we should have nothing to fear!"
+    voice "voice/ahri/6/AhriRoute_Ahri_Scene6_Line17.ogg"
+    ah "Oh, trust me, you do. That hacker is going to be sent to the deepest depths of Jigoku for this."
+    hide ahri with dissolve
+    "I warp out, leaving Ahri to her battle practice. 
+     Even if that didn't go as planned, I still count it as a success. I think."
+    scene bg black with dissolve
+    pause 0.5
+    stop music fadeout 2.0
+    jump events_end_period
+
+label ahri_7:
+    scene bg black
+    # no idea what music to play here
+    "I get a message on my phone from Ami, telling me to meet her at Star Karaoke."
+    "That's unusual. No one said anything about a karaoke night anytime soon. 
+     Or, maybe I just missed something."
+    "Whatever the case, I high-tail it over there to see what she's planning."
+    un "The guest of honor has finally arrived!"
+    mc "Who, me?"
+    show ahri veryhappy with dissolve
+    "When I walk into the room, it's empty - as I expected. 
+     The only person there is Ami, who is standing on stage with a mic."
+    mc "What in the world is going on?"
+    hide ahri
+    scene cg ahri end with dissolve
+    voice "voice/ahri/7/AhriRoute_Ami_Scene7_Line1.ogg"
+    am "I rented out the karaoke room, of course! 
+        As thanks for your help, I wanted to give you a suitable reward."
+    mc "T-That really wasn't necessary-"
+    voice "voice/ahri/7/AhriRoute_Ami_Scene7_Line2.ogg"
+    am "Oh, come on - tell me you didn't like the surprise."
+    mc "Like it? I love it! I mean, this is... incredible."
+    voice "voice/ahri/7/AhriRoute_Ami_Scene7_Line3.ogg"
+    am "Don't get too excited yet - you still haven't seen the main event. My performance!"
+    mc "No way, you can sing?"
+    voice "voice/ahri/7/AhriRoute_Ami_Scene7_Line4.ogg"
+    am "I've been taking singing lessons for a long time. But, it's something I don't usually show to my fans."
+    voice "voice/ahri/7/AhriRoute_Ami_Scene7_Line5.ogg"
+    am "For you, though, I wanted to do something really special."
+    mc "Should I sit down?"
+    voice "voice/ahri/7/AhriRoute_Ami_Scene7_Line6.ogg"
+    am "You can come up on stage if you want. There's certainly room."
+    "I walk up on stage and look out at where the seats would normally be filled with others."
+    mc "You know, it's funny - you probably have this many fans in real life."
+    voice "voice/ahri/7/AhriRoute_Ami_Scene7_Line7.ogg"
+    am "Yes... perhaps. But, you're a true fan... 
+        I'm the one who should feel lucky having you, not the other way around."
+    mc "I don't know what to say..."
+    voice "voice/ahri/7/AhriRoute_Ami_Scene7_Line8.ogg"
+    am "You don't have to say anything. Just listen!"
+    with fade
+    # Song goes here?
+    mc "Wow, that was really good."
+    voice "voice/ahri/7/AhriRoute_Ami_Scene7_Line9.ogg"
+    am "Just good? Not incredible?"
+    mc "O-Of course... I mean..."
+    voice "voice/ahri/7/AhriRoute_Ami_Scene7_Line10.ogg"
+    am "Just kidding. I don't really mind how it went, just doing this with you was reward enough."
+    mc "Thanks, Ami. Hopefully, I can get to know you even better when this is all over."
+    voice "voice/ahri/7/AhriRoute_Ami_Scene7_Line11.ogg"
+    am "Hehe, count on it!"
+    # more romantic stuff?
+    scene bg black with dissolve
+    pause 0.5
+    jump events_end_period

@@ -53,7 +53,7 @@ label raka_1:
     voice "voice/raka/1/so_scene1_2.ogg"
     sh "Oh! Um, uh... Nothing really! Sorry for not seeing you." 
     
-    "She slides the book under her. Looks like she really doesn't want anyone 
+    "She puts the book down. Looks like she really doesn't want anyone 
      to know what's written on that cover."
     
     voice "voice/raka/1/so_scene1_3.ogg"
@@ -179,7 +179,7 @@ label raka_1:
             show raka surprisedblushmid with dissolve
             pause 0.5
             show raka surprisedblush with dissolve
-            "My hands slightly ruffle her hair before I turn around to head out."
+            "I give her a wave and turn around to head out, but something makes me stop and look back at her."
             mc happy "Hey, don't sweat the small stuff. Things like flaws - everyone has 
                 them; no one is perfect. I hope to see you in Summoner's Rift, nonetheless."
             show raka sad with dissolve
@@ -256,7 +256,7 @@ label raka_2:
     hide raka with dissolve
     pause 0.2
     show raka vr flat with dissolve
-    "She stands up, her back facing me. I can feel the rage dissipate as her shoulders 
+    "She stands up, her back facing me. I can feel her anger dissipate as her shoulders 
      ease into a more relaxed position and her arms maneuver to her side gracefully."
     "I hear her breathing in a rhythmic tempo. One, two, three... Maybe she's calm now?"
     
@@ -341,7 +341,7 @@ label raka_2:
         "The team needs you!":
             $ renpy.block_rollback()
             $ soraka_confession_pts = 1
-            "Why won't she help? There are only so many explanations to give..."
+            "Why won't she help?  It’s strange that someone like Soraka is so reluctant..."
             ez angry "You can't just wait here while people are getting hurt! You have to go and 
                 help them!"            
             voice "voice/raka/2/so_scene2_21.ogg"
@@ -377,9 +377,8 @@ label raka_2:
             pause 0.5
             voice "voice/raka/2/so_scene2_27.ogg"
             so "I..."
-            
-            "Her voice wanders off until it becomes nothing but a muted silence. I 
-             should probably stop prodding at this point."
+            "Her voice wanders off. The silence between us is stifling. I’m probably not going get anywhere at this point,
+             but I have to try one more time."
             ez flat "Even though you're making no sense right now, I can tell you're bothered 
                 by something."
             show raka vr angry with dissolve
@@ -394,9 +393,8 @@ label raka_2:
             
             ez flat "R-Right... uh... going now."
             hide raka with dissolve
-            "Soraka's completely out of character now. What could have made her so angry 
-             and upset? I probably won't be able to find out right now, so I figure I might 
-             as well leave her be."
+            "Soraka's completely out of character now. What could have made her so angry and upset?
+             I probably won't be able to find out right now, so I figure I might as well leave her be."
             $ raka_rp = raka_rp + 5
             
         "Fine, then.":
@@ -421,7 +419,7 @@ label raka_2:
             so "Yes... I will just continue my meditation. Perhaps I should place 
                 a \"do not disturb\" sign here from now on."
             hide raka with dissolve
-            "Unsure of why Soraka is so reticient, I decide to leave her be, for fear 
+            "Unsure of why Soraka is so reticent, I decide to leave her be, for fear 
              of starting an argument. It couldn't be something that important... right?"
             "In any case, I leave her where she sits and warp out of her realm."
             $ raka_rp = raka_rp + 8
@@ -464,8 +462,8 @@ label raka_3:
     
     mc surrpise "What does that mean? Did you hurt someone close to you?"
     pause 1.0
-    "Think I hit the mark. Her head turning and avoiding eyes have definitely been commonplace 
-     these days."
+    "I expected her to turn away and avoid looking at me as she always does, but this time she doesn’t do anything at all.
+     She’s just staring straight off into space, as if remembering something."
     hide raka with dissolve
     show raka angry at center with dissolve
     voice "voice/raka/3/so_scene3_6.ogg"
@@ -537,9 +535,9 @@ label raka_3:
             voice "voice/raka/3/so_scene3_13.ogg"
             sh "Why are you... trying so hard?"
             
-            "A long sigh escapes my throat as I take a quick look around the library: 
+            "I let out a frustrated sigh as I take a quick look around the library: 
              no one is here except us and the books."
-            "Is it weird to think she reminds me of myself somewhat?"
+            "And yet... Is it weird to think she reminds me of myself somewhat?"
             mc happy "Because you deserve better. Everyone needs a friend."
             show raka sad with dissolve
             voice "voice/raka/3/so_scene3_14.ogg"
@@ -613,9 +611,9 @@ label raka_3:
             show raka surprised with dissolve
             pause 0.2
             show raka flat with dissolve
-            "Sharon gives me the \"this-is-impossible\" stare. I know, I know, it sounds 
-             pretty confusing, but I just tell her that I know she'll get it... through 
-             telepathy, of course."
+            "Sharon looks impossibly puzzled. I realize it sounds pretty confusing,
+             but I just tell {i}her{/i} that I know she’ll get it... through telepathy,
+             of course - er, \"subvocalization\" as it’s called."
             mc happy "Wait, let me make this a little easier. This \"person\" isn't really 
                 flesh and bones."
             show raka surprised with hpunch
@@ -677,8 +675,8 @@ label raka_3:
             show raka surprised with dissolve
             voice "voice/raka/3/so_scene3_35.ogg"
             sh "Wow... She sounds like someone I knew."
-            "Sharon adamantly twiddles her thumbs as she looks at the table behind me. 
-             Actually, they look like they're staring off into another world."
+            "Sharon nervously fidgets with her hands, looking down at them. Her lips are slightly parted,
+            like she’s about to say something important."
             show raka happy with dissolve
             pause 0.3
             voice "voice/raka/3/so_scene3_36.ogg"
@@ -694,7 +692,7 @@ label raka_3:
             sh "That's so cheesy!"
             
             "We both take a seat as our laughter grows and rings across the empty 
-             but peacful halls."
+             but peaceful halls."
             pause 0.3
             show raka sad with dissolve
             pause 0.3
@@ -738,9 +736,7 @@ label raka_3B:
     sh "Uwahh! Sorry! I didn't mean to get in your way."
     show raka flat
     mc happyblush "Haha, I'm just teasing."
-    "I pat her head enough times to make her hair clunk up into a hairball that a 
-     cat coughed up. We head over to my seat and she stays standing as I perch 
-     onto my table."
+    "We head over to my seat and she stays standing as I perch onto my table."
     show raka sadmid with dissolve
     voice "voice/raka/3/so_scene3_42.ogg"
     sh "Umm... [name]? Let's say you had a friend, a friend who put all their trust 
@@ -816,7 +812,7 @@ label raka_4:
     hide vik with easeoutright
     "Ah, and then Viktor is over there, terrorizing those poor little Yordles 
      into hiding. Nope, not him either."
-    "Guess today isn't my lucky day afterall. What a shame. I trot right over to Doran, 
+    "Guess today isn't my lucky day after all. What a shame. I trot right over to Doran, 
      the shopkeeper, hoping he can cheer me up."
     "Actually... I'm sure he'll have a good idea of the players here! And 
      he's always so friendly to boot. Maybe he'll know the right person for me."
@@ -828,12 +824,12 @@ label raka_4:
      is a great chance to talk to her more."
     show raka vr flat at left with dissolve
     hide raka with easeoutleft
-    "I run off following the Northeastern winds, blowing me toward the direction 
+    "I run off following the southeastern winds, blowing me toward the direction 
      of the dragon pit. I hear the howls of the breeze as I approach the recognizable, 
-     mauve-colored, horned character."
+     purple-colored, horned character."
     ez happy "Sora-"
     "My hands cover my mouth as my feet drag me into the nearest bush. 
-     What better way to surprise her then... to surprise her?! Heh."
+     What better way to surprise her than... to surprise her?! Heh."
     "I don't have time to admire the long, sparkling strands of grass, painted 
      with droplets of water because Soraka is walking towards me."
     "She's getting closer... and then she walks away... Wait! She's coming nearby... 
@@ -927,7 +923,7 @@ label raka_4:
     so "But you can see the sky wherever you are. So in that way, they're 
         always close by."
     "My lips curve upwards, showing off my teeth. For some reason, it's really 
-     relaxing just sitting here and talking with her under the milky dark sky."
+     relaxing just sitting here and talking with her under the crimson sky."
     "As we continue to admire the scenery, a party of five pass us by."
     ez happy "Hey, want to wander the Rift with me? Think about the new things we 
         could find here."
@@ -983,7 +979,7 @@ label raka_4:
             $ renpy.block_rollback()
             $ soraka_confession_pts = soraka_confession_pts + 1
             ez angry "Hold on!" #Calling after Soraka
-            "I'm sorry, forlorn travelers... I need to get to the bottom of this - 
+            "I'm sorry, forlorn fellow players... I need to get to the bottom of this - 
              whatever \"this\" is."
             "My legs run faster than they've ever ran, using arcane shift along the 
              way to boost my speed."
@@ -1017,8 +1013,8 @@ label raka_4:
             ez angry "Hey guys, speak to me; what's wrong?!"
             "I hadn't noticed before, but now there are only two of them remaining. 
              One is clutching his throat, unable to speak."
-            "The girl with the sinister blade leans against the cemented walls, 
-             shaking and almost too weak to grab hold of the concrete."
+            "The girl with the sinister blade leans against the nearby cliff,
+             shaking and almost too weak to grip the rock."
             ez angry "You need to say something, or else I don't know what to do! There's 
                 no time to waste!"
             "It's no use: neither of the summoners can utter the strength to reply... 
@@ -1097,7 +1093,6 @@ label raka_5:
     pause 0.3
     voice "voice/raka/5/so_scene5_8.ogg"
     sh "I – I know what you mean."
-    "Oh? Is Sharon ready to share?"
     "I turn to look her straight in the eye - I'm ready to listen to everything she 
      has to say, with an open heart."
     voice "voice/raka/5/so_scene5_9.ogg"
@@ -1154,8 +1149,8 @@ label raka_5:
      Her hands completely hide her face as her shoulders shake from her sobbing."
     "The moonlit-filled room lightens and as if on purpose, accentuates Soraka's 
      beautiful white lockets of hair, which sinks to the floor and curls along the bedsheets."
-    "As if draining my energy from the elegance of the scenery, she tilts her head 
-     just enough to almost illustrate her faint features as that of a pearly angel."
+    "Her elegance in this moment draws me closer to her. She tilts her head just enough for the
+    pearly moonlight to illustrate her faint features - an angel looks back at me..."
     mc sad "S-Sharon... you..."
     pause 0.5
     hide raka with dissolve
@@ -1264,18 +1259,18 @@ label raka_6:
     $ raka_rp = raka_rp + 12
     $ renpy.block_rollback()
     scene bg black
-    "While walking home from school, I recieve a text message on my phone from Sharon. 
+    "While walking home from school, I receive a text message on my phone from Sharon. 
      \"Come to the park at 8 PM! Meet me on the Great Lawn.\""
     "I wonder what this could be about. And, why at night? I decide not to speculate 
      until I get there, figuring it could be just about anything."
     scene bg park night with fade
-    "Later that day, I get dressed again and leave, headed to the park. The nice, 
-     cool breeze gently pat my face as I walk across the grassy pathway."
+    "Later that day, I get dressed again and leave, headed to the park. There’s a nice,
+     cool breeze as I walk a pathway that leads me to a hill."
     show raka blushhappy with dissolve
     pause 0.3
     "When I finally do arrive, I find Sharon lying on the grass, looking up into the sky."
-    "A small -thump- chimes underneath my back as I plop right on over next to Sharon. 
-     The field is slightly moist, which leaves a refreshing sensation against my body."
+    "I plop right over next to Sharon with a small -thump-.
+     The field is slightly dewy, which leaves a refreshing sensation against my face."
     mc happy "You know, this reminds of something that I've always wanted to do."
     show raka surprisedblush
     voice "voice/raka/6/so_scene6_0.1.ogg"
@@ -1339,7 +1334,7 @@ label raka_6:
     
     voice "voice/raka/6/so_scene6_7.ogg"
     sh "Maybe after the meteor shower ends, we could do something else." #in bed?
-    mc happy "Don't worry - you can invite me anywhere, anytime. You're the kindest 
+    mc happy "Don't worry - you can invite me anywhere, anytime. You're the kindest
         person I've had the honor of knowing."
     
     voice "voice/raka/6/so_scene6_8.ogg"

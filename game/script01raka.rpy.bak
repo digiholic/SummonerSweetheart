@@ -1,0 +1,458 @@
+######################################### EVENT DECLARATION
+init:
+    $ event("raka_1", "act == 'library'", event.once(), "route == 'Ezreal'", priority = 190)
+    $ event("raka_2", "act == 'vr'", event.once(), event.depends("raka_1"), "day >= 2", priority = 180)
+    $ event("raka_3", "act == 'library'", event.once(), event.depends("raka_2"), "day >= 3", priority = 170)
+    $ event("raka_4", "act == 'vr'", event.once(), event.depends("raka_3"),"day >= 4", priority = 160)
+    $ event("raka_5", "act == 'vr'", event.once(), event.depends("raka_4"), "day >= 5", priority = 150)
+
+######################################### SORAKA SCRIPT
+
+label raka_1:
+    scene bg library
+    "I walk to the library, hoping that I could find some information about the hacker."
+    play music "music/ambient2.mp3" fadein 2.0
+    show raka happy at right with dissolve
+    "However, soon after I enter, I notice Sharon sitting in one of the chairs, reading 
+     what looks like a paperback novel."
+    "She doesn’t seem to have noticed me, and I can’t decide if I should get her attention..."
+    "Sharon is probably one of the most reserved club members. Most of the time, she just 
+     sits around reading, eating, and generally not talking to anyone."
+    "She appears perfectly content with that, but I wonder if she really is."
+    "Regardless of her shy nature, she is usually pretty friendly, helping people whenever
+     possible."
+    "In fact, Sharon is, in my mind, rather innocent. She's the kind of person you would 
+     expect to be a nurse - working hard behind the scenes just to help people in need."
+    "Her character, Soraka, is the same - a healer. Though, unlike Sharon, Soraka is anything 
+     but shy - almost like what she wants to be."
+    "Maybe she's discovered something about the hacker that she's too shy, or humble, to 
+     tell us. I resolve to walk over and find out."
+    hide raka with dissolve
+    show raka happy with dissolve
+    mc "Hi, Sharon, how’s it going?"
+    sh "..."
+    show raka happymid with dissolve
+    mc "Sharon?"
+    show raka surprise with dissolve
+    voice "voice/raka/1/sorakaroute_sharon_scene1_line1.ogg"
+    sh "OH! Hi, [name]! I was kind of absorbed in this book."
+    mc "What is it that you're reading!"
+    show raka angry with dissolve
+    voice "voice/raka/1/sorakaroute_sharon_scene1_line2.ogg"
+    sh "N-None of your beeswax!"
+    "She slides the book under her. Looks like she really doesn't want anyone to know what's 
+     written on that cover."
+    show raka surprise with dissolve
+    voice "voice/raka/1/sorakaroute_sharon_scene1_line3.ogg"
+    sh "So, uh... what did you want?"
+    mc "I'm just wondering if you found anything concerning the hacker."
+    voice "voice/raka/1/sorakaroute_sharon_scene1_line4.ogg"
+    sh "You're asking me? D-Do you really think I can help?"
+    mc "I don't see why not. You're just as capable as the rest of us."
+    show raka sad with dissolve
+    voice "voice/raka/1/sorakaroute_sharon_scene1_line5.ogg"
+    sh "But, I'm just a healer... I can't really battle the hacker that well..."
+    mc "You can still provide support. And, it looks like you know your way around research... 
+        you could be more of a help than you think."
+    show raka veryhappy with dissolve
+    voice "voice/raka/1/sorakaroute_sharon_scene1_line6.ogg"
+    sh "Really, I'm not that great... you're just trying to flatter me!"
+    mc "I'm serious. You've gotten really good at the game in just a short amount of time. 
+        And your character is so... unique. I wouldn't think you'd have designed her."
+    show raka surprise with dissolve
+    voice "voice/raka/1/sorakaroute_sharon_scene1_line7.ogg"
+    sh "You... you {i}like{/i} Soraka? What do I dooo!?"
+    "Sharon blushes, hiding her face in her hands."
+    
+    menu:
+        "She's really cute.":
+            $ renpy.fix_rollback()
+            mc "Actually, I think she's pretty cute. Maybe even se-"
+            show raka sad with hpunch
+            voice "voice/raka/1/sorakaroute_sharon_scene1_line8.ogg"
+            sh "Stoooop! This is so embarrassing!"
+            mc "What's so embarrassing about it? It's only natural."
+            voice "voice/raka/1/sorakaroute_sharon_scene1_line9.ogg"
+            sh "Look, just... promise me you won't flirt with her, okay? I know I'll just 
+                screw it up..."
+            mc "You won't screw it up, I know you'll do fine!"
+            hide raka with dissolve
+            show raka sad at right with dissolve
+            voice "voice/raka/1/sorakaroute_sharon_scene1_line10.ogg"
+            sh "Oh, no... no, I'm really bad at that. I'm so clumsy, and a klutz, and 
+                a total failure... Ahri is way better at that stuff than me!"
+            mc "I think you could do at least as well as Ahri with some practice..."
+            voice "voice/raka/1/sorakaroute_sharon_scene1_line11.ogg"
+            sh "Nnnnnnooooo! Just get awaaaaay!"
+            mc "O-Okay... if you say so."
+            "Not wanting to disturb the rest of her reading, I walk away from the chair. 
+             She furtively pulls out her book and goes back to reading."
+            call gift_check("Sharon")
+            scene bg black with dissolve
+            pause 0.5
+            stop music fadeout 2.0
+            jump events_end_period
+            
+        "I didn't mean it that way.":
+            $ renpy.fix_rollback()
+            mc "Hey, I like her, but I don't... LIKE like her..."
+            show raka happy with dissolve
+            voice "voice/raka/1/sorakaroute_sharon_scene1_line12.ogg"
+            sh "Oh... you don't? Phew... I was kind of scared for a minute there."
+            mc "You don't have to be scared. I'm sure you would do fine in romance."
+            show raka surprise with dissolve
+            voice "voice/raka/1/sorakaroute_sharon_scene1_line13.ogg"
+            sh "Oh, no... no, I'm really bad at that. I'm so clumsy, and a klutz, and a total 
+                failure... Ahri is way better at that stuff than me!"
+            mc "You seem perfectly capable to me. At least, when I see you in game."
+            show raka sad with dissolve
+            voice "voice/raka/1/sorakaroute_sharon_scene1_line14.ogg"
+            sh "I have to try so hard not to break character, though. I don't want to embarass 
+                everyone by doing something stupid."
+            mc "Just give it a shot... maybe it'll work out fine."
+            show raka happy with dissolve
+            voice "voice/raka/1/sorakaroute_sharon_scene1_line15.ogg"
+            sh "O-Okay... thanks. I'll try to find some information on past hacking attacks... 
+                but it probably won't help much. Hehe."
+            "Not wanting to disturb the rest of her reading, I walk away from the chair. She 
+             furtively pulls out her book and goes back to reading."
+            call gift_check("Sharon")
+            scene bg black with dissolve
+            pause 0.5
+            stop music fadeout 2.0
+            jump events_end_period
+    
+
+label raka_2:
+    scene bg fountain
+    show raka happy with dissolve
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line1.ogg"
+    so "The power of the stars guides me..."
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line2.ogg"
+    so "I am one with the universe. I shall banish the hatred in their hearts, lest it-"
+    play music "music/ambient1.mp3" fadein 1.0
+    show raka surprise with dissolve
+    ez "Hey! How ya doin'?"
+    show raka angrymid with dissolve
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line3.ogg"
+    so "What knave dares interrupt my meditation ritual?"
+    ez "I have to say, this is pretty relaxing. I like what you've done with the place. 
+        The night sky really brings out the accents in the, uh, grass."
+    show raka angry with dissolve
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line4.ogg"
+    so "Is that so? Well, I have no time to sit here for idle chatter. I must finish my 
+        incantations to replenish my mana and support my comrades."
+    ez "What about something that isn't so idle, then? Like, a battle!"
+    with hpunch
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line5.ogg"
+    so "I am not in the mood for battling. I must finish my meditation."
+    ez "What if I told you that I'd donate 50 bucks to the Kitten Protection Foundation if 
+        you won?"
+    show raka sadmid with dissolve
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line6.ogg"
+    so "W-What!? Those poor little kitties!"
+    show raka angry with dissolve
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line7.ogg"
+    so "I mean... no, of course not! I am a child of the stars - I will not stoop to your 
+        base level."
+    ez "Just think about it. If you win, a kitten will be adopted by a loving family!"
+    show raka sadmid with dissolve
+    with hpunch
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line8.ogg"
+    so "I-I can't... I won't... WAAAAAH!"
+    ez "Wait, wait - don't cry! I was just kidding!"
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line9.ogg"
+    show raka angrymid
+    so "I'm... not crying... I am a b-bold warrior of... the heavens!"
+    ez "Look, the real reason I came is - I kind of got injured in the last battle. So... 
+        could you help me out?"
+    show raka surprise with dissolve
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line10.ogg"
+    so "Why did you not say so in the first place?"
+    "Soraka picks up her staff, chanting some words in a mysterious language. An aura of 
+     magic surrounds me, and my wounds quickly close."
+    ez "Thanks, it's good to have someone like you to count on."
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line11.ogg"
+    show raka happy with dissolve
+    so "You are... welcome? Sigh... humans and their foolishness."
+    ez "So, have you thought about what I said earlier? About romance?"
+    show raka angry
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line12.ogg"
+    so "Romance is a primitive human custom. The denizens of the heavens have no time for 
+        such matters."
+    ez "C'mon, don't tell me you never wanted to try."
+    show raka happy
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line13.ogg"
+    so "Perhaps another day. Right now, I must complete this meditation if I wish 
+        to attune my powers."
+    ez "Wait a second... that's weird. You have enough mana to join us, and then some."
+    show raka angry
+    voice "voice/raka/2/sorakaroute_soraka_scene2_line14.ogg"
+    so "I simply do not feel like helping."
+
+    menu:
+        "The team needs you!":
+            $ renpy.fix_rollback()
+            $ raka3_flag = True
+            ez "You can't just wait here while people are getting hurt! You have to go and 
+                help them!"
+            voice "voice/raka/2/sorakaroute_soraka_scene2_line15.ogg"
+            so "Sometimes, people just have to learn to help themselves."
+            ez "That doesn't sound like you at all. You used to run into battle to save people."
+            voice "voice/raka/2/sorakaroute_soraka_scene2_line16.ogg"
+            so "Please; let us not discuss this matter further."
+            ez "We have to discuss it further! How are we supposed to be a club if we all go off 
+                and do our own thing?"
+            voice "voice/raka/2/sorakaroute_soraka_scene2_line17.ogg"
+            so "It's... it's just... I..."
+            show raka angrymid
+            voice "voice/raka/2/sorakaroute_soraka_scene2_line18.ogg"
+            so "If I can’t help those in danger right before my eyes, what makes you think 
+                that I can save others, let alone myself?!"
+            pause 1.0
+            show raka sad with dissolve
+            voice "voice/raka/2/sorakaroute_soraka_scene2_line19.ogg"
+            so "I'd just be too much of a burden. That's why I'm not going to fight."
+            ez "Oh... uh... I'm sorry for getting you so worked up. I don't want to pry too 
+                much into your... personal issues."
+            show raka sad at left with dissolve
+            voice "voice/raka/2/sorakaroute_soraka_scene2_line20.ogg"
+            so "No... I'm fine. Just... leave me alone."
+            ez "R-Right... uh... going now."
+            hide raka with dissolve
+            "Soraka's completely out of character now. What could have made her so angry? 
+             I probably won't be able to find out right now, so I figure I might as well leave her be."
+            scene bg black with dissolve
+            pause 0.5
+            stop music fadeout 2.0
+            jump events_end_period
+                
+        "Fine, then.":
+            $ renpy.fix_rollback()
+            $ raka3_flag = False
+            ez "Fine, if you don't want to help, then, so be it."
+            show raka happy with dissolve
+            voice "voice/raka/2/sorakaroute_soraka_scene2_line21.ogg"
+            so "Thank you for understanding. I simply don't want to... let you down."
+            ez "Why would you be afraid of that? Well, whatever. If that's what you want to do, 
+                then that's what you want to do. I'm in no position to stop you."
+            voice "voice/raka/2/sorakaroute_soraka_scene2_line22.ogg"
+            so "Yes... I will just continue my meditation. Perhaps I should place a 
+                \"do not disturb\" sign here from now on."
+            hide raka with dissolve
+            "Unsure of why Soraka is so reticient, I decide to leave her be, for fear of 
+             starting an argument. It couldn't be something that important... right?"
+            "In any case, I leave her where she sits and warp out of her realm."
+            scene bg black with dissolve
+            pause 0.5
+            stop music fadeout 2.0
+            jump events_end_period
+    
+label raka_3:
+    play music "music/ambient2.mp3" fadein 2.0
+    if raka3_flag:
+        scene bg library
+        "I decide to head to the library, figuring I might find someone familiar. My suspicions 
+         are not far off the mark - Sharon is there, sitting in her usual seat."
+        "My mind has been fixated on the events of the last time I saw her. Originally, I was 
+         just going to let it go, but I've decided I can't just leave her alone"
+        "Whatever her problems are, it's only going to keep eating at her if I don't intervene."
+        show raka angry at right with dissolve
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line1.ogg"
+        sh "Oh... hey, [name]."
+        mc "You look a little down. Anything I can do to help?"
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line2.ogg"
+        sh "No... not really. I doubt you can help."
+        mc "You'd be surprised."
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line3.ogg"
+        sh "I said, I don't need your help, okay? I'm fine on my own. There's nothing wrong. Seriously."
+        mc "I'm in your club. I've seen you play, and how you acted back there was not you."
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line4.ogg"
+        sh "It really doesn't matter. It's just a game."
+        mc "The last I heard, you loved your character... you spent hours designing her. It 
+            wasn't just a game to you, and I don't think you feel that way now, either."
+        pause 1.0
+        show raka sad at right with dissolve
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line5.ogg"
+        sh "Umm... [name]? Let's say you had a friend, a friend who put all their trust in you. 
+            They make a promise with you, and then you break it."
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line6.ogg"
+        sh "Do you think they would forgive you? Even if what you did was terrible... unforgivable?"
+        mc "Most friends probably wouldn't. But, I think that a true friend would forgive you. 
+            To err is human, you know?"
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line7.ogg"
+        sh "You... you really think so?"
+        mc "A real friend sees your flaws, they don't just stay with you until you mess up. 
+            People make mistakes... that's real life."
+        mc "You just have to accept that and keep moving. Life is more than atoning for your 
+            mistakes - you can use that energy to do something positive."
+        show raka veryhappyblush at right with dissolve
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line8.ogg"
+        sh "Thanks... I think that helped. You're a good friend, too, [name]."
+        with hpunch
+        "Sharon smiles at me, and I can't help but blush. I awkwardly stumble backwards, 
+         almost disturbing a pile of books."
+        mc "Aww, shucks... I didn't mean it that way, I was just giving advice."
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line9.ogg"
+        sh "Well, gotta go - see ya, [name]."
+        hide raka with easeoutleft
+        "Sharon, surprisingly, walks out of the library to read somewhere else. By the time 
+         I leave myself, she is gone."
+        mc "Hmm... well, whatever."
+        scene bg black with dissolve
+        pause 0.5
+        stop music fadeout 2.0
+        jump events_end_period
+    else:
+        scene bg library
+        "I decide to head to the library, figuring I might find someone familiar. My 
+         suspicions are not far off the mark - Sharon is there, sitting in her usual seat."
+        show raka surprise with dissolve
+        voice "voice/raka/3/sorakaroute_sharon_scene3B_line1.ogg"
+        sh "Oh... hey, [name]."
+        mc "You look a little down. Anything I can do to help?"
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line2.ogg"
+        show raka happy with dissolve
+        sh "No... not really. I doubt you can help."
+        mc "You'd be surprised."
+        show raka angry
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line3.ogg"
+        sh "I said, I don't need your help, okay? I'm fine on my own. There's nothing wrong. 
+            Seriously."
+        mc "Okay, if you say so. Wait, it's not about the Kitten Foundation, is it? I'll 
+            donate to them if you really want to."
+        show raka happymid dissolve
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line4.ogg"
+        sh "You would? Oh, that would be amazing! I would throw in some money, but I kind 
+            of need this for lunch..."
+        mc "It's no problem. As you can see, I'm willing to go great lengths for a lady in need."
+        show raka happy dissolve
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line5.ogg"
+        sh "Hahaha... you're one of the weirder people I've ever seen."
+        mc "I just want you to be happy, is all."
+        show raka sad
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line6.ogg"
+        sh "Uhm... [name]? This is only a \"what if\" type of question, but..."
+        mc "...? What is it?"
+        show raka happy dissolve
+        voice "voice/raka/3/sorakaroute_sharon_scene3A_line7.ogg"
+        sh "...Actually, never mind. I hope we can find the hacker soon!"
+        mc "Ah, uhm, yeah... see ya later, then!"
+        call gift_check("Sharon")
+        "For some reason, the smile on Sharon's face seems bittersweet as I see her off. 
+         I just can't understand her. Oh, well... I guess I'll go and catch up on some homework."
+        scene bg black with dissolve
+        pause 0.5
+        stop music fadeout 2.0
+        jump events_end_period
+    
+label raka_4:
+    scene bg bedroom
+    "It's nighttime, and I am sitting in my bedroom, about to log onto Summoner's Rift."
+    "Just then, I hear the sound of the doorbell before I put on my headphones."
+    play music "music/bedroom.mp3" fadein 2.0
+    "Who could it be at this hour? I just wanted to jump into the game..."
+    "Walking downstairs, I open the door and peek my head out. I am surprised to see that 
+     it's none other than Sharon."
+    voice "voice/raka/4/sorakaroute_sharon_scene4_line1.ogg"
+    sh "Um, hey, can I come in?"
+    mc "Sure, of course. Make yourself at home. Oh, but my bedroom's upstairs."
+    with fade
+    "I let her into the house, and we both climb the stairs up to my room. I'm surprised 
+     that shy, adorable Sharon has found the boldness to enter my room without any prior suggestion."
+    show raka sad with dissolve
+    voice "voice/raka/4/sorakaroute_sharon_scene4_line2.ogg"
+    sh "So, um... remember when you were teasing me before? You know, in the game?"
+    mc "Why would you bring that up? That's over with now, right?"
+    voice "voice/raka/4/sorakaroute_sharon_scene4_line3.ogg"
+    sh "Actually, there's something that I wasn't telling you. That's what was really on my mind."
+    mc "Huh? Then, what was it?"
+    voice "voice/raka/4/sorakaroute_sharon_scene4_line4.ogg"
+    sh "I had... a really good friend. Back when they invented the VR Gear, she and 
+        I had volunteered to test them out."
+    voice "voice/raka/4/sorakaroute_sharon_scene4_line5.ogg"
+    sh "I promised to test them with her. But, I didn't come... I was too busy doing 
+        something else. I didn't honor our promise."
+    voice "voice/raka/4/sorakaroute_sharon_scene4_line6.ogg"
+    sh "The next day, I heard that the interface had malfunctioned. She had put it on 
+        by herself without supervision and... I couldn't save her."
+    voice "voice/raka/4/sorakaroute_sharon_scene4_line7.ogg"
+    sh "I wasn't there to help her and... she died. All because I was too selfish to 
+        come and test it out with her."
+    mc "N -No way..."
+    voice "voice/raka/4/sorakaroute_sharon_scene4_line8.ogg"
+    sh "So, I feel like I'll never be good enough. No matter how hard I try to help 
+        people, something bad always happens!"
+    mc "Sharon, you shouldn't blame yourself. You really are helping people with what 
+        you're doing. Life can be unfair, but that doesn't mean you should stop trying."
+    voice "voice/raka/4/sorakaroute_sharon_scene4_line9.ogg"
+    sh "But, what's the point anymore?"
+    mc "You shouldn't question yourself. I'm your friend, and I can tell you that you've 
+        been a great help to me, and everyone here. We would be worse off without you."
+    voice "voice/raka/4/sorakaroute_sharon_scene4_line10.ogg"
+    show raka surprise
+    sh "R-Really? I... I..."
+    mc "I'm so sorry for your loss."
+    show raka angrymid with dissolve
+    voice "voice/raka/4/sorakaroute_sharon_scene4_line11.ogg"
+    sh "No, it's okay... really. Now I want to go and face the hacker, together!"
+    mc "Erm... about that. I only have one VR Gear. I didn't exactly expect company."
+    show raka surprisemid with dissolve
+    hide raka with dissolve
+    show raka veryhappyblush with dissolve
+    voice "voice/raka/4/sorakaroute_sharon_scene4_line12.ogg"
+    sh "O-OH! Oops... sorry. I think I should just go back home, then. But, when the time 
+        comes, I'll be ready to help."
+    mc "Thanks, Sharon. See you later!"
+    call gift_check("Sharon")
+    scene bg black with dissolve
+    pause 0.5
+    stop music fadeout 2.0
+    jump events_end_period
+    
+label raka_5:
+     scene bg black
+     "While walking home from school, I recieve a text message on my phone from Sharon. 
+      \"Come to the park at 8 PM! Meet me on the Great Lawn.\""
+     "I wonder what this could be about. And, why at night? I decide not to speculate 
+      until get there, figuring it could be just about anything."
+     scene bg parknight with dissolve
+     "Later that day, I get dressed again and leave, headed to the park. When I finally do 
+      arrive, I find Sharon lying on the grass, looking up into the sky."
+     mc "Umm... Sharon? What exactly are you looking at?"
+     voice "voice/raka/5/sorakaroute_sharon_scene5_line1.ogg"
+     sh "Sssh! Wait, just a few more seconds!"
+     mc "I don't see- huh?"
+     scene cg raka end with dissolve
+     "To my surprise, several glowing streaks fly across the sky."
+     play music "music/Edge of Mist.mp3" fadein 1.0
+     voice "voice/raka/5/sorakaroute_sharon_scene5_line2.ogg"
+     sh "See? It's a meteor shower!"
+     mc "A meteor shower!? Are you sure that's not dangerous?"
+     voice "voice/raka/5/sorakaroute_sharon_scene5_line3.ogg"
+     sh "No, silly... it's just a bunch of harmless rocks burning up in the sky!"
+     mc "For a bunch of rocks, it sure looks beautiful."
+     voice "voice/raka/5/sorakaroute_sharon_scene5_line4.ogg"
+     sh "You should sit here and watch! It's due to last for another half hour, anyway."
+     mc "I think I'll take you up on that generous offer."
+     "I sit down on the grass, next to Sharon, and continue looking up at the sky. The breeze 
+      buffets my face as both of us sit there, peacefully."
+     voice "voice/raka/5/sorakaroute_sharon_scene5_line5.ogg"
+     sh "Isn't this great! Sometimes, you don't need virtual reality to see something incredible."
+     mc "Heh... I already knew that. In fact, I'm looking at something incredible right 
+         on the ground."
+     voice "voice/raka/5/sorakaroute_sharon_scene5_line6.ogg"
+     sh "W-What?"
+     "Both of us break into laughter at Sharon's surprised expression. As we continue to watch 
+      the stars, she scooches closer to me."
+     voice "voice/raka/5/sorakaroute_sharon_scene5_line7.ogg"
+     sh "Maye after the meteor shower ends, we could do something else."
+     mc "Don't worry - you can invite me anywhere, anytime. You're the kindest person I've 
+         had the honor of knowing."
+     voice "voice/raka/5/sorakaroute_sharon_scene5_line8.ogg"
+     sh "Th-thanks, [name]. I don't think I'll ever forget you, either."
+     scene bg black with dissolve
+     pause 0.5
+     stop music fadeout 2.0
+     jump events_end_period
+    

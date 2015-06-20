@@ -105,7 +105,7 @@ label jayce_1:
             mc flat"And enough with the gimmicky lines. You sound like you walked right out of a romance novel. 
                 A bad one."
             show jayce surprised
-            "A panicked look is plastered onto his dashing features. A straying thought of how
+            "He has this panicked look plastered across his dashing features. A straying thought of how
              entertaining it is to tease him briefly crosses my mind."
             voice "voice/leona/1/le_ja_scene1_10.ogg"
             mc flat "I'm [name]. And if you'll excuse me, I need to do some bad guy hunting! There's 
@@ -271,7 +271,7 @@ label jayce_2:
     show jayce vr angry at right
     hide jayce with moveoutleft
     "A glowing gate of light unfolds before me, exuding a slight magnetic pull towards the center 
-     of the entrance. It consumes Jayce as he rushes pas tthe majestic glare, and {i}POOF!{/i} he's gone."
+     of the entrance. It consumes Jayce as he rushes past the majestic glare, and {i}POOF!{/i} he's gone."
     "Now isn't a time for questions! I bolt straight through the portal, realizing that my 
      feet now have a touch of heightened agility."
     with hpunch
@@ -348,7 +348,7 @@ label jayce_2:
             voice "voice/jayce/2/ja_vi_scene2_2.ogg"
             vi "Hmph."
             hide vik with moveoutleft
-            "Viktor says no more as he returns to the battle field, leaving behind nothing 
+            "Viktor says no more as he returns to the battlefield, leaving behind nothing 
              but a bad taste in our mouths."
             voice "voice/leona/2/le_ja_scene2_19.ogg"
             le angry "There was no need to provoke him, Jayce."
@@ -403,6 +403,7 @@ label jayce_2:
              eight unblinking eyes loom before me."
             "I take cover under my shield to deflect a spray of venom. As I get down, 
              my shield clangs as it hits something metal. Jayce lies at my feet... not moving."
+            "Oh no..."
             "The two of us are enveloped in a bubble of purple light."
             un "Our wills align."
             with fade
@@ -474,7 +475,8 @@ label jayce_3:
         when I made that glorious kick that won us the game in the world championships."
     voice "voice/leona/3/le_ja_scene3_2.ogg"
     mc happy"Right! You were facing... Darius, I think. He was the goalkeeper."
-    "I still remember all the cheering. It was raining cats and dogs with all the shouts of praise that day."                                                                                                              
+    "I still remember all the cheering. The stadium was deafening - the crowd could have started their
+     own earthquake."
     voice "voice/jayce/3/ja_scene3_4.ogg"
     je "It wasn't an easy feat, that's for sure. And the pressure of three-hundred thousand people 
         scrutinizing every move I make was anything but pleasant."
@@ -501,7 +503,7 @@ label jayce_3:
     je "Speaking of girls I like, I actually might have a date this year. Last year during
         the Spring Fling, I was cooped in my room hacking away at my hammer."
     voice "voice/jayce/3/ja_scene3_9.ogg"
-    je "It was an unenventful evening to say the least."
+    je "It was an uneventful evening to say the least."
     mc angry "..." #angry
     voice "voice/jayce/3/ja_scene3_10.ogg"
     je "Sorry~ Forgive me. Tell me what you did... please?"
@@ -539,7 +541,7 @@ label jayce_3:
             voice "voice/leona/3/le_ja_scene3_9.ogg"
             mc angry "I can't believe you. A {i}real{/i} gentleman would do the honorable thing of 
                 defending his fellow colleagues."
-            "It isn't until the feet of my chair paint black streaks on the floor after shoving it
+            "It isn't until the feet of my chair make scuff marks on the floor after shoving it
              aside that Jason takes action."
             "There's a newfound glint in Jason's eyes as he approaches the band of soccer players."
             hide jayce with moveoutright
@@ -590,13 +592,13 @@ label jayce_3:
             voice "voice/leona/3/le_ja_scene3_13.ogg"
             mc flat "You talk so loud that even Cleopatra would raise from the dead."
             "Before I could hurl any more of my outrage at them, an arm descends from above my
-             head to imepede the argument."
+             head to halt the argument."
             show char shen at left with dissolve
             voice "voice/jayce/3/ja_zen_scene3_1.ogg"
             s "There is no need for insults, even when defending your friends, [name]."
             voice "voice/leona/3/le_ja_scene3_14.ogg"
             mc surprise "I was just - I'm sorry."
-            "That large, stern hand that was used to diffuse a heated alteraction is now comforting 
+            "That large, stern hand that was used to diffuse a heated altercation is now comforting 
              my discouraged concerns with a pat on the head."
             voice "voice/jayce/3/ja_zen_scene3_2.ogg"
             s "Advisory period will now consist of strictly verbal silence. No one has permission to 
@@ -617,7 +619,7 @@ label jayce_4:
     "You know what's silly? Me, waiting for Jason. At the park. \"Let's go on a date!\" he says." #blush
     play music "music/Market Breeze.mp3" fadein 2.0
     "I don't really have time for this. If it weren't for those charming, crimson eyes of his and 
-     the way his soft strands of midnight hair massage the air with its delicate weave..."
+     the way his hair looks so dreamy in the wind..."
     "... and the nape of his neck so pristine; elegance emitting from every inch of his dreamy build,
      and not to mention his enticing smile of perfection... Yea, if it wasn't for that, I'd be long gone by now."
     "Even as he dashes up to me after spotting me underneath the shades of a sakura tree, he still shines brilliantly."
@@ -646,7 +648,7 @@ label jayce_4:
         There's no question that our future will be bright."
     show jayce happy
     voice "voice/jayce/4/ja_scene4_5.ogg"
-    je "To make progress, you need to appreciate the intracicies of design and imminent development of
+    je "To make progress, you need to appreciate the intricacies of design and imminent development of
         our paths to greatness."
     voice "voice/leona/4/le_ja_scene4_3.ogg"
     mc sad "You almost sound like Cyrus."
@@ -659,7 +661,7 @@ label jayce_4:
     voice "voice/jayce/4/ja_scene4_7.ogg"
     je "I really want to get into engineering after graduation. Make stuff - 
         stuff that actually helps, not frivolous gadgets."
-    "He says it with such hardheaded determination that when he looks at me, I let out a little jolt."
+    "He says it with such hardheaded determination... I can see the conviction in his eyes."
     show jayce happy
     voice "voice/jayce/4/ja_scene4_8.ogg"
     je "What about you? What will you do?"
@@ -798,7 +800,7 @@ label jayce_5:
     "The gaze of his eyes penetrates the deepest part of my hearts; so heavy yet profound. 
      Nothing like the devious little child that he was a few days ago."
     voice "voice/jayce/5/ja_scene5_6.ogg"
-    je "Ever since fate entertwined us, I've thought about what you've said about being truer to myself. 
+    je "Ever since fate intertwined us, I've thought about what you've said about being truer to myself. 
         And that's what got us right here, right now."
     "W-what's with this unexpected change of pace?! I can feel my face burning with embarrassment."
     hide jayce with dissolve

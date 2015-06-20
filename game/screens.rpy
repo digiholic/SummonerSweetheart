@@ -588,7 +588,7 @@ screen bio_select():
         text "Sharon May" xpos 122 ypos 395 font "MyriadPro.ttf" size 50 color "#6e7a90"
         text "champion: SORAKA" xpos 122 ypos 443 font "OratorStd.ttf" size 30 color "#6b6b6b"
         if rango_scene > 1:
-            imagebutton auto "gui/bioselect_ren_%s.png" action ShowTransient("bio", None, champ="rango") xpos 122 ypos 568
+            imagebutton auto "gui/bioselect_ren_%s.png" action ShowTransient("bio", None, champ="rango") xpos 549 ypos 568
             text "Gwen Leon" xpos 122 ypos 568 size 50 color "#71bb62"
             text "champion: RENGAR" xpos 122 ypos 621 font "OratorStd.ttf" size 30 color "#6b6b6b"
         else:

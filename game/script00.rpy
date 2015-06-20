@@ -241,7 +241,7 @@ label prologue:
     hide jayce
     hide rumble with dissolve
     voice "voice/prologue/ch2.ogg"
-    ch "All right, everyone, settle down. I know everybody's worked up about this, but I
+    ch "Alright, everyone, settle down. I know everybody's worked up about this, but I
         just received some interesting information for you guys to look at. Take a look
         at this."
     voice "voice/prologue/am3.ogg"
@@ -466,7 +466,7 @@ label prologue:
     hide raka
     show char fiora at center with dissolve
     voice "voice/prologue/ch8.ogg"
-    ch "All right everyone, club hours are officially over! Everyone head home and make
+    ch "Alright everyone, club hours are officially over! Everyone head home and make
         sure to finish all of your assigned work before even thinking of playing League."
     voice "voice/prologue/ch9.ogg"
     ch "I don't have any personal issues with wanting to try to catch the hacker, but make sure
@@ -564,9 +564,7 @@ label dungeon:
     "Time to be patient... sometimes, it takes a little while."
     if route == "Leona":
         $ giftsInventory = [have_hammer, have_sketch, have_rubix]
-        $ comboSkillsUnlocked = [jayce_combo, rumble_combo, vik_combo]
-        $ SceneKeys = (sum(comboSkillsUnlocked), dungeon_visits_no_combo, bosses_defeated, vik_confessed)
-        $ pass_list = [False, giftsInventory, comboSkillsUnlocked, SceneKeys]
+        $ old_bosses_defeated = bosses_defeated
         $ current_battle = Battle()
         call screen dungeon_run(True)
         show screen dungeon_run(False)
@@ -574,9 +572,6 @@ label dungeon:
         $ current_battle = None
     elif route == "Ezreal":
         $ giftsInventory = [have_charm, have_bone, have_clip]
-        $ comboSkillsUnlocked = [ahri_combo, rango_combo, raka_combo]
-        $ SceneKeys = (sum(comboSkillsUnlocked), dungeon_visits_no_combo, bosses_defeated, raka_confessed)
-        $ pass_list = [True, giftsInventory, comboSkillsUnlocked, SceneKeys]
         $ old_bosses_defeated = bosses_defeated
         $ current_battle = Battle()
         call screen dungeon_run(True)
@@ -727,11 +722,11 @@ label update_whois:
                 $ whois_class = "Rumble"
                 $ class_priority = rumble_scene
         elif rumble_scene == 4 and period == 1:
-            if museum_priority < rumble_priority:
+            if museum_priority < rumble_scene:
                 $ whois_museum = "Rumble"
                 $ museum_priority = rumble_scene
         elif rumble_scene == 5 and day == 7 and period == 2 and rumble_rp >= 70: # add the wait-a-day criteria
-            if museum_priority < rumble_priority:
+            if museum_priority < rumble_scene:
                 $ whois_museum = "Rumble"
                 $ museum_priority = rumble_scene
                 

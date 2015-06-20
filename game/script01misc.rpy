@@ -122,7 +122,7 @@ label rengar_hairclip:
     $ renpy.block_rollback()
     "I get Gwen's attention."
     show rango angry with dissolve
-    "Reaching inside my pouch, I hide the starry hair clip behind my back before flauting the yellow barrette."
+    "Reaching inside my pouch, I hide the starry hair clip behind my back before flaunting the yellow barrette."
     voice "voice/ezreal/gift/ez_re_giftHAI1.ogg"
     mc happy "For you."
     show rango surprised with dissolve
@@ -193,7 +193,7 @@ label ahri_hairclip:
     $ renpy.block_rollback()
     "I get Ami's attention once again."
     show ahri happy with dissolve
-    "I reach inside my pouch and hide the starry hair clip behind my back before flauting the yellow barrette."
+    "I reach inside my pouch and hide the starry hair clip behind my back before flaunting the yellow barrette."
     voice "voice/ahri/gift/ah_gift_7.ogg"
     am "I didn't know you had an interest in astrological things."
     voice "voice/ezreal/gift/ez_ah_giftHAI1.ogg"
@@ -240,7 +240,7 @@ label soraka_charm:
     voice "voice/raka/gift/so_gift_5.ogg"
     sh "T-together?!"
     "I flash the one drooping and swaying from my iPhone 6. The light's glare makes the flaming keychain illuminate the room."
-    "Her face turns fifty shades of red before she turns her head."
+    "Her face turns red as she contemplates the phone charm."
     voice "voice/raka/gift/so_gift_6.ogg"
     sh "It's... pretty embarrassing, sorry! Thanks anyways."
     hide raka with dissolve
@@ -250,7 +250,7 @@ label soraka_hairclip:
     $ renpy.block_rollback()
     "I get Sharon's attention once again."
     show raka happy with dissolve
-    "I reach inside my pouch and hide the starry hair clip behind my back before flauting the yellow barrette."
+    "I reach inside my pouch and hide the starry hair clip behind my back before flaunting the yellow barrette."
     voice "voice/ezreal/gift/ez_so_giftHAI1.ogg"
     mc happy "I was thinking about the clip in your hair and thought it was pretty lonely by itself."
     show raka surprised with dissolve
@@ -437,7 +437,7 @@ label daniel_hammer:
     voice "voice/leona/gift/le_ru_giftHAM2.ogg"
     mc sad "Or, you know, think of me when you see it?"
     show rumble flatblush
-    "His adorable streaks of red make it difficult not to giggle a little on the inside."
+    "His ears turn red in an adorable way, making it difficult not to giggle a little."
     voice "voice/rumble/gift/ru_gift_2.ogg"
     da "S-sure."
     hide rumble with dissolve
@@ -467,7 +467,7 @@ label daniel_sketch:
     $ renpy.block_rollback()
     mc flat "Hey, Daniel?"
     show rumble flat with dissolve
-    "Swinging the notebook in front of his unsuspecting eyes, I watch for the signs of gratitude that I hope he'll display."
+    "Pressing the notebook into his hands, I watch him, hoping he’ll be delighted with my gift."
     voice "voice/leona/gift/le_ru_giftBOO1.ogg"
     mc happy "With all the time you put into sketching, maybe you're in need of a new sketchbook?"
     show rumble surprised with dissolve
@@ -475,7 +475,7 @@ label daniel_sketch:
     show rumble happy with dissolve
     voice "voice/rumble/gift/ru_gift_5.ogg"
     da "I actually just finished filling my fifth artbook yesterday."
-    "Daniel's delightful smile is like a jab of sun rays piercing through my chest."
+    "Daniel's delightful smile is like a ray of sunlight in my heart."
     voice "voice/leona/gift/le_ru_giftBOO2.ogg"
     mc happyblush "Glad you like it."
     show rumble happyblush with dissolve

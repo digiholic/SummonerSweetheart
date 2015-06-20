@@ -16,9 +16,8 @@ label vik_1:
     scene bg classroom day
     play music "music/bedroom.mp3" fadein 2.0
     "\"Darn\"! slips through my lips as I realize that I left my new HTC phone back at the classroom."
-    "I shuffle through the hallway, only getting distracted once: how did a white crow sneak past all the teachers? 
-       It's really cute, though!"
-    "Its caws are so hushed that the commotion from the other side of the entrance spooks the bird out the opened window."
+    "I shuffle through the hallway, saying quick hello's to friends I bump into."
+    "But those greetings are put to a halt when voices echo through the open doors."
     voice "voice/viktor/1/vi_scene1_1.ogg"
     cy "... And how do you expect incompetent children to derive a solution 
         for a problem that even a coterie of programming professionals failed to do?"
@@ -132,7 +131,7 @@ label vik_2:
     vi "I don't share interest in trivial matters such as rumors. 
         The mundane lives of other people deserve none of my attention."
     "Even though I was caught off-guard, I quickly recover my composure in the face of his cold attitude. 
-      I'm starting to regret running into Cyrus in the first place."
+      I'm starting to regret running into Cyrus in the first place. I totally should have left when I saw him in mid-lane."
     voice "voice/leona/2/le_vi_scene2_2.5.ogg"
     le angry "I'm sorry, did I do something wrong? You could have just moved to another lane instead of being a huge jerk!"
     "His expression doesn't change at all."
@@ -181,8 +180,8 @@ label vik_2:
     voice "voice/viktor/2/vi_scene2_11.ogg"
     vi "What?" #Zed voice
     show vik vr surprisedmid with dissolve
-    "I cover my mouth as a chuckle breaks through the cracks of my fingers. 
-     Viktor's startled face - never saw that coming."
+    "I cover my mouth with my hand, trying to cough down my laughter. Then I see a truly rare sight -
+     Viktor with a startled expression on his face."
     show vik vr angry with dissolve
     voice "voice/viktor/2/vi_scene2_12.ogg"
     vi "Ugh, that wretched hacker. I hope he writhes, like a worm on a hook." #Thresh voice
@@ -291,8 +290,8 @@ label vik_3:
             mc happy "How about this - I'll take it for now and return it to you the next day with notes. 
                 After you get your fair share of reading in, we can compare what we found. Team Summoner Detectives unite!"
             show vik surprised at left with dissolve
-            "That was brilliant. Cyrus can't say no to that; I mean, look at him! With his mouth gaping open and his posture so still, 
-             he enjoyed that pitch as much as I did."
+            "My idea is brilliant! Cyrus can’t say no to that; I mean, look at him... With his mouth agape and posture stiff... 
+             did he enjoy that pitch as much as I did?"
             show vik flat at left with dissolve
             "...Maybe not."
             voice "voice/leona/3/le_vi_scene3_8.ogg"
@@ -301,7 +300,7 @@ label vik_3:
             cy "Alright. Hurry and complete your task before it gets too late."
             "When his brows lower, his whole face lightens up with relief. I wonder why he's so tense all the time?"
             hide vik with moveoutleft
-            "He follows me all the way to the copyroom like a newborn penguin waddling behind its mama... and it's almost adorable.
+            "He follows me all the way to the copyroom as if we were party members in an old-school RPG... it's almost exciting.
              After the {i}SHING!{/i} from the copy machine says the job is done, I turn around and again-"
             with hpunch
             mc surprise "Oof!"
@@ -357,19 +356,20 @@ label vik_3:
             voice "voice/viktor/3/vi_scene3_13.ogg"
             cy "You perplex me."
             hide vik with easeoutright
-            "And with that, he frees my hand of the book and trots away."
-    "He heads out past the glass doors, stopping right in front of the checkout station. 
-     I never realized how tall he is until his height almost crushes the girl scanning his book ten feet below him."
-    "On the other hand, that was almost, kinda pleasant: 
-     the whole talking thing, that is. In Cyrus' kind of way."
-    "When he \"flees from the premises,\" being the library, 
-     a smile sneaks its way on my slightly rosey face. 
-     I wonder if he's rubbing off on me?"
-    "Another fleeting thought takes hold of my attention - 
-     as much as I'd like to think the ice is slowly being chipped away, I wonder what's {i}really{/i} underneath all that mechanic jazz." 
-    "A heartfelt side to the oh-so-callous Cyrus. 
-     Is he really all that ice cold that people make him out to be, the All-Powerful Frost King Cyrus?"
-    "It won't hurt to find out! Hehe~"
+            "And with that, he frees my hand of the book and walks off."
+
+    "He heads out past the glass doors, stopping in front of the checkout station to get scanned. I can't help but notice
+     how he stands much taller than the rest of the students, and how he seems to be the only one who walks with purpose."
+    "Cyrus may be cold, but you can’t deny that he’s determined to attain his goals."
+    "It was almost kind of pleasant: running into him and getting to talk. Each time we meet,
+     I feel like I uncover a little more about him."
+    "When he \"flees the premises\" - the library, that is - a smile sneaks its way on my rosy face.
+    I wonder if his presence is growing on me..."
+    "A fleeting thought takes hold of me - as much as I'd like to think that I’m slowly chipping away at the ice,
+     I wonder what's {i}really{/i} under that cold mechanical exterior."
+    "A soulful side to the oh-so-callous Cyrus?
+     Or is he nothing but ice - the All-Powerful Frost King Cyrus that everyone makes him out to be..."
+    "I don't think it would hurt to find out. Hehe~"
     $ vik_rp = vik_rp + 9
     stop music fadeout 2.0
     jump events_end_period
@@ -377,7 +377,10 @@ label vik_3:
 label vik_4:
     $ vik_scene = 4
     $ renpy.block_rollback()
-    scene bg classroom day
+    if period == 1:
+        scene bg classroom day
+    else:
+        scene bg classroom night
     play music "music/bedroom.mp3"
     "You know, I've been thinking. Cyrus. Talk about an enigma! 
      There's something intriguing about the unknown."
@@ -420,13 +423,13 @@ label vik_4:
     cy "Work."
     voice "voice/leona/4/le_vi_scene4_8.ogg"
     mc flat "What kind of work?"
-    "Seriously, just tell me already! Enough with the dilly daddling."
+    "Seriously, just tell me already! Don't just dodge my question..."
     voice "voice/viktor/4/vi_scene4_4.ogg"
     cy "It does not concern you."
     "Fine, I'll just look at his screen for myself."
     show vik angryclose
-    "As I attempt to huddle over, I see him frantically tapping away at his keyboard, 
-     like he's trying to make his work vanish. Was that an alt + f4 right there?"
+    "As I attempt to huddle over to take a peek, he makes uncharacteristically frantic gestures at his keyboard,
+     like he's trying to make his work vanish. Was that an Alt + F4 he just typed?"
     show vik flatclose
     voice "voice/leona/4/le_vi_scene4_9.ogg"
     mc happy "Are you afraid of someone finding out your secret appreciation for internet memes? 
@@ -466,7 +469,7 @@ label vik_4:
                 Anyone who displays such feeble emotions of concern are doing it to gain control; 
                 to satiate {i}their{/i} feelings of unrest."
             "My heart pounds against the walls of my chest as Cyrus stares at me. 
-             I know he's only doing it to overpower me, but I can't help to find his poise attractive."
+             I know he's only doing it to overpower me, but I can't help to find his poise admirable."
             voice "voice/leona/4/le_vi_scene4_14.ogg"
             mc flat "I don't know. Seems like you're grasping at straws to justify why {i}you{/i} 
                 isolate yourself from situations. It doesn't hurt to have someone in your corner."
@@ -483,7 +486,7 @@ label vik_4:
             "Cyrus goes back to his computer, giving off this aura that the conversation is over."
             voice "voice/viktor/4/vi_scene4_11.ogg"
             cy "I have something to do."
-            "I find an empty desk to rest as I face him off. I'm seething at his words, his accusations. 
+            "I find an empty desk to rest on as I face him off. I'm seething at his words, his accusations. 
              How can someone be so cold?"
             voice "voice/leona/4/le_vi_scene4_16.ogg"
             mc angry "So then, how does the stuff you're working on have anything to do with teaching the masses they're wrong?"
@@ -500,8 +503,7 @@ label vik_4:
                 What do you think his motive could be?"
             hide vik with dissolve
             show vik angryclose with dissolve
-            "I think that struck a nerve. The fumes of his anger seem to emanate from his body. 
-             He's staring daggers at me."
+            "I think that struck a nerve. He's staring daggers at me."
             voice "voice/viktor/4/vi_scene4_13.ogg"
             cy "You should know when to quit. 
                 That issue is over your head, and the consequences for getting involved will be undesirable."
@@ -559,7 +561,7 @@ label vik_4:
             voice "voice/viktor/4/vi_scene4_19.ogg"
             cy "I don't need anyone's help."
             with vpunch
-            "Argh! I stamp my foot hard on the floor with enough force that the tables next to us shake a slight dance."
+            "Argh! I stamp my foot hard on the floor with enough force that the tables next to us shake slightly."
             voice "voice/leona/4/le_vi_scene4_27.ogg"
             mc angry "No one can do everything alone. You have to let someone in."
             voice "voice/viktor/4/vi_scene4_20.ogg"
@@ -575,10 +577,9 @@ label vik_4:
             "He's looking straight at me. His piercing glare acts as the ultimate move right before my defeat."
             voice "voice/viktor/4/vi_scene4_22.ogg"
             cy "Your presence would have departed much sooner, along with your annoying demeanor."
-            "I'm not sure if there's a feeling beyond crap, but if there is, that's how I'm feeling right now. 
-             Except worse - like over 9,000 times worse."
+            "I'm not sure if there's a feeling beyond crap, but if there is, that's how I'm feeling right now. Except worse."
             hide vik with dissolve
-            "I slump down the chair closest to me. Any energy I had to argue with Cyrus was zapped away by his contempt. 
+            "I slump down in the chair closest to me. Any energy I had to argue with Cyrus was zapped away by his contempt. 
              All I can do is stare at my feet."
             show vik flat with dissolve
             voice "voice/viktor/4/vi_scene4_23.ogg"
@@ -586,9 +587,10 @@ label vik_4:
                 Everyone is engulfed in their own world, never hesitating to destroy others in the process if deemed necessary."
             voice "voice/viktor/4/vi_scene4_24.ogg"
             cy "It's all about self-gratification."
-            "Whoa. That came out of nowhere. Maybe I {i}am{/i} getting through to him."
+            "I consider his words carefully, realizing that he actually sounds convicted for once."
             voice "voice/leona/4/le_vi_scene4_29.ogg"
             mc flat "Not everyone is like that. There are people who fight for what they believe in without losing their friends."
+            "My voice is still soft, quiet."
             voice "voice/viktor/4/vi_scene4_25.ogg"
             cy "For what reason would anyone do that?"
             voice "voice/leona/4/le_vi_scene4_30.ogg"
@@ -609,7 +611,7 @@ label vik_4:
             voice "voice/leona/4/le_vi_scene4_33.ogg"
             mc angry "So, about the hacker. At least help me piece together the clues we have on the hacker so far. 
                 What do you think his motive could be?"
-            "I think that struck a nerve. The fumes of his anger seem to emanate from his body. He's staring daggers at me."
+            "I think that struck a nerve. He's staring daggers at me."
             show vik angry
             voice "voice/viktor/4/vi_scene4_29.ogg"
             cy "You should know when to quit. Go back to the world you know and stay out of the one you don't."
@@ -635,14 +637,15 @@ label vik_5:
      how do I face him? Should I apologize or stay angry? 
      Maybe I should dart in the other direction when he graces me with his remarkably dashing glare?!"
     "No, no, what am I saying? I can't do that. None of this is me!"
-    "\"Arghhh!\" is all I groan as my head buries into the softness of my poofy pillow. 
+    "\"Arghhh!\" is all I groan as I bury my head into the softness of my poofy pillow. 
      At least I've got my reliable bunny cushion to comfort my headache."
     "So I guess it's back to square one? Or maybe even negative square a million?!"
-    "When I see all these sides of Cyrus that others don't know - dorky, silly, angry, confused - it's like I'm one step ahead of the game."
+    "When I see all these sides of Cyrus that others don't know - dorky, angry, confused - it's like I'm one step ahead of the game."
     "... Wait. Ahead of the game?"
     "What game...?"
     "UWAHHH! I don't even know what I'm saying anymore!" #blush
-    "Face, meet Mrs. Kiki, the Bunny Pillow. \"Shwoop\"! Feathers scamper in all directions as my head crashes against the pillow."
+    "Face, meet Mrs. Kiki, the Bunny Pillow. {i}Shwoop!{/i}
+     Downy feathers scatter in all directions as my head crashes against the pillow."
     "..."
     voice "voice/leona/5/le_vi_scene5_1.ogg"
     mc angry "Stupid Cyrus. He's turned me into one of his mindless minions - or maybe mind{i}ful{/i}?"
@@ -659,10 +662,11 @@ label vik_5:
     show vik vr happy with dissolve
     voice "voice/viktor/5/vi_scene5_2.ogg"
     vi "Ah, Leona. Have you come to embrace progress?"
+    "I can't handle this right now."
     hide vik with easeoutleft
-    "My legs carry me far, far away. Away from him. Perhaps the fields of justice will be enough of a distraction."
-    "Mindless swinging and slashing partner throughout my hack 'n slash adventure, 
-     but not even the sun's ray will sunder my own thoughts."
+    "My legs carry me far, far away. Away from him. Perhaps the Fields of Justice will be enough of a distraction."
+    "I half-heartedly swing and slash my way across the map,
+     but not even the sun’s rays can sunder the clouds of gloom hanging over me."
     show char shen with dissolve
     voice "voice/viktor/5/vi_zen_scene5_1.ogg"
     s "Leona, you look troubled."
@@ -704,7 +708,7 @@ label vik_5:
             $ viktor_confession_pts = viktor_confession_pts + 0
             voice "voice/leona/5/le_vi_scene5_10.ogg"
             le surprise "What are you saying! Uh, I..."
-            "My tongue gets twisted in five hundred knots before I can say another word. Or maybe it's my heart."
+            "My tongue gets twisted in knots before I can say another word. Or maybe it's my heart."
             "Huh. My affections for Cyrus might run deeper than I thought."
         
         "I... I'm not sure.":
@@ -724,32 +728,34 @@ label vik_5:
     voice "voice/leona/5/le_vi_scene5_13.ogg"
     le sad "But my worries make it hard to leave him alone. I want to show him that he doesn't have to ride solo - 
         that there is someone who cares. Someone who thinks about him. Possibly even -"
-    "What great timing, Mr. Hacker. Oh, and there's the wonderful \"Attempting to Reconnect\" pop up."
+    "What great timing, Mr. Hacker. Oh, and this wonderful \"Attempting to Reconnect\" notice just popped up."
     voice "voice/leona/5/le_vi_scene5_14.ogg"
     le surprise "Uh, Shen? Are you there?"
     voice "voice/viktor/5/vi_zen_scene5_9.ogg"
     s "Be careful out there, and always be alert."
     hide char with dissolve
     "Wait, you're just going to leave me here while the game is glitching?! Ugh."
-    "By the time I approach the fountain, quiet echoes against the hollow structure veer all over the scenery. 
-     It almost feels as though a timid gaze haunts my steps."
-    "Or maybe the hysteria is getting to me. 
-     The dragon pit will probably give me food for thought, since reports of glitches have been occurring there."
-    "But on my way, what accompanies me isn't the sound of my own strides but the eerie darkness that engulfs the screen. 
-     Screeches of silence emerges from the pits of this black void."
-    "Following the stillness is a presence I can feel approaching my very motionless character."
+    "The fountain is eerily empty when I get there. The quiet seems to echo all across the hollow structures,
+     fading into the scenery. It almost feels as though there are eyes on me."
+    "Maybe the hacker hysteria is getting to me. I should go to the dragon pit to search for clues;
+     there are reports of glitches occurring there."
+    "But on my way, I notice that I can't hear the sound of my own footsteps in the grass. A strange darkness bleeds from
+     the edges of my vision, threatening to engulf the Rift. I'm not sure, but I think I hear screeching from this black void."
+    "..."
+    "I can't move."
+    "In the stillness is a presence I can feel approaching my motionless character."
     voice "voice/leona/5/le_vi_scene5_15.ogg"
     le angry "W-who's there?! I know you're out here!"
-    "An odd silence, and very ghostly to boot. Why do I get the feeling that I'm the only one trapped here?"
+    "Only ghostly silence answers. I don’t think I'm the only one trapped here."
     with vpunch
     "{i}PANG!{/i} W-what was that?!" #shake
     with hpunch
     "{i}SHING!{/i} Someone - or something - is definitely attacking me." #shake
     with hpunch
     "That's enough! I must retaliate before I suffer any more grievous wounds. {i}SWOOSH!{/i}" #shake
-    "I reach for my handy dandy sword, but notice that my hands grasp at nothing; both of them! My shield is gone, too."
-    "Hopping here and there helps me avoid the impending attacks I hear from all directions. 
-     Then suddenly, my feet halt in its tracks. I can't even fall over by the sudden impact of not moving."
+    "I reach for my sword, but notice that my hands grasp at nothing; both of them! My shield is gone, too."
+    "I try to dodge the phantom attacks I hear from all directions, but I can only move in slow motion as if in a nightmare.
+     Then suddenly, I'm paralyzed again. I'm stuck. I can’t even collapse from my injuries."
     "Am I... dying here? Alone?"
     with hpunch
     pause 0.3
@@ -757,9 +763,9 @@ label vik_5:
     pause 0.2
     voice "voice/leona/5/le_vi_scene5_16.ogg"
     le sad "H-help."
-    "I can feel the points of my health steadily decreasing by every 30 points. My conscience waning..."
+    "I can feel my health bar steadily decreasing. My consciousness waning..."
     un "!!!"
-    "A soft, radiant glow covers the edges of my golden armor, enrapturing my wounds in a rich light. 
+    "A soft, radiant glow covers the edges of my golden armor, wrapping my wounds in a rich light. 
      Small trinkets of glitter disperse into the air as it leaves a healing effect on my avatar."
     show vik vr angrymid with dissolve
     voice "voice/viktor/5/vi_scene5_3.ogg"
@@ -784,7 +790,7 @@ label vik_5:
     le flat "Oh. Wait, then how did you get here-"
     voice "voice/viktor/5/vi_scene5_6.ogg"
     vi "Did you mean what you said? That you wanted to be more acquainted with me? To get closer?"
-    "I hope Viktor didn't just see the fifty shades of red my face just sped through."
+    "...What?"
     "Wait a minute..."
     
     menu:
@@ -810,6 +816,7 @@ label vik_5:
         "Something's fishy here.":
             $ viktor_confession_pts = viktor_confession_pts + 1
             $ renpy.block_rollback()
+            "Was he spying on me during my conversation with Shen?"
             voice "voice/leona/5/le_vi_scene5_24.ogg"
             le flat "This makes no sense. How could you possibly know...? Are you the hacker, Viktor?"
             show vik vr surprised with dissolve
@@ -832,7 +839,7 @@ label vik_6:
     "Huh? What's this? A text message?"
     voice "voice/leona/6/le_vi_scene6_1.ogg"
     mc flat "...Park. 4:00PM. And it's from an unknown number. Super weird." #Reading to self
-    "Well, it doesn't hurt to snoop around for a bit."
+    "Of course I get no reply when I ask who it is. This person wants to remain mysterious."
     #Transition to park
     scene bg park day with fade
     "I love this time of year. The gentle warmth from the sun, the crisp blue skies, 
@@ -856,15 +863,13 @@ label vik_6:
     "...Gosh, his stoic expression leaves me baffled with curiosity. What harm is there? 
      He does owe me an explanation after all."
     hide vik with dissolve
-    "The long, winding path of pebbles and leaflets of flowers stretch out 
-     past the puddles of Sakura trees and teal bushes that glint under the sun."
-    "Bustling noise catches drift in the air as a cart of students and parents dart off 
-     toward the row of food trucks planted right next to the playground haven."
-    "Our marches and the charming melodies of the blue jays harmonize together to complement 
-     the songs of the sun's affectionate flickers."
+    "The long, winding path of pebbles and leaflets of flowers stretch out before us. Fragrant cherry blossom trees sway under the sun."
+    "Bustling noise catch drift in the air as a cart of students and parents dart off
+    toward the row of food trucks parked next to the playground."
+    "The charming melodies of the blue jays harmonize with the carefree, bubbling laughter of passersby."
     mc flat "..."
     cy "..."
-    "Does he expect the air to do all the talking? I mean, I can only do so much scenery narration."
+    "Does he expect the air to do all the talking? I mean, I can only look at so much scenery."
     voice "voice/leona/6/le_vi_scene6_4.ogg"
     mc flat "Uh, Cyrus."
     show vik blush with dissolve
@@ -924,13 +929,13 @@ label vik_6:
         voice "voice/leona/6/le_vi_scene6_12.ogg"
         mc angry "Spell it out for me; my brain is still swimming in ideas."
         show vik happy with dissolve
-        "Did he just crack a chuckle?"
+        "Did he just chuckle?"
         show vik flat with dissolve
         voice "voice/viktor/6/vi_scene6_10.ogg"
         cy "I came in contact with the programmer who is terminating League of Legends."
-        "What the - brainfart."
+        "What the -"
         mc surprise "...???"
-        "Derp."
+        "I don't know what I’m supposed to think."
         voice "voice/leona/6/le_vi_scene6_13.ogg"
         mc flat "Okaaay. So you're like, what, the hacker's protégé?"
         voice "voice/viktor/6/vi_scene6_11.ogg"
@@ -951,11 +956,11 @@ label vik_6:
         mc surprise "Eh? You mean, you were worried?"
         voice "voice/viktor/6/vi_scene6_14.ogg"
         cy "In summation... yes."
-        "Wowow. How many times will my face mirror the blaring red flush of an apple?"
+        "...Does that mean Cyrus was worried... about me?"
         voice "voice/leona/6/le_vi_scene6_17.ogg"
         mc happy "... Thanks, Cyrus. For saving me-"
         show vik happy with dissolve
-        "He reciprocates my gratitude with a nonchalant head bob."
+        "He reciprocates my gratitude with a nonchalant nod."
         voice "voice/leona/6/le_vi_scene6_18.ogg"
         mc happyblush "-and telling me the truth. I can't imagine how hard that was."
         voice "voice/leona/6/le_vi_scene6_19.ogg"
@@ -1002,13 +1007,12 @@ label vik_6:
     "I reach out for his hand and drag him through the waterfalls of people crowding the locally famous Crêpe Stop. 
      The world literally stops for a bite of their heavenly pastries."
     show vik happyclose with fade
-    "One look at his gleaming eyes tells me he's gloating in bliss as he munches down 
-     on his Very Vanilla & Banana Ice Cream Crêpe. As do I."
+    "One look at his content expression tells me he's enjoying his vanilla & banana ice cream crêpe. A rare display of delight."
     hide vik with dissolve
     show vik happymid with dissolve
     voice "voice/viktor/6/vi_scene6_19.ogg"
     cy "Thanks."
-    "Hehe. Well, that wasn't too bad of an ending there, was it?"
+    "I can only smile back at him."
     call gift_check("Cyrus") from _call_gift_check_16
     $ vik_rp = vik_rp + 4
     stop music fadeout 2.0
@@ -1020,7 +1024,7 @@ label vik_7:
     $ renpy.block_rollback()
     scene bg library
     play music "music/ambient2.mp3" fadein 2.0
-    "I have this odd feeling churning in my gut that tells me Cyrus will spectularly appear out of nowhere right at this moment."
+    "I have this odd feeling churning in my gut that tells me Cyrus will spectacularly appear out of nowhere right at this moment."
     "..."
     "Maybe not. I guess fate isn't as kind as I thou-"
     scene cg vik end with fade
@@ -1035,8 +1039,8 @@ label vik_7:
     cy "..."
     "Oh no, buddy. We aren't playing the silence game again. You should've learned {i}that{/i} the first time, bub!"
     "Time to take a sneak peek at his precious \"research\" material!"
-    "As Cyrus takes no notice of my slow but steady progress toward his side of the table, 
-     I come close enough to the nape of his neck that my breath leaves a soft imprint on his silky, smooth skin."
+    "Cyrus is too absorbed in his reading to notice that I'm steadily moving toward his side of the table.
+     I come close enough to hover by the nape of his neck. I'm sure he can feel me breathing right next to him."
     scene bg library with fade
     with hpunch
     show vik surprisedblush with dissolve
@@ -1044,8 +1048,8 @@ label vik_7:
     voice "voice/viktor/7/vi_scene7_3.ogg"
     cy "H-Have you turned delusional? What are you doing?!"
     hide vik with dissolve
-    "His fumbling around the books leaves them exposed on the ground, tripping over each other. 
-     Cyrus' graceful attempt to rummage through them amounts to the most entertaining 5 seconds of my life."
+    "His fumbling around the books causes them to topple over onto the ground, their contents laid bare.
+     I burst out laughing at the sight of Cyrus' distraught attempt to rummage through them."
     show vik angrymid with dissolve
     voice "voice/viktor/7/vi_scene7_4.ogg"
     cy "I would appreciate if you would refrain from such unsightly behavior."

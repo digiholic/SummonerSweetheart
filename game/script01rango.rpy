@@ -19,7 +19,7 @@ label rengar_1:
     voice "voice/ezreal/1/ez_re_scene1_1.ogg"
     ez surprise "\"Rengar\"? Who is he?"
     "Could it be someone sent by the hacker? Or just a member I don't know about?"
-    "I decide to go to find out."
+    "I decide to go to the fountain to find out."
     voice "voice/ezreal/1/ez_re_scene1_2.ogg"
     ez flat "Yeesh... this place is stifling."
     "It appears I've warped straight into a dense jungle. I can hardly see where I'm going."
@@ -276,7 +276,7 @@ label rengar_3:
     ez angry "How about a point blank shot to the face?"
     hide rango with dissolve
     show rango vr confident at right with dissolve
-    "I try to hit him with a magic blast, but he dodges out of the way far faster than his
+    "I try to shoot him with a bolt of energy, but he dodges out of the way far faster than his
      bulky frame would suggest."
     with hpunch
     show rango vr angry
@@ -331,10 +331,10 @@ label rengar_3:
     re "Come on, turn this thing back on! Why is it NOT WORKING?!"
     voice "voice/ezreal/3/ez_re_scene3_9.ogg"
     ez surprise "Wait a minute - I recognize that voice. You're Gwen, aren't you?"
-    voice "voice/rango/3/re_scene3_13(gwen).ogg"
     show rango vr surprised with dissolve
     pause 0.3
     show rango vr angry with dissolve
+    voice "voice/rango/3/re_scene3_13(gwen).ogg"
     re "Gwen? I have never heard of such a- work, you stupid voice changer! Who programmed this garbage?!"
     "Finally, Rengar's voice goes back to normal. But, the damage has been done - by the hacker,
      that is. He must be quite the prankster to go around targeting player voices."
@@ -353,7 +353,7 @@ label rengar_3:
     voice "voice/ezreal/3/ez_re_scene3_12.ogg"
     "Er... maybe I should get out of here before he makes good on his promise."
     hide rango with easeoutright
-    "Just in time, I warp away, before Rengar pounces on me with all the force of a raging tornado."
+    "Rengar leaps into the air to pounce on me, but I manage to warp away - just in time to escape those wicked claws."
     "If Rengar really is Gwen, that raises even more questions than it answers. Like, why the
      choice of avatar... and who were all those other people she was fighting?"
     "I resolve to find out for myself. The fact that she was hit by the hacker's attack has 
@@ -369,7 +369,7 @@ label rengar_4:
     scene bg soccer day
     "I wonder where Gwen could possibly be now. I checked the soccer field already, but she's
      not there any longer."
-    "Just then, I recieve a message on my phone. It's an in-game message, from Rengar of all people."
+    "Just then, I receive a message on my phone. It's an in-game message, from Rengar of all people."
     "\"Meet me at the Arcade. Galactic Pinball. Bring no one!\""
     "I stroke my chin in contemplation over the peculiar message. Could Gwen finally be fessing up, 
      or is it someone else entirely?"
@@ -378,7 +378,7 @@ label rengar_4:
     scene bg arcade
     "As the only arcade in town, it has miraculously stayed in business in an age of virtual reality."
     "In fact, it seems like the more technology advances, the more the retro kind is coming back into vogue."
-    "As I walk in the doorway, I enter a sea of blinkling lights and beeping machines. I search for 
+    "As I walk in the doorway, I enter a sea of blinking lights and beeping machines. I search for 
      anything that could match the description of the message."
     show rango flat at left with dissolve
     "Finally, I see it - the Galactic Pinball machine. Someone is already there, playing it incessantly. 
@@ -483,7 +483,7 @@ label rengar_4:
     voice "voice/ezreal/4/ez_re_scene4_15.ogg"
     mc surprise "Your dad's... ill?"
     voice "voice/rango/4/re_scene4_18.ogg"
-    gw "Not exactly. He was a professional boxer... at one time, he recieved the title of world champion."
+    gw "Not exactly. He was a professional boxer... at one time, he received the title of world champion."
     show rango angry with dissolve
     voice "voice/rango/4/re_scene4_19.ogg"
     gw "But, now he's in a lot of debt. It's all because of that one fight. His opponent hit him so hard,
@@ -676,10 +676,9 @@ label rengar_6:
     $ rango_rp = rango_rp + 10
     $ renpy.block_rollback()
     scene bg bedroom day # but mc goes downstairs to get her first, so maybe something else first for bg
-    "I get a message on my phone - it's from Gwen, of all people. 
-     And she says she's actually coming to my house!?"
-    "I wonder what it could possibly be about. 
-     Well, it's not as if I'm otherwise preoccupied."
+    "I get a message on my phone - it's from Gwen. And she says she's actually coming to my house!?"
+    "I hope she’s not coming over to beat me up in real life...
+     She wouldn’t do something like that, right?"
     "I wait in my room until I hear a knock at the door. 
      My parents are out, so it's just me here. 
      Rushing downstairs, I answer it, and see her standing there, in the flesh."

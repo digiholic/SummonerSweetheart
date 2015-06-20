@@ -1,0 +1,572 @@
+######################################### EVENT DECLARATION
+init:
+    $ event("rengar_1", "act == 'vr'", event.once(), "route == 'Ezreal'", priority = 190)
+    $ event("rengar_2", "act == 'soccer'", event.once(), event.depends("rengar_1"), "day >= 2", priority = 180)
+    $ event("rengar_3", "act == 'vr'", event.once(), event.depends("rengar_2"), priority = 170)
+    $ event("rengar_4", "act == 'soccer'", event.once(), event.depends("rengar_3"), priority = 160)
+    $ event("rengar_5", "act == 'vr'", event.once(), event.depends("rengar_4"), priority = 150)
+    $ event("rengar_6", "act == 'vr'", event.once(), event.depends("rengar_5"), priority = 140)
+
+######################################### RENGAR SCRIPT
+label rengar_1:
+    scene bg fountain
+    "I decide to check if anyone is logged on, and I realize there's someone 
+     I haven't seen before in the club."
+    play music "music/ambient1.mp3" fadein 2.0
+    mc "\"Rengar\"? Who is he?"
+    "Could it be someone sent by the hacker? Or just a member I don't know about?"
+    "I decide to go to ??? and find out."
+    ez "Yeesh... this place is stifling."
+    "It appears I've warped straight into a dense jungle. I can hardly see where I'm going."
+    show rango silhouette with dissolve
+    show rango silhouette at left with dissolve
+    "Something shakes the underbrush nearby. I turn to look, but nothing is there."
+    ez "Hmm... monsters?"
+    "Suddenly, something roars and pounces on me, pinning me to the ground before I can do anything."
+    show rango silhouetteclose with dissolve
+    "Hovering over me is a leonine face, wearing a glowering look. A rank smell drifts from 
+     his stark white fur as he examines me, growling and beginning to speak in a gravelly voice."
+    voice "voice/rango/1/re1.ogg"
+    un "Grrr... you are not what I was hunting."
+    ez "Then... maybe you could let me go!"
+    show rango angryclosedim with dissolve
+    voice "voice/rango/1/re2.ogg"
+    un "Why should I let you go? You were invading my territory!"
+    ez "I didn't mean to - I just wanted to see who you were."
+    show rango angrydim with dissolve
+    "The beast gets off of me, brushing off his arms. He is at least a foot taller than I am
+     and doesn't even look remotely human - the person behind the avatar is unrecognizable."
+    voice "voice/rango/1/re3.ogg"
+    re "I am Rengar the Pridestalker. Now, grovel before me, lesser creature!"
+    ez "I'm not groveling! You'll have to fight me if you want me to do that."
+    show rango confidentdim with dissolve
+    voice "voice/rango/1/re4.ogg"
+    re "A human with spirit... I like that. Perhaps I will take you up on your offer."
+    ez "I just want to ask you one thing. You're listed as a member of the club, but I've 
+        never seen you in meetings. So, are you the missing member?"
+    voice "voice/rango/1/re5.ogg"
+    re "And what of it?"
+    ez "I seem to recall someone saying that the missing member was a girl."
+    show rango surpriseddim with dissolve
+    show rango angrydim with dissolve
+    voice "voice/rango/1/re6.ogg"
+    re "A... a girl, you say? Ha! I know nothing... nothing about any of that! Grrrar... 
+        you dare insult me!?"
+    ez "I don't know. You sounded awfully surprised when I mentioned it."
+    show rango angrymiddim with dissolve
+    voice "voice/rango/1/re7.ogg"
+    re "Keep talking, and I will take your head as a trophy!"
+    ez "Is that a challenge? I'm going to find out who you really are."
+    show rango angrydim with dissolve
+    voice "voice/rango/1/re8.ogg"
+    re "I must take my leave now. I still have things to hunt."
+    hide rango with dissolve
+    voice "voice/rango/1/re9.ogg"
+    re "Do not dare try to find out who I am, impudent human!"
+    scene bg black with dissolve
+    pause 0.5
+    stop music fadeout 2.0
+    jump events_end_period
+    
+label rengar_2:
+    scene bg soccerfield
+    "After talking to the club advisor, I've finally gotten the name of the missing club 
+     member - Gwen. A girl I've never even heard about, so much as met in person."
+    play music "music/Smooth Sailing.mp3" fadein 2.0
+    "I've resolved to track her down and see whether the mysterious character I've run into is really her."
+    "It took having to ask about a hundred people, but I've finally narrowed down her location
+     to the soccer field."
+    show rango flat at Move((0.2, 0.3), (0.5, 0.3), 0.5) # code in ATL language
+    pause 0.5
+    show rango flat at Move((0.5, 0.3), (0.2, 0.3), 0.5)
+    pause 0.5
+    hide rango with dissolve
+    show rango flat with dissolve
+    "When I walk over, though, it doesn't appear that she's practicing with a team. Instead,
+     she is just kicking the ball repeatedly into the net and retrieving it."
+    mc "Um, hi?"
+    show rango angry with dissolve
+    gw "..."
+    "She seems pretty absorbed in what she's doing. I walk closer and talk to her again."
+    show rango angrymid with dissolve
+    with hpunch
+    hide rango with dissolve
+    show rango angry with dissolve
+    mc "I said, hi - oof!"
+    "I feel the soccer ball hit my gut, sending me reeling backwards. I'm pretty sure this
+     isn't regulation soccer."
+    gw "What do you want?"
+    mc "That wasn't very nice, you know. I could have broken something... or ruptured my spleen."
+    gw "Suck it up, crybaby. It should take more than that to bring a {i}real{/i} man down."
+    mc "I'm not sure what your standards are, but I'm going to take a wild guess and say that
+        they're too high."
+    gw "Let me guess... it's about the field, isn't it? Well, I have a permit, so you shouldn't bother."
+    mc "Actually, no... I wanted to ask you about the club. You know, the Summoner's Rift Club?"
+    show rango surprised with dissolve
+    gw "What!? I'm surprised someone actually cared enough to bother finding me."
+    mc "I'm a little curious. You're still listed as an active member, even though 
+        you don't come to any meetings."
+    show rango flat with dissolve
+    gw "That kind of stuff bores me. I'd rather play by myself, thank you very much."
+    mc "Then, why did you even bother joining?"
+    show rango confident with dissolve
+    gw "A real gamer always keeps tabs on their rivals. Otherwise, they might find
+        themselves at a disadvantage."
+    mc "So, you admit you play Summoner's Rift. Then, what's your character?"
+    show rango surprised with dissolve
+    gw "Why the hell should I tell you?"
+    mc "Um... because I'm your friend?"
+    show rango angrymid with dissolve
+    gw "It'll take more than that to be {i}my{/i} friend. I'm not into sappy stuff like that."
+    menu:
+        "I'd still like you to be my friend.":
+            $ renpy.fix_rollback()
+            mc "Even so, I'd still like you to be my friend. I think you're... cute."
+            show rango surprised with dissolve
+            gw "Hnng!? W-What the hell do you mean by that?"
+            mc "I said..."
+            show rango blush with dissolve
+            gw "No, never mind. As I said before, you won't win me over with words. 
+                You'll have to earn it."
+            mc "Fine, then. I'm up to the challenge."
+            show rango confident
+            gw "We'll just see about that."
+            show rango flat 
+            hide rango with moveoutleft
+            pause 1.0
+            show rango flat at Move((0.0, 0.7), (0.5, 0.7), 0.3,
+                  xanchor="center", yanchor="center")
+            pause 0.2
+            with hpunch
+            pause 0.1
+            hide rango with dissolve
+            "Gwen gives the ball another running kick, and it slams into the goal, dead center."
+            show rango happymid with dissolve
+            gw "That's it, perfect. I'm done."
+            
+        "Then, forget I asked.":
+            $ renpy.fix_rollback()
+            mc "Fine, then - forget I asked."
+            show rango angrymid with dissolve
+            gw "Heh, crumpling under the pressure? I don't like saps, but I don't like cowards either."
+            mc "That's not what I-"
+            show rango angryclose
+            gw "If you came all this way to talk to me, you should at least be more assertive."
+            mc "Come on, make up your mind already!"
+            hide rango with dissolve
+            show rango angry
+            hide rango with moveoutleft
+            gw "Tch - you think I care about being friends with some club lackey?"
+            show rango flat at Move((0.0, 0.7), (0.5, 0.7), 0.2,
+                  xanchor="center", yanchor="center")
+            pause 0.1
+            with hpunch
+            pause 0.1
+            hide rango with dissolve
+            show rango angry with dissolve
+            "Gwen gives the ball another running kick, and it flies far away from the goal,
+             missing it entirely."
+            gw "Screw this. I'm going home."
+            
+    mc "Umm... are you practicing for something?"
+    gw "No, I just decided to try out soccer."
+    mc "But... why bother?"
+    show rango happy with dissolve
+    gw "If I can't be good at this, I'll never be good at my {i}real{/i} job."
+    mc "What {i}is{/i} your real job, exactly?"
+    show rango angry with dissolve
+    gw "As if I'm telling you. See ya, chump."
+    hide rango with moveoutleft
+    "Gwen walks away, holding her soccer ball. If I've learned anything today, it's that 
+     she's completely unlike anyone I've ever known."
+    "I decide not to report this to the rest of the club just yet. I need to find out more 
+     before doing anything rash."
+    "I'm especially interested in whatever she claims her real job is. I suppose there's 
+     only one way to find out, and that's to get to know her better."
+    call gift_check("Gwen")
+    scene bg black with dissolve
+    pause 0.5
+    stop music fadeout 2.0
+    jump events_end_period
+    
+label rengar_3:
+    scene bg fountain
+    "After logging in to the game, I notice the mysterious club member has also logged back in."
+    mc "Huh... whoever this Rengar is, they sure are taking on a lot of people at once."
+    "I resolve to enter their world and find out what exactly is going on."
+    show rango angrydim at left with dissolve
+    re "Ha! Is that all you have? None of you can so much as dent my armor!"
+    re "Yes, that's right... run away to your mommies and daddies. You have no place in my jungle!"
+    "A number of other Summoners lie on the ground, broken and defeated. Several of them scramble 
+     to their feet and limp away, disappearing into the haze."
+    "The others just disappear out of existence, too humbled to even stand. Rengar glowers over
+     them happily, loosing a guttural roar."
+    ez "Ahem. Is there room for one more, or am I too late to join the party?"
+    with vpunch
+    "Startled, Rengar turns around, his grin turning into a frown."
+    re "No, as a matter of fact, you're not. I'd say you're right on time... for me to grind
+        you into a bloody mist!"
+    ez "I beg to differ. I think you'll find that my bark definitely matches my bite."
+    show rango angrymiddim with dissolve 
+    with vpunch
+    "Rengar wastes no time in bounding towards me. He swipes his claws, but I dodge deftly
+     and counter-attack."
+    ez "How about a point blank shot to the face?"
+    hide rango with dissolve
+    show rango angrydim at right with dissolve
+    "I try to hit him with a magic blast, but he dodges out of the way far faster than his
+     bulky frame would suggest."
+    with hpunch
+    re "You will not hit me that easily, fool- OOF!"
+    "Finally landing a blow on Rengar, I send him slamming to the ground. He quickly gets to
+     his feet - despite my skill, he is far more resourceful than I anticipated."
+    ez "I think you're just full of hot air."
+    hide rango with dissolve
+    show rango angrymiddim
+    re "Better than being full of holes when I'm done with you."
+    with vpunch
+    pause 0.1
+    with hpunch
+    "Whoever this is, they are a master at the game. Both of us stare at each other, on the brink."
+    re "There is no way I will lose. It would be a dishonor."
+    ez "A dishonor to who?"
+    re "That is none of your concern."
+    ez "You know you're going to lose. Why else would you be stalling?"
+    re "You're good. But, -HISS- not good enough."
+    ez "Oh, yeah? Well, I- wait, what?"
+    show rango confidentdim with dissolve
+    re "Finally ready to turn tail and run home?"
+    "Rather than intimidated, I am a bit confused. For, coming from the deadly lion's mouth is 
+     clearly the voice of a young girl."
+    show rango surpriseddim with dissolve
+    "Rengar seems to realize this at about the same time as I do, and steps backwards in shock."
+    re "What's going on!? Did the hacker - oh, no."
+    "I cringe as a screeching noise fills my eardrums, and Rengar's voice buzzes loudly."
+    show rango angrydim with dissolve
+    with hpunch
+    pause 0.3
+    with hpunch
+    re "Come on, restart already! Why isn't it working!?"
+    ez "Wait a minute - I recognize that voice. You're Gwen, aren't you?"
+    re "Gwen? I have never heard of such a- work, you stupid voice changer! Who programmed this garbage?"
+    show rango angry with dissolve
+    "Finally, Rengar's voice goes back to normal. But, the damage has been done - by the hacker,
+     that is. He must be quite the prankster to go around targeting player voices."
+    re "Rrrr... I must have had something stuck in my throat."
+    ez "OK, you're definitely Gwen. I'd recognize that voice anywhere."
+    show rango angrymid with dissolve
+    re "No! I am Rengar, the Pridestalker! FEAR ME!"
+    ez "Aha... hahah...."
+    show rango angryblushmid with dissolve
+    re "Don't laugh, feeble human! I will feast on your bones! I WILL DEVOUR YOU!"
+    ez "Er... maybe I should get out of here before he makes good on his promise."
+    hide rango with easeoutright
+    re "Don't you dare! Get back here!"
+    "Just in time, I warp away, before Rengar pounces on me with all the force of a raging tornado."
+    "If Rengar really is Gwen, that raises even more questions than it answers. Like, why the
+     choice of avatar... and who were all those other people she was fighting?"
+    "I resolve to find out for myself. The fact that she was hit by the hacker's attack has 
+     lowered my suspicions, but one can never be too careful."
+    scene bg black with dissolve
+    pause 0.5
+    jump events_end_period
+    
+label rengar_4:
+    scene bg soccerfield
+    "I wonder where Gwen could possibly be now. I checked the soccer field already, but she's
+     not there any longer."
+    "Just then, I recieve a message on my phone. It's an in-game message, from Rengar of all people."
+    "\"Meet me at the Arcade. Galactic Pinball. Bring no one!\""
+    "I stroke my chin in contemplation over the peculiar message. Could Gwen finally be fessing up, 
+     or is it someone else entirely?"
+    "There's only one way to find out, and that's to travel to the Arcade."
+    
+    scene bg arcade
+    "As the only arcade in town, it has miraculously stayed in business in an age of virtual reality."
+    "In fact, it seems like the more technology advances, the more the retro kind is coming back into vogue."
+    "As I walk in the doorway, I enter a sea of blinkling lights and beeping machines. I search for 
+     anything that could match the description of the message."
+    show rango angrydim at left with dissolve
+    "Finally, I see it - the Galactic Pinball machine. Someone is already there, playing it incessantly. 
+     As I get closer, I realize that it's none other than Gwen from school."
+    hide rango with dissolve
+    show rango flat with dissolve
+    mc "So, it really is you..."
+    show rango sad with dissolve
+    gw "Yeah. I figured there was no use hiding it any more."
+    mc "But, why?"
+    gw "Right now, I'm not just a student... I'm also a member of the professional gaming circuit."
+    mc "You're a pro gamer!?"
+    "Gwen appears to have run out of pinballs, and gives up on the machine, turning around to face me."
+    hide rango with dissolve
+    show rango sadmid with dissolve
+    gw "Yeah. But, you know how it is... people look down on you for being a girl. They say you must
+        have used your feminine wiles to get to the top."
+    show rango angrymid with dissolve
+    gw "Like that girl from school, Ami. All she does is blow a few kisses with that fox of hers and
+        the whole damn universe kneels at her feet. That's not skill!"
+    mc "You sure sound like you don't like her..."
+    show rango angry with dissolve
+    gw "Damn right I don't. She's so rich and coddled... she doesn't know what it is to have to fight 
+        to survive. Her greatest challenge is figuring out which brand of handbag to buy."
+    gw "Me, on the other hand - I just wanted my opponents to see me as a competitor... someone they 
+        wouldn't hold back against. So, I decided to make the toughest avatar there was."
+    mc "Isn't that just making it harder for yourself?"
+    show rango happy
+    gw "That's the idea. I'll never know what I'm truly capable of if people don't take me seriously."
+    mc "I'd fight you on equal terms no matter what your avatar was, but I guess not everyone thinks that way."
+    show  rango veryhappy
+    gw "Well, there's that, and there's also the fact that I like being the one that people fear."
+    menu:
+        "You never scared me.":
+            $ renpy.fix_rollback()
+            mc "Pssh - I was never scared of you."
+            show rango confidentmid with dissolve
+            gw "Oh, really? I could tell you were shaking in your boots during that fight. Your aim
+                was all off!"
+            mc "Okay... maybe I was a little scared. But, not a lot!"
+            show rango confidentclose with dissolve
+            gw "In that case, maybe I should work extra hard to drill the fear into you the next 
+                time we fight."
+            mc "I don't think that will be necessary..."
+            show rango veryhappyblushmid with dissolve
+            gw "I'm already picturing it now. Ezreal, screaming like a little girl."
+            mc "..."
+            gw "...Heh."
+            
+        "It definitely worked.":
+            $ renpy.fix_rollback()
+            mc "You definitely got me good back there."
+            show rango happy with dissolve
+            gw "At least you're honest. Most people like to hide their weaknesses."
+            mc "It's no use lying to you. How else are we supposed to trust each other?"
+            show rango angry with dissolve
+            gw "You're still on about that trust business? Give it a rest."
+            mc "Come on... you know you want to come back into the fold."
+            show rango blush with dissolve
+            gw "I'll consider it."
+    
+    show rango surprised with dissolve
+    mc "I just have one other question - why are you so competitive? It's almost as if you're
+        trying to prove something."
+    show rango sad with dissolve
+    gw "Uh..."
+    mc "That is... unless you'd rather not say."
+    gw "No, it's fine... I just want to be able to stand on my own two feet. My dad always 
+        raised me by himself, but now he's sick."
+    mc "You dad's... ill?"
+    gw "Not exactly. He was a professional boxer... at one time, he recieved the title of world champion."
+    show rango angry with dissolve
+    gw "But, now he's in a lot of debt. It's all because of that one fight. His opponent hit him so hard,
+        he got a concussion. And, now, the doctors aren't sure if his brain will recover."
+    mc "That's terrible..."
+    show rango sad with dissolve
+    gw "I know it's not my fault. But, I feel like... maybe, if I become truly independent, he can stop
+        worrying about me and he'll get better. The game is where I make my money... so, I have to be the best."
+    show rango flat with dissolve
+    gw "But, don't think that means you should go easy on me. I've got no time for sentimental crap."
+    mc "Oh, no, of course not. (And that's not just because you'd probably destroy me if I did...)"
+    hide rango with dissolve
+    show rango angryclose with dissolve
+    gw "And don't bug me while I'm in character. If you say my real name to any of the club members, there'll be
+        hell to pay..."
+    mc "Ulp... I think I'll be leaving now."
+    call gift_check("Gwen")
+    hide rango with dissolve
+    scene bg black with dissolve
+    pause 0.5
+    jump events_end_period
+    
+label rengar_5:
+    scene bg fountain
+    "Strangely enough, I see that both Ahri and Rengar are signed on... and on the same server, no less."
+    "Could there be something going down that I don't know about? I decide to find out,
+     even if it might be a bad idea to intervene."
+    show ahri happy at right with dissolve
+    show rango flat at left with dissolve
+    ah "Oh, hello, Ezreal. Me and the furball over here were about to find out which one was superior."
+    show rango angry at left
+    re "I am not a furball! I am Ren-"
+    show ahri angrymid at center with dissolve
+    ah "Oh, please. I can smell you from across the map. Honestly, don't you know how to take a bath?"
+    show rango angrymid at left with dissolve
+    re "I would rather my prey can smell me... it makes the hunt all the more exciting."
+    show rango angry at left with dissolve
+    hide ahri with dissolve
+    show ahri veryhappy at right with dissolve
+    ah "How crude. I always keep my tails silky smooth... a bit of conditioner works wonders."
+    show rango angrymid at left with dissolve
+    re "I'm not here to stroke your tail, woman! I'd rather put a few new scars on that smug face of yours."
+    show rango angry at left with dissolve
+    show ahri winkmid at center with dissolve
+    ah "I'm sure Ezreal here would love to nestle within my fluffy bosom, wouldn't you?"
+    show ahri surprised at center with dissolve
+    ez "Honestly? I'm not so sure about that. Rengar has a point... this game is about competition, not looks."
+    show ahri angry at right with dissolve
+    ah "You're seriously allying yourself with that monstrosity? Even when I can offer you 
+        so many... additional benefits?"
+    ez "B-Benefits...?"
+    show ahri angrymid at right with dissolve
+    ah "What can that beast give you? All he'll do is rip you apart when he's done with little old me."
+    show ahri angrymid behind rango
+    show rango angrymid at center with dissolve
+    re "That is a lie! I can give you much! Combat training, stealth training, weapons training..."
+    show rango angrymid behind ahri
+    show ahri winkclose at center with dissolve
+    ah "Who cares about training? That's soooo boring. I'm offering you my undivided attention... 
+        and love~"
+    ez "Your... love!? Gauntlet... stiffening..."
+    show ahri winkclose behind rango
+    show rango blushclose at center
+    with hpunch
+    re "Wait! She's not the only one who can be cute! I can be cute, too! *Purrr... purrr* See?
+        You can pet me if you want! Just don't join that fiend!"
+    show rango blushclose behind ahri
+    show ahri angryclose at center
+    with hpunch
+    ah "So, make your choice. Who are you going to ally yourself with... me, or that embarrassing excuse
+        for a Champion?"
+    show ahri blushmid at right
+    show rango blushmid at left
+    menu:
+        "Join Ahri":
+            $ renpy.fix_rollback()
+            ez "Sorry, but... I'm going to have to go with Ahri on this one. You might be strong, but you
+                lack that certain... something."
+            show ahri blushmid behind rango
+            show rango angryclose at left
+            re "Grrr... traitorous human! How dare you ally yourself with her?"
+            show rango angry at left
+            show ahri wink at right
+            ah "See? I can turn even your closest allies into your enemies in an instant. You have no 
+                chance against me."
+            show rango angrymid at left with dissolve
+            re "We'll see about that. I'll grind both of you into dust!"
+            show rango angry at left
+            show ahri winkmid at right with dissolve
+            ah "Do you really think you can beat us? Ezreal here is one of the most skilled Champions.
+                If you keep on going like this, you might be deleted~"
+            with hpunch
+            re "Raaaaagh! I will have my revenge on you, wretch! My claws will be the last thing you see!"
+            hide rango with moveoutleft
+            ez "Oooh, so scary. As if!"
+            jump events_end_period     
+            
+        "Join Rengar":
+            $ renpy.fix_rollback()
+            show ahri surprised at right
+            show rango surprised at left with dissolve
+            ez "I'm not falling for your tricks. I'm sticking with Rengar on this one."
+            with vpunch
+            show rango veryhappyblushmid at left
+            re "Hah! See? He has acknowledged that I am superior!"
+            show ahri angrymid at right with dissolve
+            ah "How disappointing. I see that I'll have to put you both in your place with my foxfire..."
+            show rango confidentmid at left with dissolve
+            re "Just try it. But, don't think I'll be taken in by your charms."
+            show ahri winkmid at right with dissolve
+            ah "I wouldn't be so sure. Maybe I should try out my ultimate sexy technique on you~"
+            show rango surprised at left
+            with hpunch
+            re "N-NO! I mean... no... that won't be necessary. Because we would wipe you out before you even tried...
+                right?"
+            ez "Erm... right."
+            show rango flat at left
+            show ahri sad at right with dissolve
+            show ahri wink at right with dissolve
+            ah "Sigh... I suppose I am outmatched here. I have to run... au revoir, mon amis!"
+            hide ahri with moveoutright
+            "As Ahri leaves, both of us breathe a sigh of relief."
+            hide rango with dissolve
+            show rango veryhappyblushmid with dissolve
+            show rango happymid with dissolve
+            re "Thank you for standing by me. I didn't think you would choose me over the likes of her. For a human,
+                you are truly honorable."
+            ez "Does that mean you'll stop trying to hunt me down?"
+            show rango veryhappy with dissolve
+            re "Yes, indeed. In fact, you may hunt alongside me whenever you wish. We are now brothers in blood!"
+            ez "Yeah, brothers! Wait, what? How does that even make sense?"
+            show rango angrymid with dissolve
+            re "What did you say, human!?"
+            ez "Erm... sure, whatever you say!"
+            show rango happy with dissolve
+            re "I thought as much. Now, I must bid you farewell. And, good hunting!"
+            hide rango with moveoutleft
+            scene bg black with dissolve
+            pause 0.5
+            jump events_end_period
+
+label rengar_6:
+    scene bg bedroom # but mc goes downstairs to get her first, so maybe something else first for bg
+    "I get a message on my phone - it's from Gwen, of all people. 
+     And she says she's actually coming to my house!?"
+    "I wonder what it could possibly be about. 
+     Well, it's not as if I'm otherwise preoccupied."
+    "I wait in my room until I hear a knock at the door. 
+     My parents are out, so it's just me here. 
+     Rushing downstairs, I answer it, and see her standing there, in the flesh."
+    show rango veryhappy at left with moveinleft
+    gw "Hiya. Bet you're surprised I came over, huh?"
+    mc "Yeah, I didn't expect to see you here. What's up?"
+    show rango happy at left
+    gw "Nothing much. I just figured you might want to try this out."
+    hide rango with dissolve
+    show rango confident at center with dissolve
+    "Gwen pulls out what looks like a video game from behind her."
+    mc "Woah... is that what I think it is? I didn't think anyone had Mega Smash Fighters Extreme in stock!"
+    gw "I was able to find a copy in a store that I know. They held it for me - I'm a regular customer."
+    mc "So, you've come to lord it over me?"
+    show rango happy with dissolve
+    gw "Heh... of course not. Actually, I was thinking that maybe we could play a few rounds."
+    mc "S-Seriously?"
+    show rango sad with dissolve
+    gw "If you don't want to, that's fine too..."
+    show rango surprised with dissolve
+    mc "Are you kidding? Of course I want to! I'd love to!"
+    hide rango with dissolve
+    with fade
+    "I let Gwen in the house, and show her to my room."
+    show rango angry at left with dissolve
+    gw "Is your room always this messy?"
+    mc "W-Wait! I can clean up, just give me a-"
+    hide rango with dissolve
+    show rango veryhappy with dissolve
+    gw "Just messing with you. It's fine. 
+        But, I'm flattered that you care enough to bend over backwards for me."
+    show rango surprised with dissolve
+    mc "Well, the thing is... I really like you."
+    with hpunch
+    show rango angryclose
+    gw "You what!? This is 'cuz I'm a gamer, isn't it?"
+    show rango surprised with dissolve
+    mc "No, it's not about that. I like YOU."
+    show rango angryblush with dissolve
+    "Gwen blushes, putting her hand over her mouth. She looks down, fumbling nervously with the game box."
+    show rango angryblush at left with dissolve
+    gw "Well, that's... that's nice of you... to say."
+    mc "Um... are you all right?"
+    show rango sad at left with dissolve
+    gw "Y-Yeah, I'm... this is kind of the first time anyone's said something like that to me, so... ahaha."
+    mc "What's the matter, big strong Rengar can't handle it?"
+    show rango angry at center with dissolve
+    with hpunch
+    gw "D-Don't bring Rengar into this! Let's just play the game, okay?"
+    mc "Sure thing. Hmm... I almost forgot how a non-VR system worked. I'm really getting rusty."
+    hide rango
+    scene cg rango end with fade
+    gw "All the better to beat the stuffing out of you with."
+    mc "Wow - this game looks just as good as I thought. If not better!"
+    gw "All right, time to do this!"
+    "Gwen and I play for a long time, both of us too engrossed in competition to take a break. 
+     Finally, we decide to pause for a minute."
+    gw "Phew, I'm pooped."
+    mc "I can't believe you lost so many times. Don't tell me you were holding back."
+    gw "No, nothing like that. I just couldn't concentrate... 
+        my mind was focusing on other things. Like being next to you..."
+    "She looks at me and smiles."
+    gw "So, up for another round?"
+    mc "You bet! Just... let me get some water first. I'm parched..."
+    scene bg black with dissolve
+    pause 0.5
+    jump events_end_period
+    # anything else here?

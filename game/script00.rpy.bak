@@ -1,0 +1,483 @@
+﻿######################################### IMAGE DECLARATIONS
+## Since config.automatic_images is on, image declarations are handled
+## automatically. The defined separators are ' ', '/', and '_'.
+## Examples: bg/black.png -> bg black
+##           eileen_happy.png -> eileen happy
+##           lucy/mad.png -> lucy mad
+
+######################################### CHARACTER DECLARATION
+$ narrator = Character(None)
+define mc = Character('[name]', image = "[tag]")
+define ez = Character('Ezreal')
+define le = Character('Leona')
+
+define am = Character('Ami', voice_tag="ahri", image="ahri")
+define ah = Character('Ahri', voice_tag="ahri")
+
+define sh = Character('Sharon', voice_tag = "raka", image="raka")
+define so = Character('Soraka',  voice_tag = "raka")
+
+define gw = Character('Gwen', voice_tag = "rango", image="rango")
+define re = Character('Rengar', voice_tag = "rango")
+
+define vi = Character('Viktor', voice_tag = "vik", image="vik")
+define cy = Character('Cyrus', voice_tag = "vik")
+
+define da = Character('Daniel', voice_tag = "rum", image="rumble")
+define ru = Character('Rumble', voice_tag = "rum")
+
+define je = Character('Jason', voice_tag = "jayce", image="jayce") # yes, the tag is still je.
+define ja = Character('Jayce', voice_tag = "jayce")
+
+define ch = Character('Ms. Chevalier')
+define a = Character('Annie')
+define mv = Character('Mysterious Voice')
+define t = Character('Teacher')
+define ca = Character('Calibration System')
+define everyone = Character('Everyone')
+define un = Character('???')
+define s = Character('Shen')
+define z = Character('Dr. Zen')
+define te = Character('Teemo')
+
+######################################### GAME SCRIPT
+## The splash screen.
+label splashscreen:
+    scene bg black
+    $ renpy.pause(0.5, hard=True)
+    
+    show cg notice with dissolve
+    $ renpy.pause(1.5, hard=True)
+    
+    scene bg black with dissolve
+    $ renpy.pause(0.5, hard=True)
+    return
+    
+## The beginning of the game, where player chooses their route and name.
+## Temp writing.
+label start:
+    call screen char_select
+    $ route = _return
+    $ renpy.fix_rollback()
+    scene cg name select
+    $ name = renpy.input("What was my name, again...?")
+    $ name = name.strip() # ensures string has no leading or trailing whitespace
+    if name == "":
+        if route == "Ezreal":
+            $ name = "Eric"
+        elif route == "Leona":
+            $ name = "Elizabeth"
+    "That's right, I'm [name]!"
+    if route == "Ezreal":
+        $ tag = "ez"
+    elif route == "Leona":
+        $ tag = "leo"
+    $ renpy.fix_rollback()
+    
+## MC-neutral prologue.
+label prologue:
+    stop music fadeout 1.0
+    ## Place intro video code here.
+    scene bg black # placeholder
+    "I'm [name]. Just your typical high school student... except for my extracurricular
+     activities. They're what most people would call a little unusual."
+    scene bg classroom day
+    play music "music/bedroom.mp3" fadein 2.0
+    voice "voice/prologue/z1.ogg"
+    t "Class dismissed!"
+    "Every day after class, I meet up with a certain group of people... a club. But, in
+     this group, we do something a little different than just play sports."
+    "We go... into Summoner's Rift. A virtual reality video game that requires complete
+     dedication to your character."
+    "That day, everyone was in an uproar. Little did I know that the mysterious hacker
+     shown on the news would turn out to be much closer than I thought..."
+    "... and would change my friends and I forever."
+    
+    scene bg classroom day # is there another sprite?
+    voice "voice/prologue/ch1.ogg"
+    show char fiora at center
+    ch "Hear ye, hear ye! I hereby call to order this meeting of the League of Legends
+        Club!"
+    mc "Couldn't you guys think of a more... unique name? Something more... adventurous?"
+    hide char
+    show ahri angry at right
+    voice "voice/prologue/am1.ogg"
+    am "Who cares about that? Did you guys hear about the hacker?"
+    mc "I think {i}everyone's{/i} heard about it."
+    show raka happy at left
+    voice "voice/prologue/sh1.ogg"
+    sh "Whatever... it's probably no big deal."
+    voice "voice/prologue/am2.ogg"
+    am "But, what if he's really serious? Do you think he can really shut it down just
+        like that?"
+    show raka angry at left
+    voice "voice/prologue/sh2.ogg"
+    sh "He's just blowing hot air. There's no way he would be able to hack into their
+        system and not get caught."
+    mc "Yeah, I guess so. But, still, everyone on the Internet is talking about it..."
+    show vik flat at center
+    voice "voice/prologue/cy1.ogg"
+    cy "You shouldn't underestimate the power of a determined fool."
+    hide raka
+    show rumble surprised at left
+    voice "voice/prologue/da1.ogg"
+    da "I dunno... I'm kinda scared."
+    hide vik
+    show jayce happy at center
+    voice "voice/prologue/je1.ogg"
+    je "Well, don't be. It's only a game, man. What's the worst that could happen?"
+    voice "voice/prologue/ch2.ogg"
+    ch "All right, everyone, settle down. I know everybody's worked up about this, but I
+        just received some interesting information for you guys to look at. Take a look
+        at this."
+    voice "voice/prologue/am3.ogg"
+    am "\"Rito Games offers one million Rito Points for the capture of the hacker...\""
+    # need to record a voice for this!
+    everyone "{b}ONE MILLION POINTS!?{/b}" with hpunch
+    show jayce surprised at center
+    voice "voice/prologue/je2.ogg"
+    je "*whistle* That's some serious virtual dough."
+    hide ahri
+    show vik flat at right
+    voice "voice/prologue/cy2.ogg"
+    cy "Hmph. They're running scared. The weaklings... I could shut him down in an instant."
+    hide jayce
+    show char fiora at center
+    voice "voice/prologue/ch3.ogg"
+    ch "It looks like the hacker was really serious if they're offering this big of a
+        prize."
+    mc "Honestly, if that prize will make someone catch him faster, I'm okay with that. I
+        spent over 4 years of my life in the game... there's no way they can let it be
+        shut down!"
+    hide rumble
+    show ahri happy at left
+    voice "voice/prologue/am4.ogg"
+    am "Ooh, I've got an idea. Why dont {i}we{/i} go after the prize? After all, we're
+        pretty skilled players, right? Who says we can't split it amongst ourselves?"
+    hide char
+    show raka happy at center
+    voice "voice/prologue/sh3.ogg"
+    sh "There's only one problem... how are we supposed to do what the creators can't?"
+    mc "Actually, I think that's a good idea. We can probably figure something out."
+    voice "voice/prologue/sh4.ogg"
+    sh "Sigh... when you're coming up with big plans, you have to have some kind of strategy."
+    voice "voice/prologue/am5.ogg"
+    show ahri veryhappy at left
+    am "What about if we split up, and start doing detective stuff~"
+    mc "I was thinking more along the lines of... me going over and beating up the hacker."
+    show raka angry at center
+    voice "voice/prologue/sh5.ogg"
+    sh "You can't just beat up a hacker over the Internet. There's no way he'll play by the
+        rules - he'll probably hack your character two ways from Tuesday."
+    show ahri happy at left
+    voice "voice/prologue/am6.ogg"
+    am "Plus, this is Demacia, the biggest city in Runeterra. I'm sure we'll be able to
+        find plenty of information."
+    show raka sad at center
+    voice "voice/prologue/sh6.ogg"
+    sh "R-Really? You guys are serious? All right, fine. I'll help if it means saving
+        Summoner's Rift."
+    hide vik
+    show rumble flat at right
+    voice "voice/prologue/da2.ogg"
+    da "I don't know about this...  it seems awfully dangerous."
+    hide raka
+    show jayce happy at center
+    voice "voice/prologue/je3.ogg"
+    je "Buck up, dude. It'll probably be fun."
+    hide jayce
+    show vik flat at center
+    voice "voice/prologue/cy3.ogg"
+    cy "If you want something done right... do it yourself."
+    hide vik
+    show ahri veryhappy at center
+    voice "voice/prologue/am7.ogg"
+    am "That's the spirit! Oh, and since I'm the team leader, I'll get a 50\% cut of the
+        prize once we get it."
+    mc "HEY! That's not something we'd ever agree to!"
+    show raka angry at left
+    voice "voice/prologue/sh7.ogg"
+    sh "Yeah, talk about hogging the spotlight."
+    show ahri wink at center
+    voice "voice/prologue/am8.ogg"
+    am "Fine, then... why don't you be the team leader, [name]?"
+    mc "What!? But, why does there have to be a team? I can probably handle it."
+    show ahri happy at center
+    voice "voice/prologue/am9.ogg"
+    am "And if you can't we're all doomed. I think it would be better to have some people
+        backing you up, don't you think?"
+    mc "Sigh... you just want the hacker to target me instead. Okay, okay, I'll do it!"
+    hide raka
+    show vik flat at left
+    voice "voice/prologue/cy4.ogg"
+    cy "I agree. If the hacker is targeting a specific individual, the rest of us can do our job."
+    show rumble angry at right
+    voice "voice/prologue/da3.ogg"
+    da "As long as he doesn't come after me!"
+    mc "Thanks for the vote of confidence..."
+    hide vik
+    hide ahri
+    hide rumble
+    show char fiora at center
+    voice "voice/prologue/ch4.ogg"
+    ch "I see you're already thinking up plans. Just don't get too carried away, or I might
+        be out of a job."
+    mc "I think that first things first, we should check out the dungeon itself when I get
+        home."
+    voice "voice/prologue/ch5.ogg"
+    ch "We do have a spear headgear if you want to try it out right now."
+    mc "No way ,I don't want to go through all the trouble of calibrating the settings.
+        That'd take way too much time... I'd rather just check later-"
+    voice "voice/prologue/ch6.ogg"
+    ch "We all want to know about the current situation in the game. This {i}is{/i} a club,
+        you should at least do the responsible thing and fulfill your duties."
+    mc "All right, all right, I'll put it on. Here we go..."
+    stop music fadeout 2.0
+    
+    scene bg black
+    voice "voice/prologue/ca1.ogg"
+    ca "Now entering calibration mode... being transported to training grounds for simple
+        calibration."
+    ## Place dungeon code here. --> Show Fountain mode, not dungeon
+    
+    scene bg classroom day
+    play music "music/bedroom.mp3" fadein 2.0
+    mc "I don't see anything wrong. Even the basic lobby looks fine to me."
+    mc "Everyone here seems pretty nonchalant about this; I guess all the ones that care
+        are running around outside or grinding..."
+    mc "I am hearing some weird rumors about \"ultimate buffs\", though."
+    show ahri sad at center
+    voice "voice/prologue/am10.ogg"
+    am "Ultimate Buffs? You mean, people's characters are being powered up?"
+    mc "That's what it looks like. Strange..."
+    hide ahri
+    show vik flat at center
+    voice "voice/prologue/cy5.ogg"
+    cy "The hacker must be using psychological warfare. Interesting."
+    mc "It doesn't seem like anything else is unstable, though. For the most part, the game's
+        completely intact."
+    show char fiora at left
+    voice "voice/prologue/ch7.ogg"
+    ch "Hmm, I expected a more aggressive approach with the release of that video within the
+        League servers."
+    hide vik
+    show raka sad at center
+    voice "voice/prologue/sh8.ogg"
+    sh "Maybe everyone is just in denial. Or ignoring it."
+    hide char
+    show rumble surprised at left
+    voice "voice/prologue/da4.ogg"
+    da "Or maybe it's a hoax! That's always a possibility... right?"
+    show vik flat at right
+    voice "voice/prologue/cy6.ogg"
+    cy "I highly doubt that, but you can keep believing it if you want."
+    hide vik
+    hide rumble
+    hide raka
+    show char fiora at center
+    voice "voice/prologue/ch8.ogg"
+    ch "All right everyone, club hours are officially over! Everyone head home and make
+        sure to finish all of your assigned work before even thinking of playing League."
+    voice "voice/prologue/ch9.ogg"
+    ch "I don't have any personal issues with wanting to try to catch the hacker, but make sure
+        to always put your safety first."
+    everyone "Yes, ma'am!"
+    hide char
+    mc "... huh? I thought we had another member in the club. Oh well, it's probably my imagination..."
+    scene bg black #temp
+    stop music fadeout 0.5
+    pause 1.0
+    
+    $ renpy.movie_cutscene("video/op.ogg")
+    
+    ## Start of first day's events begins here.
+    "After the dungeon introduction and the OP movie, the player moves onto the event-choosing part
+     of the game. Click on a location to go there! Each day two actions are available, and after these
+     are done the game automatically continues onto the next day. In the finished game, there will be
+     additional narration between each day." #temp
+    jump afterschool
+        
+## What happens after school hours, when the user begins the event-choosing part of the game.
+label afterschool:        
+    "It's day [day]."
+    
+label period_1:
+    "Okay, off we go!"
+    $ period = 1
+    call event_menu
+    $ renpy.fix_rollback()
+    if act == "dungeon":
+            if route == "Leona":
+                $ pass_list = [True,[jayce_skill,rumble_skill,vik_skill],[jayce_rp,rumble_rp,vik_rp],[have_hammer,have_sketch,have_rubix]]
+                # pass to dungeon and run
+            elif route == "Ezreal":
+                $ pass_list = [False,[ahri_skill,rango_skill,raka_skill],[ahri_rp,rango_rp,raka_rp],[have_charm,have_bone,have_clip]]
+                # pass to dungeon and run
+            ## temp error notification...
+            stop music fadeout 1.0
+            scene bg black
+            "I try to access the game, but find that I can't log in for some reason."
+            "There's a note from the hacker in the entry area..."
+            "\"Sorry, League is out for lunch! WITH ME! AHAHA!\""
+            "\"Permanently.\""
+            "\"For real, yo.\""
+            "\"Sincerely,\""
+            "\"With love,\""
+            "\"The hacker. Kappa.\""
+            "... well, then. Not much I can do about that."
+    else:
+        call events_run_period
+    
+label period_2:
+    "I've got time for one more thing today..."
+    $ period = 2
+    call event_menu
+    $ renpy.fix_rollback()
+    if act == "dungeon":
+            if route == "Leona":
+                $ pass_list = [True,[jayce_skill,rumble_skill,vik_skill],[jayce_rp,rumble_rp,vik_rp],[have_hammer,have_sketch,have_rubix]]
+                # pass to dungeon and run
+            elif route == "Ezreal":
+                $ pass_list = [False,[ahri_skill,rango_skill,raka_skill],[ahri_rp,rango_rp,raka_rp],[have_charm,have_bone,have_clip]]
+                # pass to dungeon and run
+            ## temp error notification...
+            stop music fadeout 1.0
+            scene bg black
+            "I try to access the game, but find that I can't log in for some reason."
+            "There's a note from the hacker in the entry area..."
+            "\"Sorry, League is out for lunch! WITH ME! AHAHA!\""
+            "\"Permanently.\""
+            "\"For real, yo.\""
+            "\"Sincerely,\""
+            "\"With love,\""
+            "\"The hacker. Kappa.\""
+            "... well, then. Not much I can do about that."
+    else:
+        call events_run_period
+    
+label night:
+    scene bg black
+    pause 1.0
+    "... just like that, it's already become night time. I head back home to get some sleep." # temp
+    call events_end_day
+    $ day += 1
+    $ period = 0
+    if (day < 8):
+        jump afterschool # temp, should jump to correct morning narration
+    else:
+        "GAME OVER FOO"
+        return
+    
+## Menu for choosing location. Will be replaced with an imagemap when available.
+## Must be called, not jumped to.
+label event_menu:
+    call screen school_map
+    $ act = _return
+    return
+
+## Gift dialogue control label. Must be called.
+label gift_check(target="blank"):
+    if route == "Ezreal":
+        if have_bone: # hue
+            "I turn to leave, but remember about the unfamiliar heft to one of my pockets. The necklace!
+             Maybe [target] would like it?"
+            menu:
+                "What should I do?"
+                "Hand it over.":
+                    if target == "Ami":
+                        call ahri_bone
+                        return
+                    elif target == "Gwen":
+                        call rengar_bone
+                        return
+                    elif target == "Sharon":
+                        call soraka_bone
+                        return
+                "Keep it for another time.":
+                    "I decide against it, this time."
+                    return
+        elif have_charm:
+            "I stop in my tracks, remembering something I had forgotten about earlier."
+            "The charm I found in the dungeon... should I give it to [target]?"
+            menu:
+                "What should I do?"
+                "Hand it over.":
+                    if target == "Ami":
+                        call ahri_charm
+                        return
+                    elif target == "Gwen":
+                        call rengar_charm
+                        return
+                    elif target == "Sharon":
+                        call soraka_charm
+                        return
+                "Keep it for another time.":
+                    "No, I don't think this is the right situation."
+                    return
+        elif have_clip:
+            "... wait. I have that hairclip I found in the dungeon. I could give it to
+             [target]."
+            menu:
+                "What should I do?"
+                "Hand it over.":
+                    if target == "Ami":
+                        call ahri_hairclip
+                        return
+                    elif target == "Gwen":
+                        call rengar_hairclip
+                        return
+                    elif target == "Sharon":
+                        call soraka_hairclip
+                        return
+                "Keep it for another time.":
+                    "Not right now, I think. I'd better hold onto it."
+                    return
+    elif route == "Leona":
+        if have_hammer:
+            "Wait a moment. Didn't I find something [target] might like? The hammer?"
+            menu:
+                "What should I do?"
+                "Present time!":
+                    if target == "Jason":
+                        call jayce_hammer
+                    elif target == "Cyrus":
+                        call viktor_hammer
+                    elif target == "Daniel":
+                        call daniel_hammer
+                    return
+                "Keep it for now.":
+                    "No, I don't think this is the right time. I'll keep it for now!"
+                    return
+        elif have_rubix:
+            "Didn't I find a rubix cube in the dungeon? Maybe [target] would like it!"
+            menu: 
+                "What should I do?"
+                "Present time!":
+                    if target == "Jason":
+                        call jayce_rubix
+                    elif target == "Cyrus":
+                        call viktor_rubix
+                    elif target == "Daniel":
+                        call daniel_rubix
+                    return
+                "Keep it for now.":
+                    "No, I don't think this is the right time. I'll keep it for now!"
+                    return
+        elif have_sketch:
+            "Suddenly, I remember about the the sketchbook I found in the dungeon. I still have it...
+             maybe [target] would like it?"
+            menu: 
+                "What should I do?"
+                "Present time!":
+                    if target == "Jayce":
+                        call jayce_sketch
+                    elif target == "Viktor":
+                        call viktor_sketch
+                    elif target == "Rumble":
+                        call daniel_sketch
+                    return
+                "Keep it for now.":
+                    "No, I don't think this is the right time. I'll keep it for now!"
+                    return
+    return
+    

@@ -2,7 +2,6 @@ init python:
   import pygame
   pygame.font.init()
   import renpygame
-  import summonersRift
   import os
   import random
   

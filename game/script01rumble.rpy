@@ -147,7 +147,7 @@ label rumble_2:
     mc angry "What is that supposed to mean?! I mean, I know what it means, but couldn't you put 
         that in a nicer way?" #pouty face
     voice "voice/rumble/2/ru_scene2_laugh.ogg"
-    "His slight chuckle sings throughout the library halls. It's more than pleasant."
+    "His laugh brings a smile to my face. It's more than pleasant."
     voice "voice/leona/2/le_ru_scene2_5.ogg"
     mc happy "Tell you what. How about you do something for me, and maybe I can forgive you for that."
     show rumble surprisedmid
@@ -280,8 +280,7 @@ label rumble_3:
             voice "voice/rumble/3/ru_vi_scene3_8.ogg"
             vi "This is why people are incompetent. They are always consumed by their emotions."
             hide vik with moveoutright
-            "Viktor's lingering shadow is the only thing that was left of his presence after
-             he trudged away from the fountain."
+            "Viktor’s shadow is the only thing left of his presence after he trudges away from the fountain."
             voice "voice/leona/3/le_ru_scene3_6.ogg"
             le flat "Well, that was pretty exhausting. Glad that it's over, though." 
             show rumble vr flat at center with dissolve
@@ -330,11 +329,10 @@ label rumble_3:
              apprehends Viktor, prohibiting him from attacking."
             voice "voice/leona/3/le_ru_scene3_10.ogg"
             le sad "R-rumble, stay still! I will protect you."
-            "The value of my words are evident when Rumble shoves me aside. With a trembling 
-             arm, he calls out to activate the equalizer."
+            "But he only shoves me aside in desperation. With a trembling arm, e calls out to activate the Equalizer."
             show rumble vr angryclose at left with vpunch
             voice "voice/rumble/3/ru_scene3_14.ogg"
-            "It forms a line of flames that bursts into smoke and blaze, encompassing the entire circle of players."
+            "A line of flaming rockets fall from above and burst into flames, lighting the air ablaze."
             show rumble vr angry at left with dissolve
             hide vik with moveoutright
             "I heard a cry of pain, not from the yordle but from the machine herald standing 
@@ -401,15 +399,14 @@ label rumble_4:
     cy "My only \"issue\" is how much embarrassment you bring to our club with your
         buffoonish tactics. I think you should quit this game while you're behind."
     mc angry "Cyrus! Don't you think you've done enough damage? What has Daniel done to 
-        deserve this harrassment?"
+        deserve this harassment?"
     show vik happy at right
     voice "voice/rumble/4/ru_vi_scene4_4.ogg"
     cy "Existing, mostly."      
     "This guy... What the heck is his problem?"
     voice "voice/rumble/4/ru_vi_scene4_5.ogg"
     cy "Now, if you'll excuse me - there are more important things I have to deal with."
-    "Cyrus flaunts his back to the end of the wall when his legs lead him towards the door. His hands
-     trace along the crevices of the door."
+    "Cyrus only lingers long enough to sigh in contempt. He makes for the door, but not without a parting shot."
     voice "voice/rumble/4/ru_vi_scene4_6.ogg"
     cy "It's just plain embarrassing, needing a girl to defend you."
     hide vik with moveoutright
@@ -552,7 +549,7 @@ label rumble_5:
     da "Thanks. What do you like about it? You never struck me as an art aficionado until recently."
     voice "voice/leona/5/le_ru_scene5_7.ogg"
     mc flat "Well..."
-    "I burrow my eyes as I begin recalling how stressful things are at home."
+    "I close my eyes as I begin recalling how stressful things are at home."
     voice "voice/leona/5/le_ru_scene5_8.ogg"
     mc sad "You see, my parents aren't exactly the most pleasant. Have you heard of Rakkor Boxing?"
     show rumble flat with dissolve
@@ -605,8 +602,7 @@ label rumble_5:
     da "It should be done soon. I hope to see you there."
     call gift_check("Daniel") from _call_gift_check_9
     hide rumble with dissolve
-    "With that, Daniel leaves me behind as I stand motionless in front of the swinging doors that 
-     sound as if they're chanting \"K-I-S-S-I-N-G.\" "
+    "With that, Daniel leaves me behind as I stand motionless in front of the swinging doors."
     $ rumble_rp = rumble_rp + 12
     stop music fadeout 2.0
     jump events_end_period
@@ -615,13 +611,11 @@ label rumble_6:
     $ rumble_rp = rumble_rp + 15
     $ renpy.block_rollback()
     scene bg museum day
-    "A huge crowd defines the museum's walls. I feel like a newborn lamb trying to walk for the
-     first time."
+    "A huge crowd defines the museum's walls. I feel lost in a sea of people."
     "Left and right - I only see painting after painting with people circling around me like flies.
      I nervously walk across the hall with my head spinning around."
     play music "music/Edge of Mist.mp3" fadein 4.0
-    "That is, until I stumble upon a drawing that wouldn’t allow anything but my eyes drooling all
-     over its brush strokes."
+    "That is, until I stumble upon a drawing that completely and utterly captivates me."
     "Then I see it: a melancholic hue of indigo. There's a sublime, lonely blue that sinks as deep
      as the depths of the ocean."
     "Along the edges of the bottom half of the canvas is what seems to be the floor of that abyss.
@@ -720,8 +714,8 @@ label rumble_6:
     da "Not everything is based off science. This is something that understanding and research
         alone won't help you achieve."
     show rumble flat at right with dissolve
-    "Oh, boy. The tension in the air can't get any worse. I can even hear the birds tweeting
-     outside."
+    "The tension in the air is unmistakable. It’s to be expected when these two encounter each other.
+     But this time, Daniel seems resolute."
     show rumble flat behind vik
     voice "voice/rumble/6/ru_vi_scene6_3.ogg"
     cy "Correct. This is not something I can simply replicate because I so desire, let alone
