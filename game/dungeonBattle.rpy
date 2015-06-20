@@ -56,11 +56,19 @@ init python:
       
       self.state = 0
       self.target = 0
-      battleNumber = 16
       self.loadBattle(battleNumber)
             
       
     def loadBattle(self, number):
+      self.startScene = None
+      self.endScene = 'victoryScreen'
+      self.lossScene = 'gameOver'
+      
+      self.music = os.path.join(*['data','music','BattleStance.wav'])      
+      self.victorySound = os.path.join(*['data','music','VictoryTheme2.wav'])
+            
+      self.scenery = []
+      
       sky = Scenery(os.path.join('data','SKY_BG.png'),(0,0))
       
       off = 0
@@ -447,14 +455,30 @@ init python:
               else:
                 self.lastThreeAttacks.append(i)
                 self.comboTimer = 0
-              if self.lastThreeAttacks == [0,3,1]:
-                if not i in self.combosDone:
-                  if (route == "Ezreal" and ((i == 1 and ahri_combo) or (i == 2 and raka_combo) or (i == 3 and rango_combo))) or (route == "Leona" and ((i == 1 and jayce_combo) or (i == 2 and vik_combo) or (i == 3 and rumble_combo))):
-                    self.effects = []
-                    self.effects.append(CharSuperAnim(self,self.players[i].superSprite))
-                    self.queueCombo = ([0,3,1],en)
-                    self.combosDone.append(i)
-              self.players[i].doAttack(en)
+              if not i in self.combosDone:
+                doCombo = False
+                if route == "Ezreal":
+                  if i == 1 and ahri_combo and self.lastThreeAttacks == [0,3,1]:
+                    doCombo = True
+                  elif i == 2 and raka_combo and self.lastThreeAttacks == [0,1,2]:
+                    doCombo = True
+                  elif i == 3 and rango_combo and self.lastThreeAttacks == [0,2,3]:
+                    doCombo = True
+                elif route == "Leona":
+                  if i == 1 and jayce_combo and self.lastThreeAttacks == [0,2,1]:
+                    doCombo = True
+                  elif i == 2 and vik_combo and self.lastThreeAttacks == [0,3,2]:
+                    doCombo = True
+                  elif i == 3 and rumble_combo and self.lastThreeAttacks == [0,1,3]:
+                    doCombo = True
+                if doCombo:
+                  self.effects = []
+                  self.effects.append(CharSuperAnim(self,self.players[i].superSprite))
+                  self.queueCombo = (self.lastThreeAttacks,en)
+                  self.combosDone.append(i)
+                else:
+                  self.lastThreeAttacks == []
+                  self.players[i].doAttack(en)
     
     def doPlayerCombo(self):
       players = self.queueCombo[0]

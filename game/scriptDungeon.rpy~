@@ -14,6 +14,26 @@ label quitScreen:
 label victoryScreen:
     show screen dungeon_run(False)
     "YOU WIN"
+    if route == "Ezreal":
+      if have_charm == False and random.randint(0,10) == 0:
+        "Found Charm!"
+        $ have_charm = True
+      elif have_bone == False and random.randint(0,1) == 0:
+        "Found Bone!"
+        $ have_bone = True
+      elif have_clip == False and random.randint(0,10) == 0:
+        "Found Clip!"
+        $ have_clip = True
+    else:
+      if have_hammer == False and random.randint(0,10) == 0:
+        "Found Hammer!"
+        $ have_hammer = True
+      elif have_sketch == False and random.randint(0,10) == 0:
+        "Found Sketch!"
+        $ have_sketch = True
+      elif have_rubix == False and random.randint(0,10) == 0:
+        "Found Rubix!"
+        $ have_rubix = True
     menu:
         "Press on":
             vrmc happy " Let's keep going!"
@@ -23,6 +43,22 @@ label victoryScreen:
             $ battleFlag = "retreat"
     call screen dungeon_run(True)
     return
+
+label afterFirstBattle:
+  show screen dungeon_run(False)
+  "YOU WIN"
+  h "Congratulations, Summoner! You’ve defeated the first minion of the game. You must be brimming with pride and glee."
+  h "Well, that will be short-lived, I assure you. No matter how you may try and struggle, you stand no chance of defeating {i}me{/i}!"
+  h "If you still think you stand a chance, you are welcome to try! But, first, you have to get past all of my minions! *Cackling*"
+  menu:
+    "Get past all of his minions":
+      vrmc happy " No problem! We can take anything you throw at us!"
+      $ battleFlag = "onward"
+    "I don't stand a chance":
+      vrmc sad " He might be right. I'm not ready for this yet. I'll come back later."
+      $ battleFlag = "retreat"
+  call screen dungeon_run(True)
+  return
             
 label redBattle:
     show screen dungeon_run(False)
@@ -67,24 +103,6 @@ label killRed:
   call screen dungeon_run(True)
   return
     
-label afterFirstBattle:
-  show screen dungeon_run(False)
-  "YOU WIN"
-  h "Congratulations, Summoner! You’ve defeated the first minion of the game. You must be brimming with pride and glee."
-  h "Well, that will be short-lived, I assure you. No matter how you may try and struggle, you stand no chance of defeating {i}me{/i}!"
-  h "If you still think you stand a chance, you are welcome to try! But, first, you have to get past all of my minions! *Cackling*"
-  menu:
-    "Get past all of his minions":
-      vrmc happy " No problem! We can take anything you throw at us!"
-      $ battleFlag = "onward"
-    "I don't stand a chance":
-      vrmc sad " He might be right. I'm not ready for this yet. I'll come back later."
-      $ battleFlag = "retreat"
-  $ current_battle.reActivate()
-  call screen dungeon_run(True)
-  return
-    
-  
 label killBaron:
   show screen dungeon_run(False)
   na "ARRGHH!"
@@ -427,4 +445,6 @@ label winFinalBattle:
 label gameOver:
   $ renpy.music.stop(fadeout=1)
   scene bg black with fade
-  "CONNECTION LOST"
+  "CONNECTION LOST{w}.{w}.{w}."
+  "GAME OVER"
+  

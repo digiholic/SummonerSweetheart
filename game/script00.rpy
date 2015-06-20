@@ -563,7 +563,6 @@ label dungeon:
     stop music fadeout 0.5
     "Time to be patient... sometimes, it takes a little while."
     if route == "Leona":
-        $ giftsInventory = [have_hammer, have_sketch, have_rubix]
         $ old_bosses_defeated = bosses_defeated
         $ current_battle = Battle()
         call screen dungeon_run(True)
@@ -571,7 +570,6 @@ label dungeon:
         scene bg black with dissolve
         $ current_battle = None
     elif route == "Ezreal":
-        $ giftsInventory = [have_charm, have_bone, have_clip]
         $ old_bosses_defeated = bosses_defeated
         $ current_battle = Battle()
         call screen dungeon_run(True)
