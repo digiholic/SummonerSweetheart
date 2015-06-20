@@ -455,9 +455,10 @@ init python:
               else:
                 self.lastThreeAttacks.append(i)
                 self.comboTimer = 0
+              doCombo = False
               if not i in self.combosDone:
-                doCombo = False
                 if route == "Ezreal":
+                  print self.lastThreeAttacks, ahri_combo
                   if i == 1 and ahri_combo and self.lastThreeAttacks == [0,3,1]:
                     doCombo = True
                   elif i == 2 and raka_combo and self.lastThreeAttacks == [0,1,2]:
@@ -471,14 +472,14 @@ init python:
                     doCombo = True
                   elif i == 3 and rumble_combo and self.lastThreeAttacks == [0,1,3]:
                     doCombo = True
-                if doCombo:
-                  self.effects = []
-                  self.effects.append(CharSuperAnim(self,self.players[i].superSprite))
-                  self.queueCombo = (self.lastThreeAttacks,en)
-                  self.combosDone.append(i)
-                else:
-                  self.lastThreeAttacks == []
-                  self.players[i].doAttack(en)
+              if doCombo:
+                self.effects = []
+                self.effects.append(CharSuperAnim(self,self.players[i].superSprite))
+                self.queueCombo = (self.lastThreeAttacks,en)
+                self.combosDone.append(i)
+              else:
+                self.lastThreeAttacks == []
+                self.players[i].doAttack(en)
     
     def doPlayerCombo(self):
       players = self.queueCombo[0]
@@ -642,7 +643,7 @@ init python:
         totalDamage += ch.attackDamage
         ef = Effect(ch.attackEffect,ch.attackEffectSize,ch.attackEffectLength)
         ef.rect.bottom = target.rect.bottom
-        ef.rect.center = target.rect.center + target.centerOffset
+        ef.rect.center = target.rect.center
         self.battle.effects.append(ef)
       
       if hasattr(target, 'gotCombod'):
@@ -1011,7 +1012,7 @@ init python:
   class Sentry(Fighter):
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Sentry'), 'sentry_', 'idle', (200,200), 0.3)
-      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 35, maxHP = 60)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 35, maxHP = 80)
       self.currentCD = random.randint(0,self.attackCD)
       self.hurtSprite = True
   
