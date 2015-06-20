@@ -5,19 +5,19 @@ While running game code:
     call dungeon
   File "game/script00.rpy", line 582, in script call
     call screen dungeon_run(True)
-  File "game/scriptDungeon.rpy", line 190, in script
+  File "game/scriptDungeon.rpy", line 29, in script call
+    call screen dungeon_run(True)
+  File "game/scriptDungeon.rpy", line 29, in script
     call screen dungeon_run(True)
   File "renpy/common/000statements.rpy", line 457, in execute_call_screen
     store._return = renpy.call_screen(name, *args, **kwargs)
-  File "game/dungeonBattle.rpy", line 326, in render
-    child_render = en.render(width, height, st, at)
-  File "game/dungeonBattle.rpy", line 626, in render
+  File "game/dungeonBattle.rpy", line 344, in render
+    child_render = ch.render(width, height, st, at)
+  File "game/dungeonBattle.rpy", line 648, in render
     self.target.getAttacked(self.attackDamage)
-  File "game/dungeonBattle.rpy", line 612, in getAttacked
-    self.battle.effects.append(HitFlash(self,False))
-  File "game/dungeonBattle.rpy", line 757, in __init__
-    self.filmstrip = self.parent.animLib.library['damage']
-KeyError: 'damage'
+  File "game/dungeonBattle.rpy", line 1097, in getAttacked
+    if self.hp <= 0:
+AttributeError: 'Baron' object has no attribute 'hp'
 
 -- Full Traceback ------------------------------------------------------------
 
@@ -26,7 +26,9 @@ Full traceback:
     call dungeon
   File "game/script00.rpy", line 582, in script call
     call screen dungeon_run(True)
-  File "game/scriptDungeon.rpy", line 190, in script
+  File "game/scriptDungeon.rpy", line 29, in script call
+    call screen dungeon_run(True)
+  File "game/scriptDungeon.rpy", line 29, in script
     call screen dungeon_run(True)
   File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 1635, in execute
     self.call("execute")
@@ -70,15 +72,13 @@ Full traceback:
   File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
   File "accelerator.pyx", line 108, in renpy.display.accelerator.transform_render (gen/renpy.display.accelerator.c:1922)
   File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "game/dungeonBattle.rpy", line 326, in render
-    child_render = en.render(width, height, st, at)
-  File "game/dungeonBattle.rpy", line 626, in render
+  File "game/dungeonBattle.rpy", line 344, in render
+    child_render = ch.render(width, height, st, at)
+  File "game/dungeonBattle.rpy", line 648, in render
     self.target.getAttacked(self.attackDamage)
-  File "game/dungeonBattle.rpy", line 612, in getAttacked
-    self.battle.effects.append(HitFlash(self,False))
-  File "game/dungeonBattle.rpy", line 757, in __init__
-    self.filmstrip = self.parent.animLib.library['damage']
-KeyError: 'damage'
+  File "game/dungeonBattle.rpy", line 1097, in getAttacked
+    if self.hp <= 0:
+AttributeError: 'Baron' object has no attribute 'hp'
 
 Linux-3.16.0-41-generic-x86_64-with-debian-jessie-sid
 Ren'Py 6.18.3.761

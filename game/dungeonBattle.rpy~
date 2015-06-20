@@ -57,7 +57,7 @@ init python:
       
       self.state = 0
       self.target = 0
-      
+      battleNumber = 16
       self.loadBattle(battleNumber)
             
       
@@ -97,11 +97,10 @@ init python:
       # self.scenery.append(Scenery(os.path.join(*[<path to file seperated by commas>]), (leftmost , rightmost)))
       # If you build a list of Sceneries, use extend instead of append, and pass the list.               
       
-      #if number == 0:
-        #self.endScene = 'afterFirstBattle'
-        #self.scenery.extend(baseGrnd)
-        #self.enemies = [Poro()]
-      
+      if number == 0:
+        self.endScene = 'afterFirstBattle'
+        self.scenery.extend(baseGrnd)
+        self.enemies = [Poro()]
       elif number == 1:
         self.scenery.extend(baseGrnd)
         self.enemies = [Poro(), Poro()]
@@ -131,7 +130,7 @@ init python:
         self.scenery.append(Scenery(os.path.join('data','redpit.png'),(928,68)))
         self.enemies = [Cinderling(), Cinderling()]
       elif number == 10:
-        self.music = os.path.join(*['data','music','bossBattle.ogg'])
+        self.music = os.path.join(*['music','dungeon.mp3'])
         self.scenery.extend(riftGrnd)
         self.scenery.append(Scenery(os.path.join('data','redpit.png'),(-96,68)))
         self.enemies = [Brambleback(), Cinderling(), Cinderling()]
@@ -149,11 +148,14 @@ init python:
         self.enemies = [Wight(), Wraith(), Wraith()]
       if number == 15:
         self.scenery.extend(riverGrnd)
-        self.enemies = [Crab(), Crab()]
-      if number ==16:
+        self.enemies = [RiftScuttler(), RiftScuttler()]
+      if number == 16:
+        self.scenery.append(BaronPit((748,283)))
         self.scenery.extend(riverGrnd)
-        self.enemies = [Wight(), Crab(), Wolf()]
+        self.enemies = [Wight(), RiftScuttler(), Wolf()]
       if number == 17:
+        self.music = os.path.join(*['music','dungeon.mp3'])
+        self.scenery.append(BaronPit((-276,283)))
         self.scenery.extend(riverGrnd)
         self.enemies = [Baron()]
       if number == 18: #Transition into Twisted Treeline
@@ -167,7 +169,7 @@ init python:
         self.enemies = [Wolf(), Wolf(), Wolf(), Wolf()]
       if number == 21: 
         self.scenery.extend(riftGrnd)
-        self.enemies = [Crab(), Crab(), Crab()]
+        self.enemies = [RiftScuttler(), RiftScuttler(), RiftScuttler()]
       if number == 22: 
         self.scenery.extend(riftGrnd)
         self.enemies = [Cinderling(), Cinderling(), Cinderling(), Cinderling()]
@@ -178,6 +180,7 @@ init python:
         self.scenery.extend(riftGrnd)
         self.enemies = [Sentry(), Sentry(), Sentry()]
       if number == 25: 
+        self.music = os.path.join(*['music','dungeon.mp3'])
         self.scenery.extend(baseGrnd)
         self.startScene = 'beforeHacker'
         self.lossScene = 'loseFinalBattle'
@@ -301,6 +304,7 @@ init python:
           self.changeTarget(1)
         if not self.players[0].alive:
           if len(self.effects) == 0:
+            self.state = -1
             self.callScene(self.lossScene)
         if len(self.enemies) == 0:
           for ch in self.players:
@@ -828,7 +832,7 @@ init python:
   class Ezreal(Fighter):
     def __init__(self):
       animLib = AnimLib(os.path.join('data','Ezreal'), 'ezreal_', 'idle', (250,200), 0.3)
-      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 80, attackDamage = 10, maxHP = 100)
+      Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 80, attackDamage = 10, maxHP = 10)
       self.attackVoice = os.path.join(*['data','EffectSFX','EZ_Attack_1.mp3'])
       self.attackSound = os.path.join(*['data','EffectSFX','ezBolt.wav'])
       
@@ -1069,15 +1073,16 @@ init python:
   class Baron(Fighter):
       def __init__(self):
         animLib = AnimLib(os.path.join('data','Nashor'), 'baron_', 'idle', (800,800), 0.3)
-        Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 160, attackDamage = 30, maxHP = 600)
+        Fighter.__init__(self, animLib, position = (0,0), centerOffset = 100, attackCD = 160, attackDamage = 30, maxHP = 600)
         self.eventTimer = 0
+        self.currentCD = random.randint(0,self.attackCD)
         self.eventTrigger = False
         
       def render(self, height, width, st, at):
         render = Fighter.render(self, height, width, st, at)
         if self.eventTrigger:
           self.eventTimer += 1
-          if self.eventTimer == 200:
+          if self.eventTimer == 150:
             self.battle.callScene("waitBaron")
         return render
         
@@ -1088,12 +1093,12 @@ init python:
         if self.HP <= self.maxHP / 2:
             if not self.eventTrigger:
               self.battle.playOnNextAvailableChannel(os.path.join(*['data','EffectSFX','baronspissed.wav']))
-              self.attackCD = 60
-              self.attackDamage = 15
+              self.attackCD = 20
+              self.attackDamage = 5
             self.eventTrigger = True
             self.eventTimer = 0
             
-        if self.hp <= 0:
+        if self.HP <= 0:
             self.alive = False
             self.active = False
             self.visible = False
@@ -1271,4 +1276,21 @@ init python:
                 
         def visit(self):
             return [self.image]
+  
+  
+  class Torch(FilmStrip):
+    def __init__(self,position,**kwargs):
+      FilmStrip.__init__(self, os.path.join(*['data','Anim_Fire','anim_fire.png']), (100,125), (3,1), 0.3, 3, True, **kwargs)
+      self.rect = pygame.Rect(position, (100,125))
+      
+  class Nexus(FilmStrip):
+    def __init__(self,position,**kwargs):
+      FilmStrip.__init__(self, os.path.join(*['data','Nexus','nexus.png']), (525,400), (14,1), 0.3, 14, True, **kwargs)
+      self.rect = pygame.Rect(position, (525,400))
+      
+  class BaronPit(FilmStrip):
+    def __init__(self,position,**kwargs):
+      FilmStrip.__init__(self, os.path.join(*['data','BaronPit','baronPit.png']), (1300,385), (4,1), 0.3, 4, True, **kwargs)
+      self.rect = pygame.Rect(position, (1300,385))
+      
   
