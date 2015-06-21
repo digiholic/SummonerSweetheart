@@ -1045,7 +1045,7 @@ init python:
       global vik_rp
       global rumble_rp
       
-      total_rp = jayce_rp, vik_rp, rumble_rp
+      total_rp = jayce_rp + vik_rp + rumble_rp
       
       maxHP = 120
       attackDamage = 10

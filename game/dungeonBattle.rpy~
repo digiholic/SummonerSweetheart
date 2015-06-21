@@ -999,10 +999,8 @@ init python:
       total_rp = ahri_rp + raka_rp + rango_rp
       
       maxHP = 100
-      #attackDamage = 15
-      attackDamage = 1000
-      #attackCD = 80
-      attackCD = 10
+      attackDamage = 15
+      attackCD = 80
       
       if total_rp >= 50:
         maxHP = 110
@@ -1047,7 +1045,7 @@ init python:
       global vik_rp
       global rumble_rp
       
-      total_rp = jayce_rp, vik_rp, rumble_rp
+      total_rp = jayce_rp + vik_rp + rumble_rp
       
       maxHP = 120
       attackDamage = 10
@@ -1083,6 +1081,7 @@ init python:
       Fighter.__init__(self, animLib, (0,0), 50, attackCD, attackDamage, maxHP)
       self.attackVoice = os.path.join(*['data','Leona','LeonaSFX','Attack1.wav'])
       self.attackSound = os.path.join(*['data','EffectSFX','daggerSound2.wav'])
+      print self.attackDamage, total_rp
       
       self.hurtSound = os.path.join(*['data','Leona','LeonaSFX','Damage.wav'])
       
