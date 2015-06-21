@@ -1,7 +1,0 @@
-Anim cycle (Loop)
-
-Name of the file | Duration (Seconds)
-
-Anim_Fire001	|	0.2
-Anim_Fire002	|	0.2
-Anim_Fire003	|	0.2

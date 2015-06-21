@@ -1,3 +1,0 @@
-alpha #1c4113
-
-timing is : 0,2 / 0,1 / 0,2 / 0,1 seconds.

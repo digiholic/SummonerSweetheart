@@ -1,3 +1,0 @@
-alpha is #1c4113
-
-Timing : 0,2s / 0,1s / 0,2s / 0,1S frame
