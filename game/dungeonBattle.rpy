@@ -25,8 +25,8 @@ init python:
       self.endScene = 'victoryScreen'
       self.lossScene = 'gameOver'
       
-      self.music = os.path.join(*['data','music','BattleStance.wav'])      
-      self.victorySound = os.path.join(*['data','music','VictoryTheme2.wav'])
+      self.music = 'data/music/BattleStance.wav'      
+      self.victorySound = 'data/music/VictoryTheme2.wav'
             
       self.scenery = []
       self.sceneryfg = []
@@ -65,14 +65,14 @@ init python:
       self.endScene = 'victoryScreen'
       self.lossScene = 'gameOver'
       
-      self.music = os.path.join(*['data','music','BattleStance.wav'])      
-      self.victorySound = os.path.join(*['data','music','VictoryTheme2.wav'])
+      self.music = 'data/music/BattleStance.wav'     
+      self.victorySound = 'data/music/VictoryTheme2.wav'
             
       self.scenery = []
       self.sceneryfg = []
       
       # The sky. It's in most places.
-      sky = Scenery(os.path.join('data','SKY_BG.png'),(0,0))
+      sky = Scenery('data/SKY_BG.png',(0,0))
       
       
       # The ground tiles.
@@ -81,25 +81,25 @@ init python:
       riftGrnd = []
       riverGrnd = []
       while off < 1024:
-        baseGrnd.append(Scenery(os.path.join(*['data','GROUNDS','SR_GRND.gif']), (off,668)))
-        riftGrnd.extend([Scenery(os.path.join(*['data','GROUNDS','SumRift_Ground_GrassMiddleLoop.png']), (off, 668)),
-                         Scenery(os.path.join(*['data','GROUNDS','SumRift_Ground_GrassMiddleLoop.png']), (off+100, 668)),
-                         Scenery(os.path.join(*['data','GROUNDS','SumRift_Ground_GrassMiddleLoop.png']), (off+200, 668))])
-        riverGrnd.extend([Scenery(os.path.join(*['data','River','tileM.png']), (off, 668)),
-                          Scenery(os.path.join(*['data','River','tileM.png']), (off+100, 668)),
-                          Scenery(os.path.join(*['data','River','tileM.png']), (off+200, 668))])
+        baseGrnd.append(Scenery('data/GROUNDS/SR_GRND.gif', (off,668)))
+        riftGrnd.extend([Scenery('data/GROUNDS/SumRift_Ground_GrassMiddleLoop.png', (off, 668)),
+                         Scenery('data/GROUNDS/SumRift_Ground_GrassMiddleLoop.png', (off+100, 668)),
+                         Scenery('data/GROUNDS/SumRift_Ground_GrassMiddleLoop.png', (off+200, 668))])
+        riverGrnd.extend([Scenery('data/River/tileM.png', (off, 668)),
+                          Scenery('data/River/tileM.png', (off+100, 668)),
+                          Scenery('data/River/tileM.png', (off+200, 668))])
                          
                          
         off += 300
         
       # Trees
-      treetile = Scenery(os.path.join('data','summoner rift tree [repeatable].png'),(0,0))
+      treetile = Scenery('data/summoner rift tree [repeatable].png',(0,0))
       if number % 2 == 0:
-        treetiles = [Scenery(os.path.join('data','summoner rift tree [repeatable].png'),(0, 668 - treetile.rect.height)),
-                     Scenery(os.path.join('data','summoner rift tree [repeatable].png'),(treetile.rect.width, 668 - treetile.rect.height))]
+        treetiles = [Scenery('data/summoner rift tree [repeatable].png',(0, 668 - treetile.rect.height)),
+                     Scenery('data/summoner rift tree [repeatable].png',(treetile.rect.width, 668 - treetile.rect.height))]
       else:
-        treetiles = [Scenery(os.path.join('data','summoner rift tree [repeatable].png'),(-88, 668 - treetile.rect.height)),
-                     Scenery(os.path.join('data','summoner rift tree [repeatable].png'),(treetile.rect.width - 88, 668 - treetile.rect.height))]
+        treetiles = [Scenery('data/summoner rift tree [repeatable].png',(-88, 668 - treetile.rect.height)),
+                     Scenery('data/summoner rift tree [repeatable].png',(treetile.rect.width - 88, 668 - treetile.rect.height))]
       
       self.scenery.append(sky)
       self.scenery.extend(treetiles)
@@ -107,82 +107,82 @@ init python:
 
       ####### HERE IS WHERE YOU DEFINE THE BATTLES #####
       # Use this to define a scenery object
-      # self.scenery.append(Scenery(os.path.join(*[<path to file seperated by commas>]), (leftmost , rightmost)))
+      # self.scenery.append(Scenery(<path to file seperated by commas>, (leftmost , rightmost)))
       # If you build a list of Sceneries, use extend instead of append, and pass the list.               
       
       if number == 0:
-        walls = [Scenery(os.path.join(*['data','Wall.png']),(0,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(156,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(312,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(468,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(624,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(780,668-72)),
-                 Scenery(os.path.join(*['data','Wall_w_shadow.png']),(936,668-72))]
+        walls = [Scenery('data/Wall.png',(0,668-72)),
+                 Scenery('data/Wall.png',(156,668-72)),
+                 Scenery('data/Wall.png',(312,668-72)),
+                 Scenery('data/Wall.png',(468,668-72)),
+                 Scenery('data/Wall.png',(624,668-72)),
+                 Scenery('data/Wall.png',(780,668-72)),
+                 Scenery('data/Wall_w_shadow.png',(936,668-72))]
                  
         self.scenery.extend(walls)
         self.scenery.append(Nexus((400,268)))
-        self.scenery.append(Scenery(os.path.join(*['data','turret.png']),(0,0)))
+        self.scenery.append(Scenery('data/turret.png',(0,0)))
         
         
         self.endScene = 'afterFirstBattle'
         self.scenery.extend(baseGrnd)
         self.enemies = [Poro()]
       elif number == 1:
-        walls = [Scenery(os.path.join(*['data','Wall.png']),(0,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(156,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(312,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(468,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(624,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(780,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(936,668-72))]
+        walls = [Scenery('data/Wall.png',(0,668-72)),
+                 Scenery('data/Wall.png',(156,668-72)),
+                 Scenery('data/Wall.png',(312,668-72)),
+                 Scenery('data/Wall.png',(468,668-72)),
+                 Scenery('data/Wall.png',(624,668-72)),
+                 Scenery('data/Wall.png',(780,668-72)),
+                 Scenery('data/Wall.png',(936,668-72))]
                  
         self.scenery.extend(walls)
         self.scenery.extend(baseGrnd)
         self.enemies = [Poro(), Poro()]
       elif number == 2:
-        walls = [Scenery(os.path.join(*['data','Wall.png']),(0,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(156,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(312,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(468,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(624,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(780,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(936,668-72))]
+        walls = [Scenery('data/Wall.png',(0,668-72)),
+                 Scenery('data/Wall.png',(156,668-72)),
+                 Scenery('data/Wall.png',(312,668-72)),
+                 Scenery('data/Wall.png',(468,668-72)),
+                 Scenery('data/Wall.png',(624,668-72)),
+                 Scenery('data/Wall.png',(780,668-72)),
+                 Scenery('data/Wall.png',(936,668-72))]
                  
         self.scenery.extend(walls)
         self.scenery.extend(baseGrnd)
         self.enemies = [Poro(), MrPoro(), Poro()]
       elif number == 3:
-        walls = [Scenery(os.path.join(*['data','Wall.png']),(0,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(156,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(312,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(468,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(624,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(780,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(936,668-72))]
+        walls = [Scenery('data/Wall.png',(0,668-72)),
+                 Scenery('data/Wall.png',(156,668-72)),
+                 Scenery('data/Wall.png',(312,668-72)),
+                 Scenery('data/Wall.png',(468,668-72)),
+                 Scenery('data/Wall.png',(624,668-72)),
+                 Scenery('data/Wall.png',(780,668-72)),
+                 Scenery('data/Wall.png',(936,668-72))]
                  
         self.scenery.extend(walls)
         
-        bushTiles = [Scenery(os.path.join(*['data','Bush','grass-tile-leftendS.png']),(724, 518)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-middleS.png']),(874, 518))]
+        bushTiles = [Scenery('data/Bush/grass-tile-leftendS.png',(724, 518)),
+                     Scenery('data/Bush/grass-tile-middleS.png',(874, 518))]
         self.scenery.extend(bushTiles)
         self.scenery.extend(baseGrnd)
         self.enemies = [MrPoro(), MeleeMinion(), MrPoro()]
       elif number == 4:
-        walls = [Scenery(os.path.join(*['data','Wall.png']),(0,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(156,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(312,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(468,668-72)),
-                 Scenery(os.path.join(*['data','Wall.png']),(624,668-72)),
-                 Scenery(os.path.join(*['data','Wall002.png']),(780,668-72))]
+        walls = [Scenery('data/Wall.png',(0,668-72)),
+                 Scenery('data/Wall.png',(156,668-72)),
+                 Scenery('data/Wall.png',(312,668-72)),
+                 Scenery('data/Wall.png',(468,668-72)),
+                 Scenery('data/Wall.png',(624,668-72)),
+                 Scenery('data/Wall002.png',(780,668-72))]
                  
         self.scenery.extend(walls)
         
-        bushTiles = [Scenery(os.path.join(*['data','Bush','grass-tile-middleS.png']),(0, 518)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-middleS.png']),(150, 518)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-rightendS.png']),(300, 518))]
-        groundTransitionTiles = [Scenery(os.path.join(*['data','Grounds','GroundR.png']), (724,668)),
-                                 Scenery(os.path.join(*['data','Grounds','SumRift_Ground_GrassMiddleLoop.png']), (824,668)),
-                                 Scenery(os.path.join(*['data','Grounds','SumRift_Ground_GrassMiddleLoop.png']), (924,668))]
+        bushTiles = [Scenery('data/Bush/grass-tile-middleS.png',(0, 518)),
+                     Scenery('data/Bush/grass-tile-middleS.png',(150, 518)),
+                     Scenery('data/Bush/grass-tile-rightendS.png',(300, 518))]
+        groundTransitionTiles = [Scenery('data/Grounds/GroundR.png', (724,668)),
+                                 Scenery('data/Grounds/SumRift_Ground_GrassMiddleLoop.png', (824,668)),
+                                 Scenery('data/Grounds/SumRift_Ground_GrassMiddleLoop.png', (924,668))]
         self.scenery.extend(baseGrnd)
         self.scenery.extend(bushTiles)
         self.scenery.extend(groundTransitionTiles)
@@ -191,138 +191,138 @@ init python:
         self.scenery.extend(riftGrnd)
         self.enemies = [MeleeMinion(), MeleeMinion(), MeleeMinion()]
       elif number == 6:
-        bushTiles = [Scenery(os.path.join(*['data','Bush','grass-tile-leftend.png']),(424, 368)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-middle.png']),(724, 368))]
+        bushTiles = [Scenery('data/Bush/grass-tile-leftend.png',(424, 368)),
+                     Scenery('data/Bush/grass-tile-middle.png',(724, 368))]
         self.scenery.extend(bushTiles)
         
         self.scenery.extend(riftGrnd)
         self.enemies = [CasterMinion(), MeleeMinion(), MeleeMinion()]
       elif number == 7:
-        bushTiles = [Scenery(os.path.join(*['data','Bush','grass-tile-middle.png']),(0, 368)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-middle.png']),(300, 368)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-rightend.png']),(600, 368)),]
+        bushTiles = [Scenery('data/Bush/grass-tile-middle.png',(0, 368)),
+                     Scenery('data/Bush/grass-tile-middle.png',(300, 368)),
+                     Scenery('data/Bush/grass-tile-rightend.png',(600, 368)),]
         
         self.scenery.extend(bushTiles)
-        self.sceneryfg.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_FG.png']),(0,668-41)))
+        self.sceneryfg.append(Scenery('data/Bush/SumRift_Bushes_FG.png',(0,668-41)))
         self.scenery.extend(riftGrnd)
         self.enemies = [CasterMinion(), CasterMinion(), CasterMinion()]
       elif number == 8:
-        self.sceneryfg.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_FG.png']),(-129,668-41)))
-        self.scenery.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_BG.png']),(0,668-273)))
+        self.sceneryfg.append(Scenery('data/Bush/SumRift_Bushes_FG.png',(-129,668-41)))
+        self.scenery.append(Scenery('data/Bush/SumRift_Bushes_BG.png',(0,668-273)))
         self.scenery.extend(riftGrnd)
         self.enemies = [Sentry(), CasterMinion(), MeleeMinion()]
       elif number == 9: #Transition to Red Buff area
-        self.sceneryfg.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_FG.png']),(0,668-41)))
-        self.scenery.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_BG.png']),(-129,668-273)))
+        self.sceneryfg.append(Scenery('data/Bush/SumRift_Bushes_FG.png',(0,668-41)))
+        self.scenery.append(Scenery('data/Bush/SumRift_Bushes_BG.png',(-129,668-273)))
         self.scenery.extend(riftGrnd)
-        self.scenery.append(Scenery(os.path.join('data','redpit.png'),(928,68)))
+        self.scenery.append(Scenery('data/redpit.png',(928,68)))
         self.enemies = [Cinderling(), Cinderling()]
       elif number == 10:
-        self.sceneryfg.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_FG.png']),(-129,668-41)))
-        self.scenery.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_BG.png']),(0,668-273)))
-        self.music = os.path.join(*['music','dungeon.mp3'])
+        self.sceneryfg.append(Scenery('data/Bush/SumRift_Bushes_FG.png',(-129,668-41)))
+        self.scenery.append(Scenery('data/Bush/SumRift_Bushes_BG.png',(0,668-273)))
+        self.music = 'music/dungeon.mp3'
         self.scenery.extend(riftGrnd)
-        self.scenery.append(Scenery(os.path.join('data','redpit.png'),(-96,68)))
+        self.scenery.append(Scenery('data/redpit.png',(-96,68)))
         self.enemies = [Brambleback(), Cinderling(), Cinderling()]
       elif number == 11: #Transition into jungle
-        self.sceneryfg.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_FG.png']),(0,668-41)))
-        self.scenery.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_BG.png']),(-129,668-273)))
+        self.sceneryfg.append(Scenery('data/Bush/SumRift_Bushes_FG.png',(0,668-41)))
+        self.scenery.append(Scenery('data/Bush/SumRift_Bushes_BG.png',(-129,668-273)))
         self.scenery.extend(riftGrnd)
         self.enemies = [Wolf()]
       elif number == 12:
-        self.sceneryfg.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_FG.png']),(-129,668-41)))
-        self.scenery.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_BG.png']),(0,668-273)))
+        self.sceneryfg.append(Scenery('data/Bush/SumRift_Bushes_FG.png',(-129,668-41)))
+        self.scenery.append(Scenery('data/Bush/SumRift_Bushes_BG.png',(0,668-273)))
         
-        bushTiles = [Scenery(os.path.join(*['data','Bush','grass-tile-leftend.png']),(300, 368)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-middle.png']),(600, 368)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-middle.png']),(900, 368)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-leftendS.png']),(0, 518)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-middleS.png']),(150, 518)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-rightendS.png']),(300, 518)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-leftendS.png']),(874, 518))]
+        bushTiles = [Scenery('data/Bush/grass-tile-leftend.png',(300, 368)),
+                     Scenery('data/Bush/grass-tile-middle.png',(600, 368)),
+                     Scenery('data/Bush/grass-tile-middle.png',(900, 368)),
+                     Scenery('data/Bush/grass-tile-leftendS.png',(0, 518)),
+                     Scenery('data/Bush/grass-tile-middleS.png',(150, 518)),
+                     Scenery('data/Bush/grass-tile-rightendS.png',(300, 518)),
+                     Scenery('data/Bush/grass-tile-leftendS.png',(874, 518))]
         
         self.scenery.extend(riftGrnd)
         self.scenery.extend(bushTiles)
         self.enemies = [Wraith(), Wolf(), Wolf()]
       if number == 13:
-        self.sceneryfg.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_FG.png']),(0,668-41)))
-        self.scenery.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_BG.png']),(-129,668-273)))
+        self.sceneryfg.append(Scenery('data/Bush/SumRift_Bushes_FG.png',(0,668-41)))
+        self.scenery.append(Scenery('data/Bush/SumRift_Bushes_BG.png',(-129,668-273)))
         
-        bushTiles = [Scenery(os.path.join(*['data','Bush','grass-tile-middle.png']),(-176, 368)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-rightend.png']),(124, 368)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-middleS.png']),(0, 518)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-middleS.png']),(150, 368)),
-                     Scenery(os.path.join(*['data','Bush','grass-tile-rightendS.png']),(300, 518))]
+        bushTiles = [Scenery('data/Bush/grass-tile-middle.png',(-176, 368)),
+                     Scenery('data/Bush/grass-tile-rightend.png',(124, 368)),
+                     Scenery('data/Bush/grass-tile-middleS.png',(0, 518)),
+                     Scenery('data/Bush/grass-tile-middleS.png',(150, 368)),
+                     Scenery('data/Bush/grass-tile-rightendS.png',(300, 518))]
         
         self.scenery.extend(bushTiles)
         self.scenery.extend(riftGrnd)
         self.enemies = [Wraith(), Wraith(), Wraith()]
       if number == 14:
-        self.scenery.append(Scenery(os.path.join(*['data','Bush','SumRift_Bushes_BG.png']),(-429,668-273)))
-        groundTransitionTiles = [Scenery(os.path.join(*['data','River','TileL.png']), (724,668)),
-                                 Scenery(os.path.join(*['data','River','TileM.png']), (824,668)),
-                                 Scenery(os.path.join(*['data','River','TileM.png']), (924,668))]
+        self.scenery.append(Scenery('data/Bush/SumRift_Bushes_BG.png',(-429,668-273)))
+        groundTransitionTiles = [Scenery('data/River/TileL.png', (724,668)),
+                                 Scenery('data/River/TileM.png', (824,668)),
+                                 Scenery('data/River/TileM.png', (924,668))]
 
         self.scenery.extend(riftGrnd)
         self.scenery.extend(groundTransitionTiles)
         self.enemies = [Wight(), Wraith(), Wraith()]
       if number == 15:
-        self.scenery.append(Scenery(os.path.join(*['data','Rock004.png']),(538,668-51)))
-        self.scenery.append(Scenery(os.path.join(*['data','Rock003.png']),(204,668-24)))
+        self.scenery.append(Scenery('data/Rock004.png',(538,668-51)))
+        self.scenery.append(Scenery('data/Rock003.png',(204,668-24)))
         self.scenery.extend(riverGrnd)
         self.enemies = [RiftScuttler(), RiftScuttler()]
       if number == 16:
-        self.scenery.append(Scenery(os.path.join(*['data','pit.png']),(200,668-385)))
+        self.scenery.append(Scenery('data/pit.png',(200,668-385)))
         
         self.scenery.append(BaronPit((748,283)))
         self.scenery.extend(riverGrnd)
         self.enemies = [Wight(), RiftScuttler(), Wolf()]
       if number == 17:
-        self.music = os.path.join(*['music','dungeon.mp3'])
+        self.music = 'music/dungeon.mp3'
         self.scenery.append(BaronPit((-276,283)))
-        groundTransitionTiles = [Scenery(os.path.join(*['data','River','TileR.png']), (724,668)),
-                                 Scenery(os.path.join(*['data','Grounds','SumRift_Ground_GrassMiddleLoop.png']), (824,668)),
-                                 Scenery(os.path.join(*['data','Grounds','SumRift_Ground_GrassMiddleLoop.png']), (924,668))]
+        groundTransitionTiles = [Scenery('data/River/TileR.png', (724,668)),
+                                 Scenery('data/Grounds/SumRift_Ground_GrassMiddleLoop.png', (824,668)),
+                                 Scenery('data/Grounds/SumRift_Ground_GrassMiddleLoop.png', (924,668))]
         
         
         self.scenery.extend(riverGrnd)
         self.scenery.extend(groundTransitionTiles)
         self.enemies = [Baron()]
       if number == 18: #Transition into Twisted Treeline
-        self.scenery.append(Scenery(os.path.join(*['data','transition_1.png']),(0,0)))
+        self.scenery.append(Scenery('data/transition_1.png',(0,0)))
         self.scenery.extend(riftGrnd)
         self.enemies = [Wight(), Wight()]
       if number == 19: 
-        self.scenery.append(Scenery(os.path.join(*['data','transition_2.png']),(0,0)))
+        self.scenery.append(Scenery('data/transition_2.png',(0,0)))
         self.scenery.extend(riftGrnd)
         self.enemies = [Wight(), Sentry(), Wight()]
       if number == 20: 
-        self.scenery.append(Scenery(os.path.join(*['data','transition_3.png']),(0,0)))
+        self.scenery.append(Scenery('data/transition_3.png',(0,0)))
         self.scenery.extend(riftGrnd)
         self.enemies = [Wolf(), Wolf(), Wolf(), Wolf()]
       if number == 21: 
-        self.scenery.append(Scenery(os.path.join(*['data','transition_4.png']),(0,0)))
+        self.scenery.append(Scenery('data/transition_4.png',(0,0)))
         self.scenery.extend(riftGrnd)
         self.enemies = [RiftScuttler(), RiftScuttler(), RiftScuttler()]
       if number == 22: 
-        self.scenery.append(Scenery(os.path.join(*['data','transition_5.png']),(0,0)))
+        self.scenery.append(Scenery('data/transition_5.png',(0,0)))
         self.scenery.extend(riftGrnd)
         self.enemies = [Cinderling(), Cinderling(), Cinderling(), Cinderling()]
       if number == 23: 
-        self.scenery.append(Scenery(os.path.join(*['data','transition_6.png']),(0,0)))
+        self.scenery.append(Scenery('data/transition_6.png',(0,0)))
         self.scenery.extend(riftGrnd)
         self.enemies = [Wight(), Wight(), Wight()]
       if number == 24: #Transition into enemy base
-        groundTransitionTiles = [Scenery(os.path.join(*['data','Grounds','SumRift_Ground_LeftBrickGrassTransition.png']), (624,668)),
-                                 Scenery(os.path.join(*['data','Grounds','SR_GRND.gif']), (724,668))]
+        groundTransitionTiles = [Scenery('data/Grounds/SumRift_Ground_LeftBrickGrassTransition.png', (624,668)),
+                                 Scenery('data/Grounds/SR_GRND.gif', (724,668))]
                                  
         self.scenery.extend(riftGrnd)
         self.scenery.extend(groundTransitionTiles)
         self.enemies = [Sentry(), Sentry(), Sentry()]
       if number == 25:
-        self.music = os.path.join(*['music','dungeon.mp3'])
+        self.music = 'music/dungeon.mp3'
         self.scenery.extend(baseGrnd)
-        self.scenery.append(Scenery(os.path.join(*['data','turret2.png']),(732,0)))
+        self.scenery.append(Scenery('data/turret2.png',(732,0)))
         self.startScene = 'beforeHacker'
         self.lossScene = 'loseFinalBattle'
         self.endScene = 'winFinalBattle'
@@ -661,13 +661,13 @@ init python:
           if hb.parent == self.players[2]:
             self.ui.remove(hb)
             self.healthBars.remove(hb)
-        poofSprite = Effect(os.path.join(*['data','Soraka','SFX', 'raka_poof.png']), (160,260),13)
+        poofSprite = Effect('data/Soraka/SFX/raka_poof.png', (160,260),13)
         
         poofSprite.rect.bottom = betrayer.rect.bottom
         poofSprite.rect.centerx = betrayer.rect.centerx - 20
         self.effects.append(poofSprite)
         
-        self.playOnNextAvailableChannel(os.path.join(*['data','EffectSFX','flash.wav']))
+        self.playOnNextAvailableChannel('data/EffectSFX/flash.wav')
         self.enemies.append(betrayer)
         
         self.state = 4
@@ -698,9 +698,9 @@ init python:
       global route
       mc = self.players[0]
       if route == "Ezreal":
-        mc.animLib = AnimLib(os.path.join('data','Ezreal'), 'ezreal_buffed_', 'idle', (250,200), 0.3)
+        mc.animLib = AnimLib('data/Ezreal', 'ezreal_buffed_', 'idle', (250,200), 0.3)
       else:
-        mc.animLib = AnimLib(os.path.join('data','Leona'), 'leona_buffed_', 'idle', (275,200), 0.3)
+        mc.animLib = AnimLib('data/Leona', 'leona_buffed_', 'idle', (275,200), 0.3)
       mc.changeImage('idle')
       mc.attackDamage = 40
       mc.maxHP = 200
@@ -848,7 +848,7 @@ init python:
   class TargetArrow(renpy.Displayable):
     def __init__(self, **kwargs):
       super(TargetArrow,self).__init__(**kwargs)
-      self.image = os.path.join(*['data','icons','arrow2.png'])
+      self.image = 'data/icons/arrow2.png'
       im = Image(self.image)
       rn = im.render(0,0,0,0)
       self.rect = pygame.Rect((0,0), rn.get_size())
@@ -873,7 +873,7 @@ init python:
       super(ChargingCircle,self).__init__(**kwargs)
       self.parent = parent
       self.rect = pygame.Rect((0,0), (64,64))
-      self.filmstrip = FilmStrip(os.path.join(*['data','icons','chargingCircle.png']), (64,64), (10,1),10,False)
+      self.filmstrip = FilmStrip('data/icons/chargingCircle.png', (64,64), (10,1),10,False)
       
       self.visible = False
       
@@ -912,10 +912,10 @@ init python:
       super(HealthBar, self).__init__(**kwargs)
       self.parent = parent
       
-      self.barimage = os.path.join(*['data','icons','healthBar.png'])
+      self.barimage = 'data/icons/healthBar.png'
       self.barrect = pygame.Rect((41,35),(168,29))
       
-      self.image = os.path.join(*['data','icons','battleuiBOX.png'])
+      self.image = 'data/icons/battleuiBOX.png'
       self.rect = pygame.Rect((0,0),(219,73))
       
       self.visible = False
@@ -974,14 +974,14 @@ init python:
       
     def render(self, width, height, st, at):
       if self.rect.right == 0:
-        self.battle.playOnNextAvailableChannel(os.path.join(*['data','effectSFX','tpStart.wav']))
+        self.battle.playOnNextAvailableChannel('data/effectSFX/tpStart.wav')
       
       if self.rect.centerx < 300:
         self.rect.x += 150
       else:
         self.holdTime += 1
       if self.holdTime == 14:
-        self.battle.playOnNextAvailableChannel(os.path.join(*['data','effectSFX','tpFinish.wav']))
+        self.battle.playOnNextAvailableChannel('data/effectSFX/tpFinish.wav')
       if self.holdTime >= 15:
         self.rect.x += 200
         if self.rect.left > 1024:
@@ -1028,14 +1028,14 @@ init python:
         attackCD = 40
         attackDamage = 40
       
-      animLib = AnimLib(os.path.join('data','Ezreal'), 'ezreal_', 'idle', (250,200), 0.3)
+      animLib = AnimLib('data/Ezreal', 'ezreal_', 'idle', (250,200), 0.3)
       Fighter.__init__(self, animLib, (0,0), 0, attackCD, attackDamage, maxHP)
-      self.attackVoice = os.path.join(*['data','EffectSFX','EZ_Attack_1.mp3'])
-      self.attackSound = os.path.join(*['data','EffectSFX','ezBolt.wav'])
+      self.attackVoice = 'data/EffectSFX/EZ_Attack_1.mp3'
+      self.attackSound = 'data/EffectSFX/ezBolt.wav'
       
-      self.hurtSound = os.path.join(*['data','EffectSFX','EzDamage.wav'])
+      self.hurtSound = 'data/EffectSFX/EzDamage.wav'
       
-      self.attackEffect = os.path.join(*['data','ArrowAttack2','effect_arrow.png'])
+      self.attackEffect = 'data/ArrowAttack2/effect_arrow.png'
       self.attackEffectSize = (250,150)
       self.attackEffectLength = 6
       
@@ -1077,14 +1077,14 @@ init python:
         attackCD = 40
         attackDamage = 40
       
-      animLib = AnimLib(os.path.join('data','Leona'), 'leona_', 'idle', (275,200), 0.3)
+      animLib = AnimLib('data/Leona', 'leona_', 'idle', (275,200), 0.3)
       Fighter.__init__(self, animLib, (0,0), 50, attackCD, attackDamage, maxHP)
-      self.attackVoice = os.path.join(*['data','Leona','LeonaSFX','Attack1.wav'])
-      self.attackSound = os.path.join(*['data','EffectSFX','daggerSound2.wav'])
+      self.attackVoice = 'data/Leona/LeonaSFX/Attack1.wav'
+      self.attackSound = 'data/EffectSFX/daggerSound2.wav'
       
-      self.hurtSound = os.path.join(*['data','Leona','LeonaSFX','Damage.wav'])
+      self.hurtSound = 'data/Leona/LeonaSFX/Damage.wav'
       
-      self.attackEffect = os.path.join(*['data','sword_slash','effect_sword.png'])
+      self.attackEffect = 'data/sword_slash/effect_sword.png'
       self.attackEffectSize = (150,150)
       self.attackEffectLength = 5
       
@@ -1111,15 +1111,15 @@ init python:
         attackDamage = 25
         attackCD = 80
       
-      animLib = AnimLib(os.path.join('data','Ahri'), 'ahri_', 'idle', (275,200), 0.3)
+      animLib = AnimLib('data/Ahri', 'ahri_', 'idle', (275,200), 0.3)
       Fighter.__init__(self, animLib,  (0,0), 50, attackCD, attackDamage, maxHP)
-      self.attackVoice = os.path.join(*['data','AhriSFX','Attack1_c.wav'])
-      self.attackSound = os.path.join(*['data','EffectSFX','FireBall.wav'])
+      self.attackVoice = 'data/AhriSFX/Attack1_c.wav'
+      self.attackSound = 'data/EffectSFX/FireBall.wav'
       
-      self.hurtSound = os.path.join(*['data','AhriSFX','AhriDamage.wav'])
-      self.superSprite = os.path.join(*['ahri','vr','ahriwink.png'])  
+      self.hurtSound = 'data/AhriSFX/AhriDamage.wav'
+      self.superSprite = 'ahri/vr/ahriwink.png'
   
-      self.attackEffect = os.path.join(*['data','fire_effect','effect_fire.png'])
+      self.attackEffect = 'data/fire_effect/effect_fire.png'
       self.attackEffectSize = (150,150)
       self.attackEffectLength = 18
       
@@ -1145,15 +1145,15 @@ init python:
         attackDamage = 25
         attackCD = 80
       
-      animLib = AnimLib(os.path.join('data','Jayce'), 'jayce_', 'idle', (400,250), 0.3)
+      animLib = AnimLib('data/Jayce', 'jayce_', 'idle', (400,250), 0.3)
       Fighter.__init__(self, animLib,  (0,0), -50, attackCD, attackDamage, maxHP)
-      self.attackVoice = os.path.join(*['data','EffectSFX','JayceAttack.wav'])
-      self.attackSound = os.path.join(*['data','EffectSFX','hammertime.wav'])
+      self.attackVoice = 'data/EffectSFX/JayceAttack.wav'
+      self.attackSound = 'data/EffectSFX/hammertime.wav'
       
-      self.hurtSound = os.path.join(*['data','EffectSFX','JayceDamage.wav'])
-      self.superSprite = os.path.join(*['jayce','vr','happy.png'])
+      self.hurtSound = 'data/EffectSFX/JayceDamage.wav'
+      self.superSprite = 'jayce/vr/happy.png'
       
-      self.attackEffect = os.path.join(*['data','sword_slash','effect_sword_gold.png'])
+      self.attackEffect = 'data/sword_slash/effect_sword_gold.png'
       self.attackEffectSize = (150,150)
       self.attackEffectLength = 5
       
@@ -1180,14 +1180,14 @@ init python:
         attackDamage = 15
         attackCD = 25
       
-      animLib = AnimLib(os.path.join('data','Soraka'), 'soraka_', 'idle', (180,250), 0.3)
+      animLib = AnimLib('data/Soraka', 'soraka_', 'idle', (180,250), 0.3)
       Fighter.__init__(self, animLib,  (0,0),  0, attackCD, attackDamage, maxHP)
-      self.attackVoice = os.path.join(*['data','EffectSFX','SorakaAttack1.wav'])
-      self.attackSound = os.path.join(*['data','EffectSFX','rakaBolt.wav'])
-      self.hurtSound = os.path.join(*['data','EffectSFX','SorakaDamage.wav'])        
-      self.superSprite = os.path.join(*['raka','vr','angry.png'])
+      self.attackVoice = 'data/EffectSFX/SorakaAttack1.wav'
+      self.attackSound = 'data/EffectSFX/rakaBolt.wav'
+      self.hurtSound = 'data/EffectSFX/SorakaDamage.wav'        
+      self.superSprite = 'raka/vr/angry.png'
       
-      self.attackEffect = os.path.join(*['data','Soraka','SFX', 'raka_poof.png'])
+      self.attackEffect = 'data/Soraka/SFX/raka_poof.png'
       self.attackEffectSize = (160,260)
       self.attackEffectLength = 13
       
@@ -1213,15 +1213,15 @@ init python:
         attackDamage = 15
         attackCD = 25
       
-      animLib = AnimLib(os.path.join('data','Viktor'), 'viktor_', 'idle', (150,300), 0.3)
+      animLib = AnimLib('data/Viktor', 'viktor_', 'idle', (150,300), 0.3)
       Fighter.__init__(self, animLib,  (0,0),  30, attackCD, attackDamage, maxHP)
-      self.attackVoice = os.path.join(*['data','EffectSFX','viktor_Attack.wav'])
-      self.attackSound = os.path.join(*['data','EffectSFX','vikBolt.wav'])
+      self.attackVoice = 'data/EffectSFX/viktor_Attack.wav'
+      self.attackSound = 'data/EffectSFX/vikBolt.wav'
       
-      self.hurtSound = os.path.join(*['data','EffectSFX','viktor_ReceiveDamage.wav'])
-      self.superSprite = os.path.join(*['vik','vr','happy.png'])
+      self.hurtSound = 'data/EffectSFX/viktor_ReceiveDamage.wav'
+      self.superSprite = 'vik/vr/happy.png'
       
-      self.attackEffect = os.path.join(*['data','Viktor_FX', 'pink_explosion.png'])
+      self.attackEffect = 'data/Viktor_FX', 'pink_explosion.png'
       self.attackEffectSize = (550,400)
       self.attackEffectLength = 13
       
@@ -1247,14 +1247,14 @@ init python:
         attackCD = 60
       
       
-      animLib = AnimLib(os.path.join('data','Rengar'), 'rengar_', 'idle', (250,200), 0.3)
+      animLib = AnimLib('data/Rengar', 'rengar_', 'idle', (250,200), 0.3)
       Fighter.__init__(self, animLib,  (0,0),  50, attackCD, attackDamage, maxHP)
-      self.attackVoice = os.path.join(*['data','EffectSFX','Attack3.wav'])
-      self.attackSound = os.path.join(*['data','EffectSFX','daggerSound.wav'])
-      self.hurtSound = os.path.join(*['data','EffectSFX','ReceivingDamage2.wav'])
-      self.superSprite = os.path.join(*['rango','vr','confident.png'])
+      self.attackVoice = 'data/EffectSFX/Attack3.wav'
+      self.attackSound = 'data/EffectSFX/daggerSound.wav'
+      self.hurtSound = 'data/EffectSFX/ReceivingDamage2.wav'
+      self.superSprite = 'rango/vr/confident.png'
       
-      self.attackEffect = os.path.join(*['data','sword_slash','effect_sword.png'])
+      self.attackEffect = 'data/sword_slash/effect_sword.png'
       self.attackEffectSize = (150,150)
       self.attackEffectLength = 5
       
@@ -1280,15 +1280,15 @@ init python:
         maxHP = 180
         attackCD = 60
       
-      animLib = AnimLib(os.path.join('data','Rumble'), 'rumble_', 'idle', (300,200), 0.3)
+      animLib = AnimLib('data/Rumble', 'rumble_', 'idle', (300,200), 0.3)
       Fighter.__init__(self, animLib,  (0,0),  0, attackCD, attackDamage, maxHP)
-      self.attackVoice = os.path.join(*['data','EffectSFX','RumbleAttack1.wav'])
-      self.attackSound = os.path.join(*['data','EffectSFX','rumbleHit.wav'])
+      self.attackVoice = 'data/EffectSFX/RumbleAttack1.wav'
+      self.attackSound = 'data/EffectSFX/rumbleHit.wav'
       
-      self.hurtSound = os.path.join(*['data','EffectSFX','RumbleDamage1.wav'])
-      self.superSprite = os.path.join(*['rumble','vr','flat.png'])  
+      self.hurtSound = 'data/EffectSFX/RumbleDamage1.wav'
+      self.superSprite = 'rumble/vr/flat.png'  
       
-      self.attackEffect = os.path.join(*['data','smoke_puff_up','smoke_puff.png'])
+      self.attackEffect = 'data/smoke_puff_up/smoke_puff.png'
       self.attackEffectSize = (500,500)
       self.attackEffectLength = 13
         
@@ -1296,14 +1296,14 @@ init python:
 ######################### BEGIN ENEMY DECLARATION #########################################
   class Poro(Fighter):
     def __init__(self):
-      animLib = AnimLib(os.path.join('data','Poro1'), 'poro_', 'idle', (200,200), 0.3)
+      animLib = AnimLib('data/Poro1', 'poro_', 'idle', (200,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 100, attackDamage = 10, maxHP = 40)
       self.currentCD = random.randint(0,self.attackCD)
       self.hurtSprite = True
   
   class MrPoro(Fighter):
     def __init__(self):
-      animLib = AnimLib(os.path.join('data','Poro2'), 'mrporo_', 'idle', (200,200), 0.3)
+      animLib = AnimLib('data/Poro2', 'mrporo_', 'idle', (200,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 100, attackDamage = 12, maxHP = 80)
       self.currentCD = random.randint(0,self.attackCD)
       self.hurtSprite = True
@@ -1311,71 +1311,71 @@ init python:
 
   class Cinderling(Fighter):
     def __init__(self):
-      animLib = AnimLib(os.path.join('data','Cinderling'), 'cinderling_', 'idle', (200,200), 0.3)
+      animLib = AnimLib('data/Cinderling', 'cinderling_', 'idle', (200,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 40, attackDamage = 5, maxHP = 40)
       self.currentCD = random.randint(0,self.attackCD)
       self.hurtSprite = True
      
   class MeleeMinion(Fighter):
     def __init__(self):
-      animLib = AnimLib(os.path.join('data','Minion'), 'minion_', 'idle', (200,200), 0.3)
+      animLib = AnimLib('data/Minion', 'minion_', 'idle', (200,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 90, attackDamage = 15, maxHP = 80)
       self.currentCD = random.randint(0,self.attackCD)
       self.hurtSprite = True
   
   class CasterMinion(Fighter):
     def __init__(self):
-      animLib = AnimLib(os.path.join('data','Ranged'), 'caster_', 'idle', (200,200), 0.3)
+      animLib = AnimLib('data/Ranged', 'caster_', 'idle', (200,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 130, attackDamage = 25, maxHP = 50)
       self.currentCD = random.randint(0,self.attackCD)
       self.hurtSprite = True
   
   class RiftScuttler(Fighter):
     def __init__(self):
-      animLib = AnimLib(os.path.join('data','Crab'), 'crab_', 'idle', (200,200), 0.3)
+      animLib = AnimLib('data/Crab', 'crab_', 'idle', (200,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 100, attackDamage = 10, maxHP = 100)
       self.currentCD = random.randint(0,self.attackCD)
       self.hurtSprite = True
   
   class Sentry(Fighter):
     def __init__(self):
-      animLib = AnimLib(os.path.join('data','Sentry'), 'sentry_', 'idle', (200,200), 0.3)
+      animLib = AnimLib('data/Sentry', 'sentry_', 'idle', (200,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 35, maxHP = 80)
       self.currentCD = random.randint(0,self.attackCD)
       self.hurtSprite = True
   
   class Wolf(Fighter):
     def __init__(self):
-      animLib = AnimLib(os.path.join('data','Wolf'), 'wolf_', 'idle', (200,200), 0.3)
+      animLib = AnimLib('data/Wolf', 'wolf_', 'idle', (200,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 60, attackDamage = 15, maxHP = 50)
       self.currentCD = random.randint(0,self.attackCD)
       self.hurtSprite = True
   
   class Wraith(Fighter):
     def __init__(self):
-      animLib = AnimLib(os.path.join('data','WraithG'), 'wraith_', 'idle', (200,200), 0.3)
+      animLib = AnimLib('data/WraithG', 'wraith_', 'idle', (200,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 60, attackDamage = 10, maxHP = 40)
       self.currentCD = random.randint(0,self.attackCD)
       self.hurtSprite = True
   
   class Wight(Fighter):
     def __init__(self):
-      animLib = AnimLib(os.path.join('data','WraithW'), 'wight_', 'idle', (200,200), 0.3)
+      animLib = AnimLib('data/WraithW', 'wight_', 'idle', (200,200), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 60, attackDamage = 15, maxHP = 90)
       self.currentCD = random.randint(0,self.attackCD)
       self.hurtSprite = True
   
   class Brambleback(Fighter):
     def __init__(self):
-        animLib = AnimLib(os.path.join('data','Brambleback'), 'brambleback_', 'idle', (400,400), 0.3)
+        animLib = AnimLib('data/Brambleback', 'brambleback_', 'idle', (400,400), 0.3)
         Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 120, attackDamage = 20, maxHP = 200)
         self.currentCD = 120
         self.zonya = False
         self.zTimer = 0
         self.gotCombod = False
         self.zReady = True
-        self.sound1 = os.path.join(*['data','EffectSFX','zonya1.wav'])
-        self.sound2 = os.path.join(*['data','EffectSFX','zonya2.wav'])
+        self.sound1 = 'data/EffectSFX/zonya1.wav'
+        self.sound2 = 'data/EffectSFX/zonya2.wav'
         self.hurtSprite = True
     
     def render(self, height, width, st, at):
@@ -1424,7 +1424,7 @@ init python:
   
   class Baron(Fighter):
       def __init__(self):
-        animLib = AnimLib(os.path.join('data','Nashor'), 'baron_', 'idle', (800,800), 0.3)
+        animLib = AnimLib('data/Nashor', 'baron_', 'idle', (800,800), 0.3)
         Fighter.__init__(self, animLib, position = (0,0), centerOffset = 100, attackCD = 160, attackDamage = 30, maxHP = 600)
         self.eventTimer = 0
         self.currentCD = random.randint(0,self.attackCD)
@@ -1444,7 +1444,7 @@ init python:
           
         if self.HP <= self.maxHP / 2:
             if not self.eventTrigger:
-              self.battle.playOnNextAvailableChannel(os.path.join(*['data','EffectSFX','baronspissed.wav']))
+              self.battle.playOnNextAvailableChannel('data/EffectSFX/baronspissed.wav')
               self.attackCD = 20
               self.attackDamage = 5
             self.eventTrigger = True
@@ -1465,7 +1465,7 @@ init python:
   
   class Doran(Fighter):
     def __init__(self):
-      animLib = AnimLib(os.path.join('data','Doran'), 'doran_', 'idle', (100,150), 0.3)
+      animLib = AnimLib('data/Doran', 'doran_', 'idle', (100,150), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 80, attackDamage = 15, maxHP = 800)
       self.currentCD = self.attackCD
       self.halfHealthScene = False
@@ -1482,14 +1482,14 @@ init python:
     
   class EnemyRaka(Fighter):
     def __init__(self):
-      animLib = AnimLib(os.path.join('data','Soraka'), 'soraka_enemy_', 'idle', (180,250), 0.3)
+      animLib = AnimLib('data/Soraka', 'soraka_enemy_', 'idle', (180,250), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 0, attackCD = 60, attackDamage = 5, maxHP = 100)
-      self.attackVoice = os.path.join(*['data','EffectSFX','SorakaAttack1.wav'])
-      self.attackSound = os.path.join(*['data','EffectSFX','rakaBolt.wav'])
-      self.hurtSound = os.path.join(*['data','EffectSFX','SorakaDamage.wav'])        
-      self.superSprite = os.path.join(*['raka','vr','angry.png'])
+      self.attackVoice = 'data/EffectSFX/SorakaAttack1.wav'
+      self.attackSound = 'data/EffectSFX/rakaBolt.wav'
+      self.hurtSound = 'data/EffectSFX/SorakaDamage.wav'        
+      self.superSprite = 'raka/vr/angry.png'
       
-      self.attackEffect = os.path.join(*['data','Soraka','SFX', 'raka_poof.png'])
+      self.attackEffect = 'data/Soraka/SFX', 'raka_poof.png'
       self.attackEffectSize = (160,260)
       self.attackEffectLength = 13
       
@@ -1501,15 +1501,15 @@ init python:
   
   class EnemyViktor(Fighter):
     def __init__(self):
-      animLib = AnimLib(os.path.join('data','Viktor'), 'viktor_enemy_', 'idle', (150,300), 0.3)
+      animLib = AnimLib('data/Viktor', 'viktor_enemy_', 'idle', (150,300), 0.3)
       Fighter.__init__(self, animLib, position = (0,0), centerOffset = 30, attackCD = 60, attackDamage = 5, maxHP = 100)
-      self.attackVoice = os.path.join(*['data','EffectSFX','viktor_Attack.wav'])
-      self.attackSound = os.path.join(*['data','EffectSFX','vikBolt.wav'])
+      self.attackVoice = 'data/EffectSFX/viktor_Attack.wav'
+      self.attackSound = 'data/EffectSFX/vikBolt.wav'
       
-      self.hurtSound = os.path.join(*['data','EffectSFX','viktor_ReceiveDamage.wav'])
-      self.superSprite = os.path.join(*['vik','vr','happy.png'])
+      self.hurtSound = 'data/EffectSFX/viktor_ReceiveDamage.wav'
+      self.superSprite = 'vik/vr/happy.png'
       
-      self.attackEffect = os.path.join(*['data','Viktor_FX', 'pink_explosion.png'])
+      self.attackEffect = 'data/Viktor_FX', 'pink_explosion.png'
       self.attackEffectSize = (550,400)
       self.attackEffectLength = 13
       
@@ -1529,12 +1529,12 @@ init python:
       self.currentImage = defaultImage
       self.frame = 0
       
-      fullPath = os.path.join(renpy.config.gamedir, directory)
+      fullPath = renpy.config.gamedir + '/' + directory
       for f in os.listdir(fullPath):
         fname, ext = os.path.splitext(f)
         if fname.startswith(prefix) and ext in supportedFileTypes:
           spriteName= fname[len(prefix):]
-          fp = os.path.join(fullPath,f)
+          fp = fullPath + '/' + f
           #x, y, w, h = renpy.get_image_bounds(fp)
           #length = w / framesize[0]
           #TODO
@@ -1638,17 +1638,17 @@ init python:
   
   class Torch(FilmStrip):
     def __init__(self,position,**kwargs):
-      FilmStrip.__init__(self, os.path.join(*['data','Anim_Fire','anim_fire.png']), (100,125), (3,1), 0.3, 3, True, **kwargs)
+      FilmStrip.__init__(self, 'data/Anim_Fire/anim_fire.png', (100,125), (3,1), 0.3, 3, True, **kwargs)
       self.rect = pygame.Rect(position, (100,125))
       
   class Nexus(FilmStrip):
     def __init__(self,position,**kwargs):
-      FilmStrip.__init__(self, os.path.join(*['data','Nexus','nexus.png']), (525,400), (14,1), 0.3, 14, True, **kwargs)
+      FilmStrip.__init__(self, 'data/Nexus/nexus.png', (525,400), (14,1), 0.3, 14, True, **kwargs)
       self.rect = pygame.Rect(position, (525,400))
       
   class BaronPit(FilmStrip):
     def __init__(self,position,**kwargs):
-      FilmStrip.__init__(self, os.path.join(*['data','BaronPit','baronPit.png']), (1300,385), (4,1), 0.3, 4, True, **kwargs)
+      FilmStrip.__init__(self, 'data/BaronPit/baronPit.png', (1300,385), (4,1), 0.3, 4, True, **kwargs)
       self.rect = pygame.Rect(position, (1300,385))
       
   

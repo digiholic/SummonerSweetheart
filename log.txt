@@ -1,4 +1,4 @@
-Sun Jun 21 08:58:29 2015
+Mon Jun 22 00:27:45 2015
 Linux-3.16.0-41-generic-x86_64-with-debian-jessie-sid
 Ren'Py 6.18.3.761
 Summoner Sweetheart 0.9
@@ -211,8 +211,8 @@ Texture testing:
 Performance test:
 - Target is 5 frames in 0.333333333333 seconds.
 - Frame drawn at 0.000000 seconds.
-- Frame drawn at 0.023312 seconds.
-- Frame drawn at 0.053964 seconds.
-- Frame drawn at 0.066652 seconds.
-- Frame drawn at 0.084461 seconds.
-- 0.084461 seconds to render 5 frames.
+- Frame drawn at 0.023365 seconds.
+- Frame drawn at 0.054068 seconds.
+- Frame drawn at 0.067270 seconds.
+- Frame drawn at 0.083237 seconds.
+- 0.083237 seconds to render 5 frames.
