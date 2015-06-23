@@ -1529,7 +1529,7 @@ init python:
       self.currentImage = defaultImage
       self.frame = 0
       
-      fullPath = renpy.config.gamedir + '/' + directory
+      fullPath = renpy.config.gamedir.replace('\\','/') + '/' + directory
       for f in os.listdir(fullPath):
         fname, ext = os.path.splitext(f)
         if fname.startswith(prefix) and ext in supportedFileTypes:

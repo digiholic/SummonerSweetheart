@@ -3,86 +3,38 @@
 While running game code:
   File "game/script00.rpy", line 501, in script call
     call dungeon
-  File "game/script00.rpy", line 576, in script
-    call screen dungeon_run(True)
-  File "renpy/common/000statements.rpy", line 457, in execute_call_screen
-    store._return = renpy.call_screen(name, *args, **kwargs)
-  File "game/dungeonBattle.rpy", line 501, in render
-    child_render = ef.render(width, height, st, at)
-  File "game/dungeonBattle.rpy", line 844, in render
-    return self.filmStrip.render(width, height, st, at)
-  File "game/dungeonBattle.rpy", line 1626, in render
-    child_render = renpy.render(t, width, height, st, at)
-IOError: Couldn't find file 'data/Soraka/SFX/raka_poof.png'.
+  File "game/script00.rpy", line 575, in script
+    $ current_battle = Battle()
+  File "game/script00.rpy", line 575, in <module>
+    $ current_battle = Battle()
+  File "game/dungeonBattle.rpy", line 49, in __init__
+    self.players = [Ezreal(), Ahri(), Soraka(), Rengar()]
+  File "game/dungeonBattle.rpy", line 1031, in __init__
+    animLib = AnimLib('data/Ezreal', 'ezreal_', 'idle', (250,200), 0.3)
+  File "game/dungeonBattle.rpy", line 1533, in __init__
+    for f in os.listdir(fullPath):
+OSError: [Errno 2] No such file or directory: '/game/data/Ezreal'
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
   File "game/script00.rpy", line 501, in script call
     call dungeon
-  File "game/script00.rpy", line 576, in script
-    call screen dungeon_run(True)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 1635, in execute
-    self.call("execute")
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 1653, in call
-    renpy.statements.call(method, parsed, *args, **kwargs)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/statements.py", line 144, in call
-    return method(parsed, *args, **kwargs)
-  File "renpy/common/000statements.rpy", line 457, in execute_call_screen
-    store._return = renpy.call_screen(name, *args, **kwargs)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/exports.py", line 2311, in call_screen
-    rv = renpy.ui.interact(mouse="screen", type="screen", roll_forward=roll_forward)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ui.py", line 247, in interact
-    rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/core.py", line 2149, in interact
-    repeat, rv = self.interact_core(preloads=preloads, **kwargs)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/core.py", line 2478, in interact_core
-    self.draw_screen(root_widget, fullscreen_video, (not fullscreen_video) or video_frame_drawn)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/core.py", line 1677, in draw_screen
-    renpy.config.screen_height,
-  File "render.pyx", line 363, in renpy.display.render.render_screen (gen/renpy.display.render.c:5330)
-  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 618, in render
-    surf = render(child, width, height, cst, cat)
-  File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
-  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 618, in render
-    surf = render(child, width, height, cst, cat)
-  File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
-  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 618, in render
-    surf = render(child, width, height, cst, cat)
-  File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
-  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/screen.py", line 598, in render
-    child = renpy.display.render.render(self.child, w, h, st, at)
-  File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
-  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/layout.py", line 618, in render
-    surf = render(child, width, height, cst, cat)
-  File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
-  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "accelerator.pyx", line 108, in renpy.display.accelerator.transform_render (gen/renpy.display.accelerator.c:1922)
-  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "game/dungeonBattle.rpy", line 501, in render
-    child_render = ef.render(width, height, st, at)
-  File "game/dungeonBattle.rpy", line 844, in render
-    return self.filmStrip.render(width, height, st, at)
-  File "game/dungeonBattle.rpy", line 1626, in render
-    child_render = renpy.render(t, width, height, st, at)
-  File "render.pyx", line 98, in renpy.display.render.render (gen/renpy.display.render.c:2849)
-  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "accelerator.pyx", line 108, in renpy.display.accelerator.transform_render (gen/renpy.display.accelerator.c:1922)
-  File "render.pyx", line 174, in renpy.display.render.render (gen/renpy.display.render.c:2537)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/im.py", line 465, in render
-    im = cache.get(self)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/im.py", line 198, in get
-    surf = image.load()
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/display/im.py", line 509, in load
-    surf = renpy.display.pgrender.load_image(renpy.loader.load(self.filename), self.filename)
-  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/loader.py", line 438, in load
-    raise IOError("Couldn't find file '%s'." % name)
-IOError: Couldn't find file 'data/Soraka/SFX/raka_poof.png'.
+  File "game/script00.rpy", line 575, in script
+    $ current_battle = Battle()
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/ast.py", line 785, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+  File "/home/digiholic/workspace/SummonerSweetheart-0.9-all/renpy/python.py", line 1382, in py_exec_bytecode
+    exec bytecode in globals, locals
+  File "game/script00.rpy", line 575, in <module>
+    $ current_battle = Battle()
+  File "game/dungeonBattle.rpy", line 49, in __init__
+    self.players = [Ezreal(), Ahri(), Soraka(), Rengar()]
+  File "game/dungeonBattle.rpy", line 1031, in __init__
+    animLib = AnimLib('data/Ezreal', 'ezreal_', 'idle', (250,200), 0.3)
+  File "game/dungeonBattle.rpy", line 1533, in __init__
+    for f in os.listdir(fullPath):
+OSError: [Errno 2] No such file or directory: '/game/data/Ezreal'
 
 Linux-3.16.0-41-generic-x86_64-with-debian-jessie-sid
 Ren'Py 6.18.3.761
